@@ -1,0 +1,38 @@
+name: checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request: {}
+  schedule:
+    - cron: '0 * * * *'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-python@v4
+      with:
+        python-version: 3.9
+
+    - name: install checkers
+      run: |
+        pip install black flake8 isort mypy blackdoc types-PyYAML
+    - name: black
+      run: black . --check --diff
+    - name: flake8
+      run: flake8 .
+    - name: isort
+      run: isort . --check --diff
+    - name: mypy
+      run: mypy .
+    - name: blackdoc
+      run: blackdoc . --check --diff
