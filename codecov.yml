@@ -1,0 +1,6 @@
+# ignore:
+# ...
+
+coverage:
+  status:
+    patch: off
