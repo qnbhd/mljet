@@ -1,0 +1,48 @@
+name: test
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  test:
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [ "3.8", "3.9", "3.10" ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      #----------------------------------------------
+      #       check-out repo and set-up python
+      #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Set up python ${{ matrix.python-version }}
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install requirements
+        run: pip install -r requirements.txt
+
+      #----------------------------------------------
+      #              run test suite
+      #----------------------------------------------
+      - name: Run python tests
+        run: |
+          pytest --log-level=INFO --cov=deployme --cov-report=xml tests/
+          
+          
+      - name: Publish codecov report
+        uses: codecov/codecov-action@v1
+        if: matrix.python-version == '3.9' && matrix.os == 'ubuntu-latest'
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: true
