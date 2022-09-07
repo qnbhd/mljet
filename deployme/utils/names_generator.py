@@ -1,5 +1,6 @@
 import random
 
+
 left = [
     "admiring",
     "adoring",
@@ -352,4 +353,4 @@ right = [
 
 
 def get_random_name():
-    return f'{random.choice(left)}_{random.choice(right)}'
+    return f"{random.choice(left)}_{random.choice(right)}"
