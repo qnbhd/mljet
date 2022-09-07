@@ -1,0 +1,9 @@
+ARG BASE_IMAGE=python:3.7-slim-buster
+FROM $BASE_IMAGE
+
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+
+COPY . .
+
+CMD [ "python3", "app.py"]
