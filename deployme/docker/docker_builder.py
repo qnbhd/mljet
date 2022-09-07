@@ -11,7 +11,7 @@ BASE_IMAGE = 'python:3.7-slim-buster'
 def build_image(model_path, image_name, base_image):
     """Build a Docker image for the project."""
     project_path = Path.cwd() / 'lama_project'
-    project_path.mkdir(exist_ok=True, parents=True) # TODO: make tempfolder
+    project_path.mkdir(exist_ok=True, parents=True)  # TODO: make tempfolder
     templates_path = Path(__file__).parent.parent / "template"
     copy_template_files(project_path, templates_path)
     copy_model(project_path, model_path)
