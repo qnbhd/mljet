@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-import logging
 import io
+import logging
+import os
 import pickle
 from typing import List
 
@@ -13,14 +14,12 @@ from blacksheep.server.openapi.v3 import ResponseInfo
 from blacksheep.server.responses import redirect
 import click
 from openapidocs.v3 import Info
+import pandas as pd
 import uvicorn as uvicorn
 
-import os
-import pandas as pd
 
-
-MODEL_TYPE = os.getenv("MODEL_TYPE") #?
-#N_WORKERS = int(os.getenv("N_WORKERS"))
+MODEL_TYPE = os.getenv("MODEL_TYPE")  # ?
+# N_WORKERS = int(os.getenv("N_WORKERS"))
 N_WORKERS = 1
 
 logger = logging.getLogger("deployme")
@@ -38,7 +37,9 @@ class RenameUnpickler(pickle.Unpickler):
         if module == "deployme.template.base_preprocessor":
             renamed_module = "base_preprocessor"
 
-        return super(RenameUnpickler, self).find_class(renamed_module, name)
+        return super(RenameUnpickler, self).find_class(
+            renamed_module, name
+        )
 
 
 def pickle_loads(object_path):
@@ -54,7 +55,11 @@ def load_object(object_path):
 model = load_object("models/model.pkl")
 example_data_path = "data/example.csv"
 preprocessor_path = "models/preprocessor.pkl"
-preprocessor = pickle_loads(preprocessor_path) if os.path.isfile(preprocessor_path) else None
+preprocessor = (
+    pickle_loads(preprocessor_path)
+    if os.path.isfile(preprocessor_path)
+    else None
+)
 
 
 @dataclass
@@ -78,12 +83,8 @@ def generate_docs_example():
         example_data = pd.read_csv(example_data_path, nrows=2)
         targets = get_predictions(example_data)
         examples = {
-            'f1': Objects(
-                data=[example_data.iloc[0].to_dict()]
-            ),
-            'f2': Objects(
-                data=[example_data.iloc[1].to_dict()]
-            ),
+            "f1": Objects(data=[example_data.iloc[0].to_dict()]),
+            "f2": Objects(data=[example_data.iloc[1].to_dict()]),
         }
         return examples, targets.tolist()
     else:
@@ -99,7 +100,7 @@ docs_examples, docs_target = generate_docs_example()
     description="Endpoint for prediction method.",
     request_body=RequestBodyInfo(
         description="Input data for prediction",
-        examples=docs_examples
+        examples=docs_examples,
     ),
     responses={
         "200": ResponseInfo(
@@ -136,7 +137,11 @@ def cli():
 @click.option("--port", type=int, default=5000)
 def run(host, port):
     config = uvicorn.Config(
-        "app:app", host=host, port=port, log_level="debug", workers=N_WORKERS,
+        "app:app",
+        host=host,
+        port=port,
+        log_level="debug",
+        workers=N_WORKERS,
     )
     server = uvicorn.Server(config)
     server.run()

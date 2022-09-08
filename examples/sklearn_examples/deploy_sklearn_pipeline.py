@@ -23,7 +23,11 @@ pipe.fit(X_train, y_train)
 X_test = pd.DataFrame(X_test)
 
 # Create and run docker-image
-deploy_to_docker(model=pipe, image_name="my_sklearn_pipe_service", data_example=X_test.head())
+deploy_to_docker(
+    model=pipe,
+    image_name="my_sklearn_pipe_service",
+    data_example=X_test.head(),
+)
 
 # Test running flask-service
 url = "http://localhost:5000/predict"

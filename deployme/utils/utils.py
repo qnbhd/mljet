@@ -1,9 +1,10 @@
 import logging
 from pathlib import Path
 import shutil
-from merge_requirements.manage_file import ManageFile, Merge
 
 import executor
+from merge_requirements.manage_file import ManageFile
+from merge_requirements.manage_file import Merge
 
 
 log = logging.getLogger(__name__)
@@ -42,10 +43,7 @@ def merge_requirements(project_path: Path):
 
 
 def merge_reqs(first_file, second_file):
-    mf = ManageFile(
-        first_file,
-        second_file
-    )
+    mf = ManageFile(first_file, second_file)
 
     mg = Merge(mf)
     mg.generate_requirements_txt()

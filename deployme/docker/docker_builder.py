@@ -1,23 +1,21 @@
+import os
 from pathlib import Path
 import pickle
 import shutil
 import tempfile
-import os
-
 import warnings
-from sklearn.pipeline import Pipeline
-from sklearn.base import BaseEstimator
 
+import pandas as pd
+from pipreqsnb import pipreqsnb
+from sklearn.base import BaseEstimator
+from sklearn.pipeline import Pipeline
 
 from deployme.utils import copy_project_files
 from deployme.utils import copy_template_files
 from deployme.utils import get_random_name
 from deployme.utils import merge_reqs
 from deployme.utils.logging import init
-
-from pipreqsnb import pipreqsnb
 import docker
-import pandas as pd
 
 
 init(verbose=True)
@@ -38,34 +36,37 @@ def build_models(project_path, model, preprocessor):
         with open(preprocessor_path, "wb") as f:
             pickle.dump(preprocessor, f)
 
-    copy_project_files(project_path, old_path=models_path, folder_name='models')
+    copy_project_files(
+        project_path, old_path=models_path, folder_name="models"
+    )
     shutil.rmtree(models_path)
 
 
 def build_requirements(project_path):
     project_reqs_path = str(project_path / "requirements.txt")
-    pipreqsnb_reqs_path = str(project_path.parent / "requirements.txt")
+    pipreqsnb_reqs_path = str(
+        project_path.parent / "requirements.txt"
+    )
 
     pipreqsnb.main()
     merge_reqs(project_reqs_path, pipreqsnb_reqs_path)
-    shutil.move(f'{str(project_path.parent / "requirements-merged.txt")}', project_reqs_path)
+    shutil.move(
+        f'{str(project_path.parent / "requirements-merged.txt")}',
+        project_reqs_path,
+    )
     if os.path.isfile(pipreqsnb_reqs_path):
         os.remove(pipreqsnb_reqs_path)
 
 
 def build_data(project_path, example_data):
-    data_path = project_path / 'data'
-    data_path.mkdir(
-        exist_ok=True, parents=True
-    )
-    example_data.to_csv(str(data_path / 'example.csv'), index=False)
+    data_path = project_path / "data"
+    data_path.mkdir(exist_ok=True, parents=True)
+    example_data.to_csv(str(data_path / "example.csv"), index=False)
 
 
 def build_project_files(model, preprocessor, example_data):
     project_path = Path.cwd() / "project"
-    project_path.mkdir(
-        exist_ok=True, parents=True
-    )
+    project_path.mkdir(exist_ok=True, parents=True)
     build_models(project_path, model, preprocessor)
     build_data(project_path, example_data)
 
@@ -78,15 +79,30 @@ def build_project_files(model, preprocessor, example_data):
 
 def build_image(project_path, image_name, base_image):
     """Build a Docker image for the project."""
-    docker_client.images.build(buildargs={'BASE_IMAGE': base_image}, tag=image_name, path=project_path)
+    docker_client.images.build(
+        buildargs={"BASE_IMAGE": base_image},
+        tag=image_name,
+        path=project_path,
+    )
 
 
-def run_image(image_name, model_type, n_workers, container_name=None, port=5000):
+def run_image(
+    image_name, model_type, n_workers, container_name=None, port=5000
+):
     """Run builded Docker image."""
     container_name = (
         container_name if container_name else get_random_name()
     )
-    docker_client.containers.run(image=image_name, environment={'MODEL_TYPE': model_type, 'N_WORKERS': n_workers}, name=container_name, ports={'5000': port}, detach=True)
+    docker_client.containers.run(
+        image=image_name,
+        environment={
+            "MODEL_TYPE": model_type,
+            "N_WORKERS": n_workers,
+        },
+        name=container_name,
+        ports={"5000": port},
+        detach=True,
+    )
 
 
 def deploy_to_docker(
@@ -113,7 +129,9 @@ def deploy_to_docker(
                 "preprocessed data as an input."
             )
 
-    project_path = build_project_files(model, preprocessor, data_example)
+    project_path = build_project_files(
+        model, preprocessor, data_example
+    )
 
     build_image(
         project_path,
