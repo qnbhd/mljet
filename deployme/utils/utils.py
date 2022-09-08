@@ -1,8 +1,11 @@
+import logging
 from pathlib import Path
 import shutil
-import subprocess
 
-import click
+import executor
+
+
+log = logging.getLogger(__name__)
 
 
 def copy_template_files(
@@ -29,18 +32,23 @@ def copy_template_files(
             )
 
 
+def merge_requirements(project_path: Path):
+    with open(project_path / "requirements.txt", "a") as wfd:
+        with open(project_path.parent / "requirements.txt") as fd:
+            user_reqs = "\n" + fd.read()
+            wfd.write(user_reqs)
+
+
 def copy_model(
     project_path: Path,
     model_path: Path,
 ):
     new_model_path = project_path / "models"
     new_model_path.mkdir(exist_ok=True, parents=True)
-    new_model_path = new_model_path / "model_lama.pkl"
+    new_model_path = new_model_path / "model.pkl"
     shutil.copyfile(str(model_path), str(new_model_path))
 
 
 def call(cmd, **kwargs):
-    click.echo(" ".join(c for c in cmd))
-    exit_code = subprocess.run(cmd, **kwargs).returncode
-    if exit_code:
-        raise click.exceptions.Exit(code=exit_code)
+    log.debug(cmd)
+    executor.execute(cmd)

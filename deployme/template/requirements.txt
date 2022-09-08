@@ -1,2 +1,4 @@
-lightautoml==0.3.6
-flask==2.0.2
+pandas
+numpy
+blacksheep
+uvicorn

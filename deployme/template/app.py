@@ -1,71 +1,113 @@
-from collections import defaultdict
-from datetime import datetime
+from dataclasses import dataclass
 import logging
 import pickle
-import time
+from typing import List
 
-from flask import Flask
-from flask import jsonify
-from flask import request
+from blacksheep import Application
+from blacksheep.server.openapi.v3 import ContentInfo
+from blacksheep.server.openapi.v3 import OpenAPIHandler
+from blacksheep.server.openapi.v3 import RequestBodyInfo
+from blacksheep.server.openapi.v3 import ResponseExample
+from blacksheep.server.openapi.v3 import ResponseInfo
+from blacksheep.server.responses import redirect
+import click
+from openapidocs.v3 import Info
 import pandas as pd
+import uvicorn as uvicorn
 
 
-app = Flask(__name__)
-
-logger = logging.getLogger("waitress")
+logger = logging.getLogger("deployme")
 logger.setLevel(logging.INFO)
 
-with open("models/model_lama.pkl", "rb") as f:
+app = Application()
+
+
+docs = OpenAPIHandler(info=Info(title="DeployMe", version="0.0.1"))
+docs.bind_app(app)
+
+with open("models/model.pkl", "rb") as f:
     model = pickle.load(f)
 
 
+@dataclass
+class Prediction:
+    data: List[int]
+
+
+@dataclass
+class Objects:
+    data: List[dict]
+
+
 @app.route("/predict", methods=["POST"])
-def predict():
-    start = time.time()
-    timestamp = datetime.now().strftime("[%Y-%b-%d %H:%M]")
+@docs(
+    summary="Returns a prediction for a given input",
+    description="Endpoint for prediction method.",
+    request_body=RequestBodyInfo(
+        description="Input data for prediction",
+        examples={
+            "f1": Objects(
+                data=[
+                    {
+                        "sepal length (cm)": 6.7,
+                        "sepal width (cm)": 3.3,
+                        "petal length (cm)": 5.7,
+                        "petal width (cm)": 2.1,
+                    }
+                ]
+            ),
+            "f2": Objects(
+                data=[
+                    {
+                        "sepal length (cm)": 5.0,
+                        "sepal width (cm)": 3.4,
+                        "petal length (cm)": 1.6,
+                        "petal width (cm)": 0.4,
+                    },
+                ]
+            ),
+        },
+    ),
+    responses={
+        "200": ResponseInfo(
+            "Prediction",
+            content=[
+                ContentInfo(
+                    Prediction,
+                    examples=[ResponseExample(Prediction([0, 1, 2]))],
+                )
+            ],
+        ),
+    },
+)
+async def predict(obj: Objects):
+    data = pd.DataFrame.from_records(obj.data)
+    prediction = model.predict(data)
+    return Prediction(prediction.tolist())
 
-    request_data = request.get_json(force=True)
-    non_required_columns = [
-        "features_names",
-        "batch_size",
-        "n_jobs",
-        "return_all_predictions",
-    ]
-    fields = defaultdict(lambda: None)
 
-    if "data" not in request_data or request_data["data"] == "":
-        return jsonify(error="Data is required!"), 400
-    else:
-        fields["data"] = request_data["data"]
+@app.route("/")
+def main():
+    return redirect("/docs")
 
-    for col in non_required_columns:
-        if col in request_data and request_data[col] != "":
-            fields[col] = request_data[col]
 
-    if not fields["n_jobs"]:
-        fields["n_jobs"] = 1
+@click.group()
+def cli():
+    pass
 
-    data = pd.read_json(fields["data"])
-    output = model.predict(
-        data=data,
-        features_names=fields["features_names"],
-        batch_size=fields["batch_size"],
-        n_jobs=fields["n_jobs"],
-        return_all_predictions=fields["return_all_predictions"],
+
+@click.command()
+@click.option("--host", type=str, default="0.0.0.0")
+@click.option("--port", type=int, default=5000)
+def run(host, port):
+    config = uvicorn.Config(
+        "app:app", host=host, port=port, log_level="debug"
     )
+    server = uvicorn.Server(config)
+    server.run()
 
-    elapsed = time.time() - start
-    logger.info(
-        "%s %s %s %s %s %s",
-        timestamp,
-        request.remote_addr,
-        request.method,
-        request.scheme,
-        request.full_path,
-        elapsed,
-    )
-    return jsonify(prediction=output.data.tolist())
 
+cli.add_command(run)
 
 if __name__ == "__main__":
-    app.run(debug=False, host="0.0.0.0")
+    cli()
