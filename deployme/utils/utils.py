@@ -16,6 +16,7 @@ def copy_template_files(
         "Dockerfile.lama",
         "app.py",
         "requirements.txt",
+        "base_preprocessor.py",
     ]:
         dest_file = (
             "Dockerfile"
@@ -39,14 +40,12 @@ def merge_requirements(project_path: Path):
             wfd.write(user_reqs)
 
 
-def copy_model(
+def copy_models(
     project_path: Path,
     model_path: Path,
 ):
     new_model_path = project_path / "models"
-    new_model_path.mkdir(exist_ok=True, parents=True)
-    new_model_path = new_model_path / "model.pkl"
-    shutil.copyfile(str(model_path), str(new_model_path))
+    shutil.copytree(str(model_path), str(new_model_path))
 
 
 def call(cmd, **kwargs):
