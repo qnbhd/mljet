@@ -1,6 +1,7 @@
 import logging
 from pathlib import Path
 import shutil
+from merge_requirements.manage_file import ManageFile, Merge
 
 import executor
 
@@ -40,12 +41,23 @@ def merge_requirements(project_path: Path):
             wfd.write(user_reqs)
 
 
-def copy_models(
+def merge_reqs(first_file, second_file):
+    mf = ManageFile(
+        first_file,
+        second_file
+    )
+
+    mg = Merge(mf)
+    mg.generate_requirements_txt()
+
+
+def copy_project_files(
     project_path: Path,
-    model_path: Path,
+    old_path: Path,
+    folder_name,
 ):
-    new_model_path = project_path / "models"
-    shutil.copytree(str(model_path), str(new_model_path))
+    new_model_path = project_path / folder_name
+    shutil.copytree(str(old_path), str(new_model_path))
 
 
 def call(cmd, **kwargs):

@@ -52,7 +52,7 @@ def load_object(object_path):
 
 
 model = load_object("models/model.pkl")
-
+example_data_path = "data/example.csv"
 preprocessor_path = "models/preprocessor.pkl"
 preprocessor = pickle_loads(preprocessor_path) if os.path.isfile(preprocessor_path) else None
 
@@ -67,14 +67,30 @@ class Objects:
     data: List[dict]
 
 
+def get_predictions(data):
+    if preprocessor:
+        data = preprocessor.transform(data.values)
+    return model.predict(data)
+
+
 def generate_docs_example():
-    example_data_path = "data/example.csv"
-    examples = {}
     if os.path.isfile(example_data_path):
         example_data = pd.read_csv(example_data_path, nrows=2)
-        examples['f1'] = Objects(
-            data={}
-        )
+        targets = get_predictions(example_data)
+        examples = {
+            'f1': Objects(
+                data=[example_data.iloc[0].to_dict()]
+            ),
+            'f2': Objects(
+                data=[example_data.iloc[1].to_dict()]
+            ),
+        }
+        return examples, targets.tolist()
+    else:
+        return {Objects(data=[])}
+
+
+docs_examples, docs_target = generate_docs_example()
 
 
 @app.route("/predict", methods=["POST"])
@@ -83,28 +99,7 @@ def generate_docs_example():
     description="Endpoint for prediction method.",
     request_body=RequestBodyInfo(
         description="Input data for prediction",
-        examples={
-            "f1": Objects(
-                data=[
-                    {
-                        "sepal length (cm)": 6.7,
-                        "sepal width (cm)": 3.3,
-                        "petal length (cm)": 5.7,
-                        "petal width (cm)": 2.1,
-                    }
-                ]
-            ),
-            "f2": Objects(
-                data=[
-                    {
-                        "sepal length (cm)": 5.0,
-                        "sepal width (cm)": 3.4,
-                        "petal length (cm)": 1.6,
-                        "petal width (cm)": 0.4,
-                    },
-                ]
-            ),
-        },
+        examples=docs_examples
     ),
     responses={
         "200": ResponseInfo(
@@ -112,7 +107,9 @@ def generate_docs_example():
             content=[
                 ContentInfo(
                     Prediction,
-                    examples=[ResponseExample(Prediction([0, 1, 2]))],
+                    examples=[
+                        ResponseExample(Prediction(docs_target))
+                    ],
                 )
             ],
         ),
@@ -120,9 +117,7 @@ def generate_docs_example():
 )
 async def predict(obj: Objects):
     data = pd.read_json(obj.data)
-    if preprocessor:
-        data = preprocessor.transform(data.values)
-    prediction = model.predict(data)
+    prediction = get_predictions(data)
     return Prediction(prediction.tolist())
 
 
@@ -151,5 +146,4 @@ cli.add_command(run)
 
 
 if __name__ == "__main__":
-    #cli()
-    run()
+    cli()
