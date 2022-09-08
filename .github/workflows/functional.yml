@@ -34,4 +34,4 @@ jobs:
           export PYTHONPATH=$PWD
           python -u examples/skl/skl_clf.py &
           sleep 120
-          curl -X POST "http://0.0.0.0:8000/predict" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"data\":[{\"sepal length (cm)\":6.7,\"sepal width (cm)\":3.3,\"petal length (cm)\":5.7,\"petal width (cm)\":2.1}]}"
+          curl -X POST "http://0.0.0.0:5000/predict" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"data\":[{\"sepal length (cm)\":6.7,\"sepal width (cm)\":3.3,\"petal length (cm)\":5.7,\"petal width (cm)\":2.1}]}"
