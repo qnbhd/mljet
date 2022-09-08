@@ -352,5 +352,5 @@ right = [
 ]
 
 
-def get_random_name():
+def get_random_name() -> str:
     return f"{random.choice(left)}_{random.choice(right)}"

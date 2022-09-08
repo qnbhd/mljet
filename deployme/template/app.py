@@ -31,7 +31,7 @@ docs.bind_app(app)
 
 
 class RenameUnpickler(pickle.Unpickler):
-    def find_class(self, module, name):
+    def find_class(self, module: str, name: str):
         renamed_module = module
         if module == "deployme.template.base_preprocessor":
             renamed_module = "base_preprocessor"
@@ -41,12 +41,12 @@ class RenameUnpickler(pickle.Unpickler):
         )
 
 
-def pickle_loads(object_path):
+def pickle_loads(object_path: str):
     with open(object_path, "rb") as f:
         return RenameUnpickler(f).load()
 
 
-def load_object(object_path):
+def load_object(object_path: str):
     with open(object_path, "rb") as f:
         return pickle.load(f)
 
@@ -71,7 +71,7 @@ class Objects:
     data: List[dict]
 
 
-def get_predictions(data):
+def get_predictions(data: pd.DataFrame):
     if preprocessor:
         data = preprocessor.transform(data.values)
     return model.predict(data)
@@ -87,7 +87,7 @@ def generate_docs_example():
         }
         return examples, targets.tolist()
     else:
-        return {Objects(data=[])}
+        return {Objects(data=[])}, []
 
 
 docs_examples, docs_target = generate_docs_example()
@@ -115,7 +115,7 @@ docs_examples, docs_target = generate_docs_example()
         ),
     },
 )
-async def predict(obj: Objects):
+async def predict(obj: Objects) -> Prediction:
     data = pd.read_json(obj.data)
     prediction = get_predictions(data)
     return Prediction(prediction.tolist())

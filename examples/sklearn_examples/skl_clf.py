@@ -16,7 +16,12 @@ def main():
     clf = RandomForestClassifier()
     clf.fit(X_train, y_train)
 
-    deploy_to_docker(model=clf, image_name="skl", port=5000, data_example=X_test.head())
+    deploy_to_docker(
+        model=clf,
+        image_name="skl",
+        port=5000,
+        data_example=X_test.head(),
+    )
 
 
 if __name__ == "__main__":

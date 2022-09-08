@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 def copy_template_files(
     project_path: Path,
     templates_path: Path,
-):
+) -> None:
     for file_name in [
         "Dockerfile.lama",
         "app.py",
@@ -35,14 +35,14 @@ def copy_template_files(
             )
 
 
-def merge_requirements(project_path: Path):
+def merge_requirements(project_path: Path) -> None:
     with open(project_path / "requirements.txt", "a") as wfd:
         with open(project_path.parent / "requirements.txt") as fd:
             user_reqs = "\n" + fd.read()
             wfd.write(user_reqs)
 
 
-def merge_reqs(first_file, second_file):
+def merge_reqs(first_file: str, second_file: str) -> None:
     mf = ManageFile(first_file, second_file)
 
     mg = Merge(mf)
@@ -51,13 +51,13 @@ def merge_reqs(first_file, second_file):
 
 def copy_project_files(
     project_path: Path,
-    old_path: Path,
-    folder_name,
-):
+    old_path: str,
+    folder_name: str,
+) -> None:
     new_model_path = project_path / folder_name
     shutil.copytree(str(old_path), str(new_model_path))
 
 
-def call(cmd, **kwargs):
+def call(cmd: str, **kwargs) -> None:
     log.debug(cmd)
     executor.execute(cmd)

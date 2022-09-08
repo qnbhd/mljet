@@ -3,6 +3,7 @@ from pathlib import Path
 import pickle
 import shutil
 import tempfile
+from typing import Optional
 import warnings
 
 import pandas as pd
@@ -10,6 +11,7 @@ from pipreqsnb import pipreqsnb
 from sklearn.base import BaseEstimator
 from sklearn.pipeline import Pipeline
 
+from deployme.template.base_preprocessor import BasePreprocessor
 from deployme.utils import copy_project_files
 from deployme.utils import copy_template_files
 from deployme.utils import get_random_name
@@ -25,7 +27,9 @@ BASE_IMAGE = "python:3.10-slim-bullseye"
 docker_client = docker.from_env()
 
 
-def build_models(project_path, model, preprocessor):
+def build_models(
+    project_path: Path, model, preprocessor: BasePreprocessor
+) -> None:
     models_path = tempfile.mkdtemp()
     model_path = f"{models_path}/model.pkl"
     with open(model_path, "wb") as f:
@@ -42,7 +46,7 @@ def build_models(project_path, model, preprocessor):
     shutil.rmtree(models_path)
 
 
-def build_requirements(project_path):
+def build_requirements(project_path: Path) -> None:
     project_reqs_path = str(project_path / "requirements.txt")
     pipreqsnb_reqs_path = str(
         project_path.parent / "requirements.txt"
@@ -58,13 +62,17 @@ def build_requirements(project_path):
         os.remove(pipreqsnb_reqs_path)
 
 
-def build_data(project_path, example_data):
+def build_data(
+    project_path: Path, example_data: pd.DataFrame
+) -> None:
     data_path = project_path / "data"
     data_path.mkdir(exist_ok=True, parents=True)
     example_data.to_csv(str(data_path / "example.csv"), index=False)
 
 
-def build_project_files(model, preprocessor, example_data):
+def build_project_files(
+    model, preprocessor: BasePreprocessor, example_data: pd.DataFrame
+) -> str:
     project_path = Path.cwd() / "project"
     project_path.mkdir(exist_ok=True, parents=True)
     build_models(project_path, model, preprocessor)
@@ -77,7 +85,9 @@ def build_project_files(model, preprocessor, example_data):
     return str(project_path)
 
 
-def build_image(project_path, image_name, base_image):
+def build_image(
+    project_path: str, image_name: str, base_image: str
+) -> None:
     """Build a Docker image for the project."""
     docker_client.images.build(
         buildargs={"BASE_IMAGE": base_image},
@@ -87,8 +97,12 @@ def build_image(project_path, image_name, base_image):
 
 
 def run_image(
-    image_name, model_type, n_workers, container_name=None, port=5000
-):
+    image_name: str,
+    model_type: str,
+    n_workers: int,
+    container_name: Optional[str] = None,
+    port: int = 5000,
+) -> None:
     """Run builded Docker image."""
     container_name = (
         container_name if container_name else get_random_name()
@@ -107,15 +121,15 @@ def run_image(
 
 def deploy_to_docker(
     model,
-    image_name,
-    data_example,
-    base_image=BASE_IMAGE,
-    container_name=None,
-    need_run=True,
-    port=5000,
-    preprocessor=None,
-    n_workers=4,
-):
+    image_name: str,
+    data_example: pd.DataFrame,
+    base_image: str = BASE_IMAGE,
+    container_name: Optional[str] = None,
+    need_run: bool = True,
+    port: int = 5000,
+    preprocessor: Optional[BasePreprocessor] = None,
+    n_workers: int = 4,
+) -> None:
     if "lightautoml" in str(type(model)):
         model_type = "LAMA"
     elif isinstance(model, Pipeline):
