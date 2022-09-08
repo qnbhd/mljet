@@ -19,8 +19,7 @@ import uvicorn as uvicorn
 
 
 MODEL_TYPE = os.getenv("MODEL_TYPE")  # ?
-n_workers = os.getenv("N_WORKERS")
-N_WORKERS = n_workers if n_workers else 2
+N_WORKERS = int(os.getenv("N_WORKERS", default=2))
 
 logger = logging.getLogger("deployme")
 logger.setLevel(logging.INFO)
