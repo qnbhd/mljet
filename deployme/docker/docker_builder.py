@@ -7,9 +7,13 @@ from deployme.utils import call
 from deployme.utils import copy_model
 from deployme.utils import copy_template_files
 from deployme.utils import get_random_name
+from deployme.utils.logging import init
+from deployme.utils.utils import merge_requirements
 
 
-BASE_IMAGE = "python:3.7-slim-buster"
+init(verbose=True)
+
+BASE_IMAGE = "python:3.10-slim-bullseye"
 
 
 def build_image(model_path, image_name, base_image):
@@ -20,18 +24,20 @@ def build_image(model_path, image_name, base_image):
     )  # TODO: make tempfolder
     templates_path = Path(__file__).parent.parent / "template"
     copy_template_files(project_path, templates_path)
+
+    call(f"pipreqsnb {Path.cwd()}")
+    call(
+        f'merge_requirements {project_path / "requirements.txt"} {project_path.parent / "requirements.txt"}'
+    )
+    call(
+        f'mv {project_path.parent / "requirements-merged.txt"} {project_path / "requirements.txt"}'
+    )
+
     copy_model(project_path, model_path)
 
-    command = (
-        [
-            "docker",
-            "build",
-        ]
-        + ["--build-arg", f"BASE_IMAGE={base_image}"]
-        + ["--tag", image_name]
-        + [str(project_path)]
+    call(
+        f"docker build --build-arg BASE_IMAGE={base_image} --no-cache --tag {image_name} {str(project_path)}"
     )
-    call(command)
 
 
 def run_image(image_name, container_name=None, port=5000):
@@ -39,13 +45,9 @@ def run_image(image_name, container_name=None, port=5000):
     container_name = (
         container_name if container_name else get_random_name()
     )
-    command = (
-        ["docker", "run"]
-        + ["-p", f"{port}:5000"]
-        + ["--name", container_name]
-        + [image_name]
+    call(
+        f"docker run -p {port}:5000 --name {container_name} {image_name}"
     )
-    call(command)
 
 
 def deploy_to_docker(
@@ -57,7 +59,7 @@ def deploy_to_docker(
     port=5000,
 ):
     model_path = tempfile.mkdtemp()
-    model_path = f"{model_path}/model_lama.pkl"
+    model_path = f"{model_path}/model.pkl"
     with open(model_path, "wb") as f:
         pickle.dump(model, f)
 
@@ -66,4 +68,4 @@ def deploy_to_docker(
         run_image(
             image_name, container_name=container_name, port=port
         )
-    shutil.rmtree(model_path)
+    shutil.rmtree(model_path, ignore_errors=True)

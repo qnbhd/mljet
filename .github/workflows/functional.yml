@@ -1,0 +1,37 @@
+name: functional test
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      #----------------------------------------------
+      #       check-out repo and set-up python
+      #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: 'pip'
+
+      - name: Install requirements
+        run: pip install -r requirements.txt
+
+      - uses: docker-practice/actions-setup-docker@master
+      - name: Run functional tests
+        run: |
+          export PYTHONPATH=$PWD
+          python -u examples/skl/skl_clf.py &
+          sleep 120
+          curl -X POST "http://0.0.0.0:8000/predict" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"data\":[{\"sepal length (cm)\":6.7,\"sepal width (cm)\":3.3,\"petal length (cm)\":5.7,\"petal width (cm)\":2.1}]}"
