@@ -32,6 +32,6 @@ jobs:
       - name: Run functional tests
         run: |
           export PYTHONPATH=$PWD
-          python -u examples/skl/skl_clf.py &
+          python -u examples/sklearn_examples/skl_clf.py &
           sleep 120
           curl -X POST "http://localhost:5000/predict" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"data\":[{\"sepal length (cm)\":6.7,\"sepal width (cm)\":3.3,\"petal length (cm)\":5.7,\"petal width (cm)\":2.1}]}"
