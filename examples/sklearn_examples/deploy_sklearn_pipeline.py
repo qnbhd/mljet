@@ -8,7 +8,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
-from deployme.docker import deploy_to_docker
+from deployme.docker_ import deploy_to_docker
 
 
 # Create and fit Scikit-Learn pipeline for classification task

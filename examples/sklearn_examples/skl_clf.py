@@ -2,7 +2,7 @@ from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
-from deployme.docker import deploy_to_docker
+from deployme import deploy_to_docker
 
 
 # noinspection PyPep8Naming
@@ -21,6 +21,7 @@ def main():
         image_name="skl",
         port=5000,
         data_example=X_test.head(),
+        silent=False,
     )
 
 

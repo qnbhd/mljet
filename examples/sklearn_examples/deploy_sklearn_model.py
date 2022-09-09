@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
-from deployme.docker import deploy_to_docker
+from deployme.docker_ import deploy_to_docker
 from deployme.template.base_preprocessor import BasePreprocessor
 
 
