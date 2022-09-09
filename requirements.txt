@@ -6,3 +6,4 @@ executor
 rich
 pipreqsnb
 merge-requirements
+docker

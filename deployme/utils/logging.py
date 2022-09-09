@@ -5,7 +5,7 @@ from rich.logging import RichHandler
 from rich.traceback import install
 
 
-def init(verbose=False):
+def init(verbose: bool = False) -> None:
     """
     Init logging.
         Args:

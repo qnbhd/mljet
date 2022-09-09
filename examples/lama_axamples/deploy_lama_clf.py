@@ -65,7 +65,11 @@ automl = TabularAutoML(
 oof_pred = automl.fit_predict(tr_data, roles=roles, verbose=1)
 
 # Create and run docker-image
-deploy_to_docker(model=automl, image_name="my_lama_service")
+deploy_to_docker(
+    model=automl,
+    image_name="my_lama_service",
+    data_example=te_data.head(),
+)
 
 # Test running flask-service
 url = "http://127.0.0.1:5000/predict"
