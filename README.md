@@ -77,7 +77,7 @@ curl -X POST "http://127.0.0.1:5001/predict" -H  "accept: application/json" -H  
 We are always open to your contributions!
 Please check our issue's and make PR.
 
-# Our team:
+## Our team:
 
 * Templin Konstantin - Product Lead & SWE
 * Kristina Zheltov - Idea Owner & Data Scientist
