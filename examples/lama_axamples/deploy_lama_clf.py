@@ -9,7 +9,7 @@ import requests
 from sklearn.model_selection import train_test_split
 import torch
 
-from deployme.docker import deploy_to_docker
+from deployme.docker_ import deploy_to_docker
 
 
 # Configure and fit LightAutoML model for binary classification

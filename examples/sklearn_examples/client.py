@@ -5,7 +5,7 @@ from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
-from deployme.docker import deploy_to_docker
+from deployme.docker_ import deploy_to_docker
 
 
 X, y = load_iris(return_X_y=True, as_frame=True)

@@ -34,6 +34,14 @@ def init(verbose: bool = False) -> None:
         "numba",
         "matplotlib",
         "executor",
+        "connectionpool",
+        "docker.auth",
+        "docker.utils.config",
+        "requests.packages.urllib3",
+        "requests",
+        "urllib3.connectionpool",
+        "pipreqs.pipreqs",
+        "docker.api.build",
     )
 
     for log_name in excluded_loggers:

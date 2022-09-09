@@ -116,8 +116,7 @@ docs_examples, docs_target = generate_docs_example()
     },
 )
 async def predict(obj: Objects) -> Prediction:
-    data = pd.read_json(obj.data)
-    prediction = get_predictions(data)
+    prediction = get_predictions(pd.DataFrame.from_records(obj.data))
     return Prediction(prediction.tolist())
 
 
