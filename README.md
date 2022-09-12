@@ -79,7 +79,7 @@ Please check our issue's and make PR.
 
 ## Our team:
 
-* Templin Konstantin - Product Lead & SWE
-* Kristina Zheltova - Idea Owner & Data Scientist
-* Maxim Popov - DS/ML & PL
-* Semen Zabrodin - Public relations
+* Templin Konstantin
+* Kristina Zheltova
+* Maxim Popov
+* Semen Zabrodin
