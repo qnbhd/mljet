@@ -4,6 +4,6 @@ numpy
 scikit-learn
 executor
 rich
-pipreqsnb
 merge-requirements
 docker
+importlib_metadata

@@ -4,7 +4,7 @@ import shutil
 
 from merge_requirements.manage_file import ManageFile
 
-from deployme.utils.requirements_collector import CustomMerge
+from deployme.utils.requirements import CustomMerge
 
 
 log = logging.getLogger(__name__)
