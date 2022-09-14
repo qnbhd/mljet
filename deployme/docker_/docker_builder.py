@@ -21,7 +21,7 @@ from deployme.utils.logging_ import init
 from deployme.utils.requirements import make_requirements_txt
 
 
-BASE_IMAGE = "python:3.10-slim-bullseye"
+BASE_IMAGE = "python:3.10"
 
 docker_client = docker.from_env()
 
@@ -251,7 +251,27 @@ def deploy_to_docker(
     n_workers: int = 4,
     silent=True,
     verbose=False,
-) -> None:
+):
+    """
+    Deploy model.
+
+    Args:
+        model: model to deploy
+        image_name: name of the image to build
+        data_example: example data to deploy
+        base_image: base image to build on
+        container_name: name of the container to run
+        need_run: if True, run container after building
+        port: port to run
+        preprocessor: preprocessor to deploy
+        n_workers: number of workers to run
+        silent: if True, run container in the background
+        verbose: if True, show verbose logs
+
+    Returns:
+        Container name.
+
+    """
 
     init(verbose=verbose)
 
@@ -270,6 +290,8 @@ def deploy_to_docker(
                 " callable object with preprocess data logic. Otherwise your API will accept only"
                 " preprocessed data as an input."
             )
+    else:
+        raise ValueError("Unknown model object.")
 
     log.info("🔨 Сopying project files ...")
 
@@ -285,8 +307,6 @@ def deploy_to_docker(
 
     container_name = container_name or get_random_name()
 
-    # TODO (qnbhd): model_type might be
-    #  referenced before assignment
     if need_run:
         run_image(
             image_name,

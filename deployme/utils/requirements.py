@@ -102,7 +102,7 @@ def get_source_from_notebook(path: PathLike) -> str:
         RuntimeError: If the notebook is not valid JSON.
     """
 
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         j = json.load(f)
 
     content = []
@@ -226,7 +226,7 @@ def scan_requirements(
         if script.suffix == ".ipynb":
             content = get_source_from_notebook(script)
         else:
-            with open(script) as f:
+            with open(script, encoding="utf-8") as f:
                 content = f.read()
 
         try:
@@ -279,7 +279,7 @@ def make_requirements_txt(
 
     specifier = "==" if strict else ">="
 
-    with open(out_path, "w") as f:
+    with open(out_path, "w", encoding="utf-8") as f:
         for pkg, version in requirements.items():
             f.write(f"{pkg}{specifier}{version}\n")
 

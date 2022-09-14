@@ -61,7 +61,7 @@ def merge_reqs(first_file, second_file, to):
     mg = CustomMerge(mf)
     deps = mg.pickup_deps(ignore_prefixes=["deployme"])
 
-    with open(to, "w") as f:
+    with open(to, "w", encoding="utf-8") as f:
         f.write("\n".join(deps))
 
 

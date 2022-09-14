@@ -1,11 +1,9 @@
+import logging
 from time import sleep
 
+import docker
 import pytest
 import requests
-import logging
-
-import docker
-
 from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
@@ -35,8 +33,10 @@ def test_deploy_to_docker_sklearn():
 
     # run silently
     container_name = deploy_to_docker(
-        model=clf, image_name="skl",
-        port=free_port, data_example=X_test.head(),
+        model=clf,
+        image_name="skl",
+        port=free_port,
+        data_example=X_test.head(),
     )
 
     json = {
@@ -45,12 +45,14 @@ def test_deploy_to_docker_sklearn():
                 "sepal length (cm)": 5.8,
                 "sepal width (cm)": 2.7,
                 "petal length (cm)": 5.1,
-                "petal width (cm)": 1.9
+                "petal width (cm)": 1.9,
             }
         ]
     }
 
-    log.info('Waiting for service completely start (sleep for 5s) ...')
+    log.info(
+        "Waiting for service completely start (sleep for 5s) ..."
+    )
     sleep(5)
 
     response = requests.post(

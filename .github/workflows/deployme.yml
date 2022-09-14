@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
         python-version: [ "3.7", "3.10" ]
     runs-on: ${{ matrix.os }}
     steps:
@@ -35,14 +35,17 @@ jobs:
       - name: Install dev requirements
         run: pip install pytest pytest-cov
 
+      - uses: docker-practice/actions-setup-docker@master
+      - name: Docker version
+        run: docker --version
+
       #----------------------------------------------
       #              run test suite
       #----------------------------------------------
       - name: Run python tests
         run: |
           pytest --log-level=INFO --cov=deployme --cov-report=xml tests/
-          
-          
+
       - name: Publish codecov report
         uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.9' && matrix.os == 'ubuntu-latest'
