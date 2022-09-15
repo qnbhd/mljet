@@ -1,6 +1,6 @@
 [project]
 name = "deployme"
-version = "0.0.1"
+version = "0.0.4"
 description = "minimalistic ML-models auto deployment tool"
 authors = [
     {name = "Konstantin Templin", email = "1qnbhd@gmail.com"},
@@ -21,7 +21,7 @@ license = {text = "MIT"}
 requires-python = ">=3.7"
 dependencies = [
     "click", "pandas", "numpy", "scikit-learn", "executor",
-    "rich", "pipreqsnb", "merge-requirements"
+    "rich", "pipreqsnb", "merge-requirements", "docker"
 ]
 classifiers = [
         "Intended Audience :: Science/Research",
@@ -84,6 +84,7 @@ log_cli_level = "DEBUG"
 log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
 log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 addopts = "--color=yes"
+markers = {slow = "Slow tests"}
 
 [tool.pydocstyle]
 inherit = false

@@ -4,7 +4,7 @@ import shutil
 
 from merge_requirements.manage_file import ManageFile
 
-from deployme.utils.requirements_collector import CustomMerge
+from deployme.utils.requirements import CustomMerge
 
 
 log = logging.getLogger(__name__)
@@ -61,7 +61,7 @@ def merge_reqs(first_file, second_file, to):
     mg = CustomMerge(mf)
     deps = mg.pickup_deps(ignore_prefixes=["deployme"])
 
-    with open(to, "w") as f:
+    with open(to, "w", encoding="utf-8") as f:
         f.write("\n".join(deps))
 
 

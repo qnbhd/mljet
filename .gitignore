@@ -134,6 +134,8 @@ dmypy.json
 **/.pyc
 /deployme/template/models/
 
-*.ipynb
 /examples/sklearn_examples/project/
 /examples/lama_axamples/project/
+/notebooks/
+/project/
+/tests/project/
