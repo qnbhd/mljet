@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-import io
 import logging
 import os
 import pickle
@@ -74,7 +73,22 @@ class Objects:
 def get_predictions(data: pd.DataFrame):
     if preprocessor:
         data = preprocessor.transform(data.values)
-    return model.predict(data)
+
+    y_pred = model.predict(data)
+
+    # TODO: eliminate this
+    #  code block when the
+    #  architecture is changed
+    try:
+        # noinspection PyPackageRequirements,PyUnresolvedReferences
+        from lightautoml.dataset.np_pd_dataset import NumpyDataset
+
+        if isinstance(y_pred, NumpyDataset):
+            y_pred = y_pred.data[:, 0]
+    except ImportError:
+        pass
+
+    return y_pred
 
 
 def generate_docs_example():

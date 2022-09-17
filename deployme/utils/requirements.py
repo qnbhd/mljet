@@ -90,16 +90,16 @@ def cleanup_deps(deps: list, ignore_prefixes: list) -> list:
 
 def get_source_from_notebook(path: PathLike) -> str:
     """
-    Extract the source code from a Jupyter notebook.
+    Extract the source code from a Jupyter notebook
 
     Args:
-        path: Path to the notebook.
+        path: Path to the notebook
 
     Returns:
-        The source code as a string.
+        The source code as a string
 
     Raises:
-        RuntimeError: If the notebook is not valid JSON.
+        RuntimeError: If the notebook is not valid JSON
     """
 
     with open(path, encoding="utf-8") as f:
@@ -122,10 +122,10 @@ def get_source_from_notebook(path: PathLike) -> str:
 @functools.lru_cache(None)
 def freeze() -> dict:
     """
-    Get a dictionary of installed packages and their versions.
+    Get a dictionary of installed packages and their versions
 
     Returns:
-        A dictionary of installed packages and their versions.
+        A dictionary of installed packages and their versions
     """
 
     return {
@@ -137,11 +137,10 @@ def freeze() -> dict:
 @functools.lru_cache(None)
 def get_pkgs_distributions() -> dict:
     """
-    Get a dictionary of installed packages and their module names.
+    Get a dictionary of installed packages and their module names
 
     Returns:
-        A dictionary of installed packages and their module names.
-
+        A dictionary of installed packages and their module names
     """
 
     return {
@@ -154,13 +153,11 @@ def extract_modules_from_node(
     node: Union[ast.Import, ast.ImportFrom], ignore_mods=None
 ) -> dict:
     """
-    Extract the modules from an import node.
+    Extract the modules from an import node
 
     Args:
-        node: The import node.
-        ignore_mods: List of modules to ignore.
-
-    Returns:
+        node: The import node
+        ignore_mods: List of modules to ignore
 
     """
 
@@ -191,21 +188,25 @@ def extract_modules_from_node(
 
 
 def scan_requirements(
-    path: PathLike, extensions=None, ignore_mods=None
+    path: PathLike,
+    extensions=None,
+    ignore_mods=None,
+    ignore_names=None,
 ):
     """
     Scan a directory of file for requirements.
 
     Args:
-        path: Path to the directory.
-        extensions: List of file extensions to scan. Defaults to ['py', 'ipynb'].
-        ignore_mods: List of modules to ignore.
+        path: Path to the directory
+        extensions: List of file extensions to scan. Defaults to ['py', 'ipynb']
+        ignore_mods: List of modules to ignore
+        ignore_names: List of file/dirs names to ignore
 
     Returns:
-        A dict of requirements and their versions.
+        A dict of requirements and their versions
 
     Raises:
-        ValueError: If the path is not correct.
+        ValueError: If the path is not correct
     """
 
     base = pathlib.Path(path)
@@ -213,13 +214,17 @@ def scan_requirements(
     extensions = extensions or ["py", "ipynb"]
 
     ignore_mods = ignore_mods or []
+    ignore_names = ignore_names or ["venv", ".venv"]
 
     pool = dict()
 
     gen: Iterable = (base,)
 
     if base.is_dir():
-        gen = chain(*[base.glob(f"**/*.{ext}") for ext in extensions])
+        gen = filter(
+            lambda x: all([u not in x.parts for u in ignore_names]),
+            chain(*[base.glob(f"*.{ext}") for ext in extensions]),
+        )
 
     for script in gen:
 
@@ -260,17 +265,17 @@ def make_requirements_txt(
     Make a requirements.txt file from a directory of files.
 
     Args:
-        path: Path to the directory.
-        out_path: Path to the output file.
-        extensions: List of file extensions to scan. Defaults to ['py', 'ipynb'].
-        strict: Set only the exact version of the packages.
-        ignore_mods: List of modules to ignore.
+        path: Path to the directory
+        out_path: Path to the output file
+        extensions: List of file extensions to scan. Defaults to ['py', 'ipynb']
+        strict: Set only the exact version of the packages
+        ignore_mods: List of modules to ignore
 
     Returns:
-        A dict of requirements and their versions.
+        A dict of requirements and their versions
 
     Raises:
-        ValueError: If the path is not correct.
+        ValueError: If the path is not correct
     """
 
     requirements = scan_requirements(
