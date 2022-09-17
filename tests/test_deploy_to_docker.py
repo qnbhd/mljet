@@ -37,6 +37,7 @@ def test_deploy_to_docker_sklearn():
         image_name="skl",
         port=free_port,
         data_example=X_test.head(),
+        scan_path=__file__,
     )
 
     json = {

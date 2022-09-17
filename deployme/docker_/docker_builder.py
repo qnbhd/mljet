@@ -1,7 +1,9 @@
+import json
 import logging
 import os
 from pathlib import Path
 import pickle
+import platform
 import shutil
 import tempfile
 from typing import Optional
@@ -24,7 +26,6 @@ from deployme.utils.requirements import make_requirements_txt
 BASE_IMAGE = "python:3.10"
 
 docker_client = docker.from_env()
-
 
 log = logging.getLogger(__name__)
 
@@ -65,12 +66,13 @@ def build_models(
     shutil.rmtree(models_path)
 
 
-def build_requirements(project_path: Path):
+def build_requirements(project_path: Path, scan_path: Path):
     """
     Build requirements.txt file.
 
     Args:
         project_path: path to the project
+        scan_path: path to scan for dependencies
 
     Returns:
         None
@@ -85,9 +87,14 @@ def build_requirements(project_path: Path):
     )
 
     log.info("☕ Cooking requirements ...")
-    make_requirements_txt(
-        project_path.parent, ignore_mods=["deployme"]
+
+    requirements = make_requirements_txt(
+        scan_path, ignore_mods=["deployme"]
     )
+
+    log.info("I found the following requirements:")
+
+    log.info(f"{json.dumps(requirements, indent=4)}")
 
     merge_reqs(
         project_reqs_path, pipreqsnb_reqs_path, project_reqs_path
@@ -121,7 +128,8 @@ def build_project_files(
     model,
     preprocessor: Optional[BasePreprocessor],
     example_data: pd.DataFrame,
-) -> str:
+    scan_path: Path,
+) -> Path:
     """
     Build project files.
 
@@ -129,6 +137,7 @@ def build_project_files(
         model: model to deploy
         preprocessor: preprocessor to deploy
         example_data: example data to deploy
+        scan_path: path to scan for dependencies
 
     Returns:
         path to the project
@@ -146,13 +155,12 @@ def build_project_files(
     templates_path = Path(__file__).parent.parent / "template"
     copy_template_files(project_path, templates_path)
 
-    build_requirements(project_path)
-    return str(project_path)
+    build_requirements(project_path, scan_path)
+
+    return project_path
 
 
-def build_image(
-    project_path: str, image_name: str, base_image: str
-) -> None:
+def build_image(project_path: Path, image_name: str, base_image: str):
     """
     Build a Docker image with the project.
 
@@ -170,7 +178,7 @@ def build_image(
     docker_client.images.build(
         buildargs={"BASE_IMAGE": base_image},
         tag=image_name,
-        path=project_path,
+        path=str(project_path),
     )
 
 
@@ -181,7 +189,7 @@ def run_image(
     container_name: str,
     port: int = 5000,
     silent=True,
-) -> None:
+):
     """
     Run a Docker image with the project.
 
@@ -243,7 +251,7 @@ def deploy_to_docker(
     model,
     image_name: str,
     data_example: pd.DataFrame,
-    base_image: str = BASE_IMAGE,
+    base_image=None,
     container_name: Optional[str] = None,
     need_run: bool = True,
     port: int = 5000,
@@ -251,6 +259,8 @@ def deploy_to_docker(
     n_workers: int = 4,
     silent=True,
     verbose=False,
+    scan_path=None,
+    remove_project_dir=False,
 ):
     """
     Deploy model.
@@ -260,6 +270,8 @@ def deploy_to_docker(
         image_name: name of the image to build
         data_example: example data to deploy
         base_image: base image to build on
+        base_image: base image to build on, defaults
+            to auto-detect.
         container_name: name of the container to run
         need_run: if True, run container after building
         port: port to run
@@ -267,6 +279,8 @@ def deploy_to_docker(
         n_workers: number of workers to run
         silent: if True, run container in the background
         verbose: if True, show verbose logs
+        scan_path: path to scan for dependencies
+        remove_project_dir: if True, remove project directory after building
 
     Returns:
         Container name.
@@ -291,13 +305,23 @@ def deploy_to_docker(
                 " preprocessed data as an input."
             )
     else:
-        raise ValueError("Unknown model object.")
+        raise ValueError("Model type is not supported")
 
     log.info("🔨 Сopying project files ...")
 
+    scan_path = Path(scan_path) if scan_path else Path.cwd()
+
     project_path = build_project_files(
-        model, preprocessor, data_example
+        model, preprocessor, data_example, scan_path=scan_path
     )
+
+    log.info(f"🏠 Project directory: {project_path}")
+
+    log.info("🔎 Detecting base image ...")
+    python_version = platform.python_version()
+
+    log.info(f"Python version detected: {python_version}")
+    base_image = base_image or f"python:{python_version}"
 
     build_image(
         project_path,
@@ -317,6 +341,7 @@ def deploy_to_docker(
             silent=silent,
         )
 
-    shutil.rmtree(project_path)
+    if remove_project_dir:
+        shutil.rmtree(project_path, ignore_errors=True)
 
     return container_name
