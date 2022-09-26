@@ -1,14 +1,18 @@
+import itertools
 import json
 import logging
 import os
 from pathlib import Path
 import pickle
 import platform
+import re
 import shutil
 import tempfile
 from typing import Optional
 
 import docker
+from docker.errors import BuildError
+from docker.utils.json_stream import json_stream
 import pandas as pd
 from sklearn.base import BaseEstimator
 from sklearn.pipeline import Pipeline
@@ -22,8 +26,6 @@ from deployme.utils.conn import is_port_in_use
 from deployme.utils.logging_ import init
 from deployme.utils.requirements import make_requirements_txt
 
-
-BASE_IMAGE = "python:3.10"
 
 docker_client = docker.from_env()
 
@@ -160,7 +162,12 @@ def build_project_files(
     return project_path
 
 
-def build_image(project_path: Path, image_name: str, base_image: str):
+def build_image(
+    project_path: Path,
+    image_name: str,
+    base_image: str,
+    log_level: str = "INFO",
+):
     """
     Build a Docker image with the project.
 
@@ -168,18 +175,45 @@ def build_image(project_path: Path, image_name: str, base_image: str):
         project_path: path to the project
         image_name: name of the image to build
         base_image: base image to build on
+        log_level: logging level to set up logger
 
     Returns:
         None
     """
-
+    log.setLevel(log_level)
     log.info("🍻 Building Docker image ...")
 
-    docker_client.images.build(
+    build_streamer = docker_client.api.build(
         buildargs={"BASE_IMAGE": base_image},
         tag=image_name,
         path=str(project_path),
+        forcerm=True,
+        nocache=True,
+        pull=True,
     )
+
+    json_stream_value = json_stream(build_streamer)
+    result_stream, internal_stream = itertools.tee(json_stream_value)
+    for chunk in result_stream:
+        if "error" in chunk:
+            raise BuildError(chunk["error"], result_stream)
+        if "stream" in chunk:
+            match = re.search(
+                r"(^Successfully built |sha256:)([0-9a-f]+)$",
+                chunk["stream"],
+            )
+            if match:
+                image_id = match.group(2)
+        last_event = chunk
+        if "stream" in chunk or "status" in chunk:
+            log_message = chunk.popitem()[1].strip("\n")
+            if "Step" in log_message:
+                log.info(log_message)
+            elif log_message:
+                log.debug(log_message)
+
+    if not image_id:
+        raise BuildError(last_event or "Unknown", result_stream)
 
 
 def run_image(
@@ -261,6 +295,7 @@ def deploy_to_docker(
     verbose=False,
     scan_path=None,
     remove_project_dir=False,
+    log_level: str = "INFO",
 ):
     """
     Deploy model.
@@ -281,6 +316,7 @@ def deploy_to_docker(
         verbose: if True, show verbose logs
         scan_path: path to scan for dependencies
         remove_project_dir: if True, remove project directory after building
+        log_level: logging level to set up logger
 
     Returns:
         Container name.
@@ -327,6 +363,7 @@ def deploy_to_docker(
         project_path,
         image_name,
         base_image=base_image,
+        log_level=log_level,
     )
 
     container_name = container_name or get_random_name()
