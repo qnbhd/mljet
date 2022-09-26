@@ -24,7 +24,7 @@ def copy_template_files(
     """
 
     for file_name in [
-        "Dockerfile.lama",
+        "Dockerfile",
         "app.py",
         "requirements.txt",
         "base_preprocessor.py",
