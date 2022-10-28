@@ -2,17 +2,14 @@
 
 import ast
 import functools
-from itertools import chain
 import json
 import logging
 import pathlib
-from typing import Iterable
-from typing import TypeVar
-from typing import Union
+from itertools import chain
+from typing import Iterable, TypeVar, Union
 
 import importlib_metadata
 from merge_requirements.manage_file import Merge
-
 
 PathLike = TypeVar("PathLike", str, pathlib.Path)
 
@@ -24,9 +21,6 @@ class CustomMerge(Merge):
     Custom merge method inherited from Merge class
     in merge_requirements.manage_file
     """
-
-    def __init__(self, mf):
-        super().__init__(mf)
 
     def pickup_deps(self, ignore_prefixes: list, unique=True):
         """
@@ -45,9 +39,9 @@ class CustomMerge(Merge):
 
         for key, value in self.dict_libs.items():
             if len(value) > 0:
-                array.append("".join("{}=={}".format(key, value)))
+                array.append("".join(f"{key}=={value}"))
             else:
-                array.append("".join("{}".format(key)))
+                array.append("".join(f"{key}"))
 
         result = cleanup_deps(array, ignore_prefixes)
 
@@ -108,11 +102,11 @@ def get_source_from_notebook(path: PathLike) -> str:
     content = []
 
     if j["nbformat"] >= 4:
-        for i, cell in enumerate(j["cells"]):
+        for cell in j["cells"]:
             for line in cell["source"]:
                 content.append(line)
     else:
-        for i, cell in enumerate(j["worksheets"][0]["cells"]):
+        for cell in j["worksheets"][0]["cells"]:
             for line in cell["input"]:
                 content.append(line)
 
@@ -164,7 +158,7 @@ def extract_modules_from_node(
     packages = freeze()
     package2module = get_pkgs_distributions()
 
-    pool = dict()
+    pool = {}
 
     if isinstance(node, ast.Import):
 
@@ -216,13 +210,13 @@ def scan_requirements(
     ignore_mods = ignore_mods or []
     ignore_names = ignore_names or ["venv", ".venv"]
 
-    pool = dict()
+    pool = {}
 
     gen: Iterable = (base,)
 
     if base.is_dir():
         gen = filter(
-            lambda x: all([u not in x.parts for u in ignore_names]),
+            lambda x: all(u not in x.parts for u in ignore_names),
             chain(*[base.glob(f"*.{ext}") for ext in extensions]),
         )
 
@@ -248,7 +242,9 @@ def scan_requirements(
             ast.walk(tree),
         ):
             # noinspection PyTypeChecker
-            mods = extract_modules_from_node(node, ignore_mods=ignore_mods)  # type: ignore
+            mods = extract_modules_from_node(
+                node, ignore_mods=ignore_mods  # type: ignore
+            )
             pool.update(mods)
 
     return pool

@@ -1,11 +1,13 @@
+"""Docker build module."""
+
 import json
 import logging
 import os
-from pathlib import Path
 import pickle
 import platform
 import shutil
 import tempfile
+from pathlib import Path
 from typing import Optional
 
 import docker
@@ -14,14 +16,15 @@ from sklearn.base import BaseEstimator
 from sklearn.pipeline import Pipeline
 
 from deployme.template.base_preprocessor import BasePreprocessor
-from deployme.utils import copy_project_files
-from deployme.utils import copy_template_files
-from deployme.utils import get_random_name
-from deployme.utils import merge_reqs
+from deployme.utils import (
+    copy_project_files,
+    copy_template_files,
+    get_random_name,
+    merge_reqs,
+)
 from deployme.utils.conn import is_port_in_use
 from deployme.utils.logging_ import init
 from deployme.utils.requirements import make_requirements_txt
-
 
 BASE_IMAGE = "python:3.10"
 
@@ -300,8 +303,10 @@ def deploy_to_docker(
         model_type = "sklearn_model"
         if preprocessor is None:
             log.debug(
-                "If you'd like to use a raw data as API input, you could provide preprocessor object"
-                " callable object with preprocess data logic. Otherwise your API will accept only"
+                "If you'd like to use a raw data as API input,"
+                " you could provide preprocessor object"
+                " callable object with preprocess data logic."
+                " Otherwise your API will accept only"
                 " preprocessed data as an input."
             )
     else:

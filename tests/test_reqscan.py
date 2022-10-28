@@ -3,11 +3,13 @@ from pathlib import Path
 
 import pytest
 
-from deployme.utils.requirements import freeze
-from deployme.utils.requirements import get_pkgs_distributions
-from deployme.utils.requirements import get_source_from_notebook
-from deployme.utils.requirements import make_requirements_txt
-from deployme.utils.requirements import scan_requirements
+from deployme.utils.requirements import (
+    freeze,
+    get_pkgs_distributions,
+    get_source_from_notebook,
+    make_requirements_txt,
+    scan_requirements,
+)
 
 
 def test_reqscan():

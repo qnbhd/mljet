@@ -7,7 +7,6 @@ from sklearn.model_selection import train_test_split
 
 from deployme.docker_ import deploy_to_docker
 
-
 X, y = load_iris(return_X_y=True, as_frame=True)
 
 X_train, X_test, y_train, y_test = train_test_split(
