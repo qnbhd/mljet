@@ -1,5 +1,7 @@
-from contextlib import closing
+"""Helper functions for connecting across the network."""
+
 import socket
+from contextlib import closing
 
 
 def is_port_in_use(port: int) -> bool:

@@ -1,3 +1,5 @@
+"""Logging module."""
+
 import logging
 
 import click

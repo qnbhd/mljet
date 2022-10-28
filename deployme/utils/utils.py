@@ -1,11 +1,12 @@
+"""Utils for docker image building."""
+
 import logging
-from pathlib import Path
 import shutil
+from pathlib import Path
 
 from merge_requirements.manage_file import ManageFile
 
 from deployme.utils.requirements import CustomMerge
-
 
 log = logging.getLogger(__name__)
 

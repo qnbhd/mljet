@@ -13,7 +13,6 @@ from deployme import deploy_to_docker
 # noinspection PyPep8Naming
 from deployme.utils.conn import find_free_port
 
-
 log = logging.getLogger(__name__)
 
 

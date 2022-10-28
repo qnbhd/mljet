@@ -1,5 +1,6 @@
-import random
+"""Docker image name generator."""
 
+import random
 
 left = [
     "admiring",

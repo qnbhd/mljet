@@ -10,7 +10,6 @@ from sklearn.svm import SVC
 
 from deployme.docker_ import deploy_to_docker
 
-
 # Create and fit Scikit-Learn pipeline for classification task
 
 X, y = make_classification(random_state=0)

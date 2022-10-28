@@ -1,24 +1,27 @@
-from dataclasses import dataclass
+"""Main app template."""
+
 import logging
 import os
 import pickle
+from dataclasses import dataclass
 from typing import List
 
-from blacksheep import Application
-from blacksheep.server.openapi.v3 import ContentInfo
-from blacksheep.server.openapi.v3 import OpenAPIHandler
-from blacksheep.server.openapi.v3 import RequestBodyInfo
-from blacksheep.server.openapi.v3 import ResponseExample
-from blacksheep.server.openapi.v3 import ResponseInfo
-from blacksheep.server.responses import redirect
 import click
-from openapidocs.v3 import Info
 import pandas as pd
-import uvicorn as uvicorn
-
+import uvicorn
+from blacksheep import Application
+from blacksheep.server.openapi.v3 import (
+    ContentInfo,
+    OpenAPIHandler,
+    RequestBodyInfo,
+    ResponseExample,
+    ResponseInfo,
+)
+from blacksheep.server.responses import redirect
+from openapidocs.v3 import Info
 
 MODEL_TYPE = os.getenv("MODEL_TYPE")  # ?
-N_WORKERS = int(os.getenv("N_WORKERS", default=2))
+N_WORKERS = int(os.getenv("N_WORKERS", default="2"))
 
 logger = logging.getLogger("deployme")
 logger.setLevel(logging.INFO)
@@ -35,9 +38,7 @@ class RenameUnpickler(pickle.Unpickler):
         if module == "deployme.template.base_preprocessor":
             renamed_module = "base_preprocessor"
 
-        return super(RenameUnpickler, self).find_class(
-            renamed_module, name
-        )
+        return super().find_class(renamed_module, name)
 
 
 def pickle_loads(object_path: str):
@@ -81,6 +82,7 @@ def get_predictions(data: pd.DataFrame):
     #  architecture is changed
     try:
         # noinspection PyPackageRequirements,PyUnresolvedReferences
+        # pylint: disable=import-outside-toplevel
         from lightautoml.dataset.np_pd_dataset import NumpyDataset
 
         if isinstance(y_pred, NumpyDataset):

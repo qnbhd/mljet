@@ -25,7 +25,7 @@ jobs:
 
     - name: install checkers
       run: |
-        pip install black flake8 isort mypy blackdoc types-PyYAML types-requests
+        pip install black flake8 isort mypy blackdoc types-PyYAML types-requests pylint types-setuptools
     - name: black
       run: black . --check --diff
     - name: flake8
@@ -36,3 +36,5 @@ jobs:
       run: mypy .
     - name: blackdoc
       run: blackdoc . --check --diff
+    - name: pylint
+      run: pylint deployme --output-format=colorized

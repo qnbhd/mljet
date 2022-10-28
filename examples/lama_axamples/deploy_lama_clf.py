@@ -1,16 +1,15 @@
 import json
 import os
 
-from lightautoml.automl.presets.tabular_presets import TabularAutoML
-from lightautoml.tasks import Task
 import numpy as np
 import pandas as pd
 import requests
-from sklearn.model_selection import train_test_split
 import torch
+from lightautoml.automl.presets.tabular_presets import TabularAutoML
+from lightautoml.tasks import Task
+from sklearn.model_selection import train_test_split
 
 from deployme.docker_ import deploy_to_docker
-
 
 # Configure and fit LightAutoML model for binary classification
 

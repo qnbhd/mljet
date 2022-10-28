@@ -1,6 +1,9 @@
+"""Base Preprocessor class for all preprocessor classes."""
+
+
 class BasePreprocessor:
     def __init__(self, *args):
-        self.transformers = [x for x in args]
+        self.transformers = list(args)
 
     def transform(self, input_data):
         for preprocessor in self.transformers:
