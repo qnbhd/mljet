@@ -15,4 +15,4 @@ of web framework (like Flask).
 
 from deployme.docker_.docker_builder import deploy_to_docker
 
-__version__ = "0.0.1"
+__version__ = "0.0.4"

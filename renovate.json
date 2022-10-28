@@ -2,5 +2,13 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base"
-  ]
+  ],
+  "pip_requirements": {
+    "fileMatch": ["^requirements/.*\\.txt$"],
+    "commitMessageTopic": "requirements"
+  },
+  "pyproject": {
+    "fileMatch": ["^pyproject.toml$"],
+    "commitMessageTopic": "pyproject"
+  }
 }
