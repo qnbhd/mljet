@@ -1,4 +1,4 @@
-name: checks
+name: Linters&Checkers
 
 on:
   push:
@@ -23,9 +23,12 @@ jobs:
       with:
         python-version: 3.9
 
-    - name: install checkers
-      run: |
-        pip install black 'black[jupyter]' flake8 isort mypy blackdoc types-PyYAML types-requests pylint types-setuptools
+    - name: Install requirements
+      run: pip install -r requirements.txt
+
+    - name: Install dev requirements
+      run: pip install -r requirements-dev.txt
+
     - name: black
       run: black . --check --diff
     - name: flake8
@@ -34,7 +37,3 @@ jobs:
       run: isort . --check --diff
     - name: mypy
       run: mypy .
-    - name: blackdoc
-      run: blackdoc . --check --diff
-    - name: pylint
-      run: pylint deployme --output-format=colorized

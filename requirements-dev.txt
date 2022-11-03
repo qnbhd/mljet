@@ -3,5 +3,9 @@ pytest-cov
 black
 isort
 flake8
-mypy
+mypy==0.950
 types-requests
+types-PyYAML
+types-requests
+types-setuptools
+pylint

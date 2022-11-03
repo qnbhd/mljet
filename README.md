@@ -27,6 +27,8 @@ Our team believes that it can be made even easier!
 
 Our tool automatically collects all the necessary files and dependencies, creates a docker container, and launches it! And all this in one line of source code.
 
+![Pipeline](docs/images/pipeline.png)
+
 ## Prerequisites
 
 On your PC with local run you must have Docker & Python >= 3.7
@@ -41,29 +43,20 @@ pip install deployme
 
 or with your favorite package manager.
 
-## Example:
+## Example
 
 ```python
 from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
 
-from deployme import deploy_to_docker
+from deployme import cook
 
 X, y = load_iris(return_X_y=True, as_frame=True)
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.33
-)
-
 clf = RandomForestClassifier()
-clf.fit(X_train, y_train)
+clf.fit(X, y)
 
-deploy_to_docker(
-    model=clf,
-    image_name="skl",
-    data_example=X_test.head(),
-)
+cook(strategy="docker", model=clf, port=5010)
 ```
 
 After running script you can see new Docker container.
@@ -76,7 +69,7 @@ For direct post-requests you can use Curl:
 curl -X POST "http://127.0.0.1:5001/predict" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"data\":[{\"sepal length (cm)\":5.8,\"sepal width (cm)\":2.7,\"petal length (cm)\":3.9,\"petal width (cm)\":1.2}]}"
 ```
 
-## RoadMap:
+## RoadMap
 
 1. Deploy to Heroku & clusters
 2. Model's basic vizualization
@@ -84,8 +77,7 @@ curl -X POST "http://127.0.0.1:5001/predict" -H  "accept: application/json" -H  
 4. Support many popular ML-frameworks, such as `XGBoost`, `TensorFlow`, `CatBoost`, etc.
 5. *Your ideas!*
 
-## Contribution:
-
+## Contribution
 
 We are always open to your contributions!
 Please check our issue's and make PR.
