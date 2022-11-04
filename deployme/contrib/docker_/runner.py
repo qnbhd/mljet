@@ -7,6 +7,7 @@ from pathlib import Path
 
 from deployme.contrib.local import local as local_runner
 from deployme.contrib.supported import ModelType
+from deployme.contrib.validator import validate_ret_container_name
 from deployme.utils import get_random_name
 
 log = logging.getLogger(__name__)
@@ -61,6 +62,7 @@ def docker(
     )
 
     container_name = container_name or get_random_name()
+    container_name = validate_ret_container_name(container_name)
 
     if need_run:
         run_image(

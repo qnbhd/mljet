@@ -7,12 +7,13 @@ from typing import (
 )
 
 from returns.pipeline import is_successful
+from returns.result import safe
 
 from deployme.contrib.docker_.runner import docker as docker_runner
 from deployme.contrib.local import local as local_runner
 from deployme.contrib.supported import Strategy
 from deployme.contrib.validator import validate_ret_strategy
-from deployme.utils.requirements import PathLike
+from deployme.utils.types import PathLike
 from deployme.utils.utils import drop_unnecessary_kwargs
 
 log = logging.getLogger(__name__)
@@ -27,12 +28,13 @@ def cook(
     base_image: Optional[str] = None,
     container_name: Optional[str] = None,
     need_run: bool = True,
-    port: int = 5000,
+    port: Optional[int] = None,
     scan_path: Optional[PathLike] = None,
     n_workers: int = 1,
     silent: bool = True,
     verbose: bool = False,
     remove_project_dir: bool = False,
+    ignore_mypy: bool = False,
 ):
     """
     Cook web-service.
@@ -51,13 +53,14 @@ def cook(
         silent: silent mode
         verbose: verbose mode
         remove_project_dir: remove project directory after build
+        ignore_mypy: ignore mypy errors
 
     Returns:
-        ...
+        Result of build, maybe bool or container name (if docker strategy)
 
     """
 
-    strategy_cont = validate_ret_strategy(strategy)
+    strategy_cont = safe(validate_ret_strategy)(strategy)
 
     if not is_successful(strategy_cont):
         raise strategy_cont.failure()
@@ -78,6 +81,7 @@ def cook(
         silent=silent,
         verbose=verbose,
         remove_project_dir=remove_project_dir,
+        ignore_mypy=ignore_mypy,
     )
 
 

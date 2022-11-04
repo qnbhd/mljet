@@ -9,10 +9,10 @@ from typing import (
 )
 
 from returns.iterables import Fold
+from returns.pipeline import is_successful
 from returns.result import (
-    Failure,
-    Result,
     Success,
+    safe,
 )
 
 _ENTRYPOINT_TEMPLATE = re.compile(
@@ -46,7 +46,10 @@ def _parse_defs(source: str) -> Dict[str, List[str]]:
     """
 
     result = _FUN_TEMPLATE.findall(source)
-    return {method[1]: method[2].split(",") for method in result}
+    return {
+        method[1]: [x.strip() for x in method[2].split(",")]
+        for method in result
+    }
 
 
 def _get_assoc_endpoint_name(name: str) -> str:
@@ -63,7 +66,7 @@ def _get_assoc_endpoint_name(name: str) -> str:
     return f"_{name}"
 
 
-def check_entrypoint(*, source: str) -> Result[bool, ValidationError]:
+def check_entrypoint(*, source: str) -> bool:
     """
     Check the __main__ entrypoint.
 
@@ -75,16 +78,12 @@ def check_entrypoint(*, source: str) -> Result[bool, ValidationError]:
     """
 
     result = bool(_ENTRYPOINT_TEMPLATE.search(source))
-    return (
-        Success(result)
-        if result
-        else Failure(ValidationError("The __main__ entrypoint is missing"))
-    )
+    if not result:
+        raise ValidationError("The __main__ entrypoint is missing")
+    return result
 
 
-def check_needed_methods(
-    *, source: str, methods: Sequence[str]
-) -> Result[bool, ValidationError]:
+def check_needed_methods(*, source: str, methods: Sequence[str]) -> bool:
     """
     Check if the needed methods are present in the template.
 
@@ -99,16 +98,14 @@ def check_needed_methods(
     parsed = _parse_defs(source)
     existing_methods = frozenset(parsed.keys())
     result = all(method in existing_methods for method in methods)
-    return (
-        Success(result)
-        if result
-        else Failure(ValidationError("The needed methods are missing"))
-    )
+
+    if not result:
+        raise ValidationError("The needed methods are missing")
+
+    return result
 
 
-def check_dual_endpoints(
-    *, source: str, methods: Sequence[str]
-) -> Result[bool, ValidationError]:
+def check_associated_endpoints(*, source: str, methods: Sequence[str]) -> bool:
     """
     Check if the needed methods associated endpoints
     are present in the template.
@@ -128,14 +125,9 @@ def check_dual_endpoints(
         _get_assoc_endpoint_name(method) in existing_methods
         for method in methods
     )
-
-    return (
-        Success(result)
-        if result
-        else Failure(
-            ValidationError("The needed associated endpoints are missing")
-        )
-    )
+    if not result:
+        raise ValidationError("The needed associated endpoints are missing")
+    return result
 
 
 def validate(source: str, methods: Sequence[str]):
@@ -150,11 +142,16 @@ def validate(source: str, methods: Sequence[str]):
         Success if the template is valid, Failure otherwise
     """
 
-    return Fold.collect(
+    result = Fold.collect(
         (
-            check_needed_methods(source=source, methods=methods),
-            check_dual_endpoints(source=source, methods=methods),
-            check_entrypoint(source=source),
+            safe(check_needed_methods)(source=source, methods=methods),
+            safe(check_associated_endpoints)(source=source, methods=methods),
+            safe(check_entrypoint)(source=source),
         ),
         Success(()),
     )
+
+    if not is_successful(result):
+        raise result.failure()
+
+    return result.unwrap()

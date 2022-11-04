@@ -113,7 +113,6 @@ def run_image(
 
     to_drop = ["INFO:", "WARNING:", "ERROR:", "CRITICAL:"]
 
-    # noinspection PyBroadException
     try:
         for line in container.logs(stream=True):
             decoded = line.decode("utf-8")

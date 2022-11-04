@@ -9,3 +9,13 @@ types-PyYAML
 types-requests
 types-setuptools
 pylint
+hypothesis
+flask
+pydantic
+flask-pydantic
+gunicorn
+sanic
+sanic-ext
+joblib
+dill
+mock-open

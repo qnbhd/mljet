@@ -14,7 +14,7 @@ from typing import (
 import importlib_metadata
 from merge_requirements.manage_file import Merge
 
-PathLike = Union[str, pathlib.Path]
+from deployme.utils.types import PathLike
 
 log = logging.getLogger(__name__)
 

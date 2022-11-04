@@ -1,0 +1,29 @@
+[report]
+exclude_lines =
+    # Skip any pass lines such as may be used for @abstractmethod
+    pass
+
+    # Have to re-enable the standard pragma
+    pragma: no cover
+
+    # Don't complain about missing debug-only code:
+    def __repr__
+    if self\.debug
+
+    @abstractmethod
+    @abc.abstractmethod
+
+    # Don't complain if tests don't hit defensive assertion code:
+    raise AssertionError
+    raise NotImplementedError
+    raise NotImplemented
+    pass
+
+    # Don't complain if non-runnable code isn't run:
+    if 0:
+    if __name__ == .__main__.:
+
+omit =
+    deployme/utils/logging_.py
+    deployme/cookie/templates/backends
+    deployme/cookie/templates/ml

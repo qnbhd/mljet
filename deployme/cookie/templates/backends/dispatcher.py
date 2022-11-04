@@ -14,8 +14,13 @@ BASES_PATH = Path(__file__).parent
 def get_all_default_backends() -> Dict[str, Path]:
     """Returns all default backends."""
     return {
-        x.stem.replace("_", ""): x for x in BASES_PATH.iterdir() if x.is_dir()
+        x.stem.replace("_", ""): x
+        for x in BASES_PATH.iterdir()
+        if x.is_dir() and not x.name.startswith("__")
     }
+
+
+SUPPORTED_BACKENDS = get_all_default_backends()
 
 
 def dispatch_default_backend(backend_name, strict=False) -> Optional[Path]:

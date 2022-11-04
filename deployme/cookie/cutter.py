@@ -3,12 +3,13 @@
 import importlib
 import importlib.util
 import inspect
-import sys
+import re
 from functools import partial
 from pathlib import Path
 from types import ModuleType
 from typing import (
     Callable,
+    Dict,
     Optional,
     Sequence,
     Union,
@@ -20,7 +21,6 @@ from black import (
 )
 from isort.api import sort_code_string
 from mypy.api import run as _mypy_run
-from returns.io import impure_safe
 from returns.iterables import Fold
 from returns.pipeline import (
     flow,
@@ -28,59 +28,58 @@ from returns.pipeline import (
 )
 from returns.pointfree import bind
 from returns.result import (
-    Failure,
-    Result,
     ResultE,
     Success,
     safe,
 )
 
 from deployme.cookie.validator import validate
-from deployme.utils.requirements import PathLike
+from deployme.utils.types import PathLike
 
 _Module = Union[str, ModuleType]
 
 __all__ = ["build_backend"]
+
+pyfunc_with_body = re.compile(
+    r"(?P<indent>[ \t]*)(async def|def)[ \t]*(?P<name>\w+)\s*\((?P<params>.*?)\)(?:[ "
+    r"\t]*->[ \t]*(?P<return>\w+))?:(?P<body>(?:\n(?P=indent)(?:[ \t]+[^\n]*)|\n)+)"
+)
 
 
 class MypyValidationError(Exception):
     """Exception raised when the template is not passing mypy check."""
 
 
-@impure_safe
-def replace_method(mod: _Module, method: str, code: Callable):
-    """
-    Replaces method in text with code.
+def replace_functions_by_names(source, names2repls: Dict[str, Callable]):
+    """Replace functions by names in source code with `repl_codes`."""
+    new_source = source
+    replaced = []
 
-    Args:
-        mod: module, that contains method.
-        method: method to replace.
-        code: method to replace with.
+    for m in pyfunc_with_body.finditer(source):
+        source_with_signature = m.group(0)
+        name = m.group("name")
+        if name not in names2repls:
+            continue
+        argspec = m.group("params")
+        argscount = len(argspec.split(","))
+        if argscount != len(inspect.getfullargspec(names2repls[name]).args):
+            raise TypeError(
+                f"Method `{name}` takes {argscount} arguments, but "
+                f"{len(inspect.getfullargspec(names2repls[name]).args)} were given"
+            )
+        repl_code = inspect.getsource(names2repls[name])
+        after_black = process_black(repl_code, mode=FileMode())
+        new_source = new_source.replace(source_with_signature, after_black)
+        replaced.append(name)
 
-    Returns:
-        Text with replaced method.
+    if len(replaced) != len(names2repls):
+        raise ValueError(
+            f"Replaced {len(replaced)} functions, but {len(names2repls)} were given"
+        )
 
-    Raises:
-        TypeError: if mod is str, but module is not found.
-        AttributeError: if method is not found in module.
-
-    """
-
-    if isinstance(mod, str):
-        mod = importlib.import_module(mod)
-        sys.modules[mod.__name__] = mod
-    if not hasattr(mod, method):
-        raise AttributeError(f"Module `{mod}` has no attribute `{method}`")
-
-    repl = inspect.getsource(getattr(mod, method))
-    text = inspect.getsource(mod)
-
-    res = process_black(inspect.getsource(code), mode=FileMode())
-
-    return text.replace(repl, res)
+    return process_black(new_source, mode=FileMode())
 
 
-@safe
 def insert_import(text: str, deps: Sequence[str]):
     """
     Inserts import into text.
@@ -93,10 +92,15 @@ def insert_import(text: str, deps: Sequence[str]):
         Text with inserted import.
     """
 
+    if isinstance(deps, str):
+        raise TypeError("`deps` must be a sequence of strings, not a string")
+    if not all(isinstance(dep, str) for dep in deps):
+        raise TypeError("`deps` must be a sequence of strings")
+
     return "\n".join([*[f"import {dep}" for dep in deps], text])
 
 
-def mypy_run(text) -> Result[str, MypyValidationError]:
+def mypy_run(text):
     """
     Run mypy check on template.
 
@@ -109,8 +113,8 @@ def mypy_run(text) -> Result[str, MypyValidationError]:
 
     res = _mypy_run(["-c", text])
     if res[2]:
-        return Failure(MypyValidationError(res[0]))
-    return Success(res[0])
+        raise MypyValidationError(res[0])
+    return res[0]
 
 
 def build_backend(
@@ -118,7 +122,8 @@ def build_backend(
     methods_to_replace: Sequence[str],
     methods: Sequence[Callable],
     imports: Optional[Sequence[str]] = None,
-) -> ResultE:
+    ignore_mypy: bool = False,
+) -> str:
     """
     Build app from template.
 
@@ -127,6 +132,7 @@ def build_backend(
         methods_to_replace: methods to replace in template.
         methods: methods to replace with.
         imports: imports to insert into template.
+        ignore_mypy: ignore mypy check.
 
     Returns:
         Result with app source code.
@@ -148,28 +154,20 @@ def build_backend(
     """
 
     if len(methods_to_replace) != len(methods):
-        return Failure(
-            ValueError("methods_to_replace and methods must be the same length")
+        raise ValueError(
+            "methods_to_replace and methods must be the same length"
         )
 
     template_path = Path(template_path).resolve()
     imports = imports or []
 
     if not template_path.exists():
-        return Failure(
-            FileNotFoundError(f"Template `{template_path}` not found")
-        )
+        raise FileNotFoundError(f"Template `{template_path}` not found")
 
     spec = importlib.util.spec_from_file_location("$server", template_path)
 
     if spec is None:
-        return Failure(
-            ImportError(f"Failed to make spec from `{template_path}`")
-        )
-
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules["$server"] = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)  # type: ignore
+        raise ImportError(f"Failed to make spec from `{template_path}`")
 
     template_path = str(template_path)
 
@@ -183,9 +181,9 @@ def build_backend(
             # entrypoint exists
             # existence of methods
             # existence of associated endpoints
-            validate(text, methods_to_replace),
+            safe(validate)(text, methods_to_replace),
             # mypy check
-            mypy_run(text),
+            safe(mypy_run if not ignore_mypy else lambda x: x)(text),
         ),
         Success(()),
     )
@@ -193,7 +191,7 @@ def build_backend(
     # if `validation_result` is `Failure`, then raise exception
     if not is_successful(validation_result):
         # take first error
-        return validation_result
+        raise validation_result.failure()  # type: ignore
 
     # Built pipeline:
     # 1. Replace methods in template with passed methods.
@@ -203,18 +201,18 @@ def build_backend(
     # TODO (qnbhd): Mypy check crashes if mypy version != 0.950
     text_result = flow(  # type: ignore
         text,
-        *[
-            # dirty hack for pass into `flow`
-            # TODO (qnbhd): find better solution
-            lambda _: replace_method(mod, method, code)  # pylint: disable=W0640
-            for method, code in zip(methods_to_replace, methods)
-        ],
-        # insert imports
-        bind(partial(insert_import, deps=imports)),
-        # format with black
+        safe(
+            partial(
+                replace_functions_by_names,
+                names2repls=dict(zip(methods_to_replace, methods)),
+            )
+        ),
+        bind(safe(partial(insert_import, deps=imports))),
         bind(safe(partial(process_black, mode=FileMode()))),
-        # format with isort
         bind(safe(sort_code_string)),
     )
 
-    return text_result
+    if not is_successful(text_result):
+        raise text_result.failure()
+
+    return text_result.unwrap()

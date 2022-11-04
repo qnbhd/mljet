@@ -7,6 +7,21 @@ import emoji
 from rich.logging import RichHandler
 from rich.traceback import install
 
+EXCLUDED_LOGGERS = (
+    "numba",
+    "matplotlib",
+    "connectionpool",
+    "docker.auth",
+    "docker.utils.config",
+    "requests.packages.urllib3",
+    "requests",
+    "urllib3.connectionpool",
+    "docker.api.build",
+    "black",
+    "blackd",
+    "blib2to3",
+)
+
 
 class RichEmojiFilteredHandler(RichHandler):
     """Extended rich handler with emoji filter support."""
@@ -26,7 +41,7 @@ class RichEmojiFilteredHandler(RichHandler):
         return formatted
 
 
-def init(verbose: bool = False, enable_emoji=False) -> None:
+def init(verbose: bool = False, enable_emoji=False, rich=True) -> None:
     """
     Init logging.
         Args:
@@ -34,11 +49,22 @@ def init(verbose: bool = False, enable_emoji=False) -> None:
                 Verbose level (DEBUG) or not (INFO).
             enable_emoji (bool):
                 Enable emoji in logs or not.
+            rich (bool):
+                Enable rich handler & traceback or not.
         Raises:
             AnyError: If anything bad happens.
     """
 
-    install(suppress=[click])
+    for log_name in EXCLUDED_LOGGERS:
+        other_log = logging.getLogger(log_name)
+        other_log.setLevel(logging.WARNING)
+
+    if enable_emoji:
+        assert rich, "Emoji can be enabled only with rich handler"
+
+    if not rich:
+        logging.basicConfig(level=logging.DEBUG if verbose else logging.INFO)
+        return
 
     logging.basicConfig(
         level="DEBUG" if verbose else "INFO",
@@ -54,18 +80,4 @@ def init(verbose: bool = False, enable_emoji=False) -> None:
         ],
     )
 
-    excluded_loggers = (
-        "numba",
-        "matplotlib",
-        "connectionpool",
-        "docker.auth",
-        "docker.utils.config",
-        "requests.packages.urllib3",
-        "requests",
-        "urllib3.connectionpool",
-        "docker.api.build",
-    )
-
-    for log_name in excluded_loggers:
-        other_log = logging.getLogger(log_name)
-        other_log.setLevel(logging.WARNING)
+    install(suppress=[click])

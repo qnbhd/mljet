@@ -5,7 +5,10 @@ from pathlib import Path
 
 from returns.iterables import Fold
 from returns.pipeline import is_successful
-from returns.result import Success
+from returns.result import (
+    Success,
+    safe,
+)
 
 from deployme.contrib.project_builder import full_build
 from deployme.contrib.validator import (
@@ -24,6 +27,7 @@ def local(
     port=5000,
     scan_path=None,
     verbose=False,
+    ignore_mypy=False,
 ) -> bool:
     """Cook project"""
 
@@ -33,9 +37,9 @@ def local(
 
     val_result = Fold.collect(
         [
-            validate_ret_port(port),
-            validate_ret_backend(backend),
-            validate_ret_model(model),
+            safe(validate_ret_port)(port),
+            safe(validate_ret_backend)(backend),
+            safe(validate_ret_model)(model),
         ],
         Success(()),
     )
@@ -52,7 +56,7 @@ def local(
 
     project_path = Path.cwd().joinpath("build")
 
-    build_result = full_build(
+    build_result = safe(full_build)(
         project_path,
         backend_path,
         backend_path.joinpath("server.py"),
@@ -60,6 +64,7 @@ def local(
         [model],
         ["model"],
         filename="server.py",
+        ignore_mypy=ignore_mypy,
     )
 
     if not is_successful(build_result):

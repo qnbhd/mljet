@@ -25,7 +25,6 @@ from returns.pipeline import (
 )
 from returns.pointfree import bind
 from returns.result import (
-    Failure,
     ResultE,
     Success,
     safe,
@@ -35,9 +34,9 @@ from deployme.contrib.analyzer import get_methods_names_and_associated_wrappers
 from deployme.cookie.cutter import build_backend as cook_backend
 from deployme.utils.requirements import (
     CustomMerge,
-    PathLike,
     make_requirements_txt,
 )
+from deployme.utils.types import PathLike
 
 get_mna_aw = safe(get_methods_names_and_associated_wrappers)
 
@@ -56,17 +55,17 @@ def managed_write(
         return Success(Path(filepath))
 
 
-def init_project_directory(path: PathLike, force=False) -> ResultE[Path]:
+def init_project_directory(path: PathLike, force=False) -> Path:
     """Initializes project directory."""
     path = Path(path)
     # check if path exists
     if path.exists() and not force:
-        return Failure(ValueError(f"Path `{path}` already exists"))
+        raise FileExistsError(f"{path} already exists")
     # create path
     path.mkdir(parents=True, exist_ok=True)
     path.joinpath("models").mkdir(parents=True, exist_ok=True)
     path.joinpath("data").mkdir(parents=True, exist_ok=True)
-    return Success(path)
+    return path
 
 
 def dumps_models(
@@ -75,10 +74,12 @@ def dumps_models(
     models_names: Sequence[str],
     serializer=pickle,
     ext="pkl",
-) -> ResultE[Path]:
+) -> Path:
     """Dumps models to models_path."""
     models_path = Path(path) / "models"
-    return Fold.collect(  # type: ignore
+    if len(models) != len(models_names):
+        raise ValueError("models and models_names must be same length")
+    result = Fold.collect(  # type: ignore
         [
             # write serialized model to models_path
             managed_write(
@@ -97,6 +98,11 @@ def dumps_models(
         Success(()),
     )
 
+    if not is_successful(result):
+        raise result.failure()  # type: ignore
+
+    return Path(path)
+
 
 def build_backend(
     path: PathLike,
@@ -104,11 +110,19 @@ def build_backend(
     template_path: PathLike,
     models: Sequence,
     imports: Optional[Sequence[str]] = None,
-) -> ResultE:
+    ignore_mypy: bool = False,
+):
     path_wrapped = Path(path)
     imports = imports or []
-    cook = partial(cook_backend, template_path=template_path, imports=imports)
-    return (
+    cook = safe(
+        partial(
+            cook_backend,
+            template_path=template_path,
+            imports=imports,
+            ignore_mypy=ignore_mypy,
+        )
+    )
+    result = (
         # get methods and associated wrappers
         Fold.collect(
             [
@@ -141,26 +155,29 @@ def build_backend(
                 lambda stream: stream.write(x),
             )
         )
-        # return Success if everything is ok
-        .bind(lambda x: Success(path))
     )
+
+    if not is_successful(result):
+        raise result.failure()
+
+    return path
 
 
 def copy_backend_dockerfile(
     project_path: PathLike, backend_path: PathLike
-) -> ResultE[Path]:
+) -> Path:
     """Copies backend Dockerfile to project_path."""
     backend_dockerfile = Path(backend_path).joinpath("Dockerfile")
     project_dockerfile = Path(project_path).joinpath("Dockerfile")
     shutil.copyfile(backend_dockerfile, project_dockerfile)
-    return Success(Path(project_path))
+    return Path(project_path)
 
 
 def build_requirements_txt(
     project_path: PathLike,
     backend_path: PathLike,
     scan_path: PathLike,
-) -> ResultE[Path]:
+) -> Path:
     """Builds requirements.txt"""
 
     scan_path = Path(scan_path)
@@ -174,13 +191,13 @@ def build_requirements_txt(
     )
 
     if not is_successful(result):
-        return result
+        raise result.failure()
 
     log.info(
         f"Was founded next requirements: {json.dumps(flatten(result), indent=4)}"
     )
 
-    return flow(
+    result = flow(
         # setup merge-reqs
         CustomMerge(ManageFile(backend_reqs, target_reqs_path)),
         # merge backend requirements with project requirements
@@ -196,8 +213,12 @@ def build_requirements_txt(
                 )
             )
         ),
-        bind(lambda _: Success(project_path)),  # type: ignore
     )
+
+    if not is_successful(result):
+        raise result.failure()
+
+    return Path(project_path)
 
 
 def full_build(
@@ -211,36 +232,48 @@ def full_build(
     imports: Optional[Sequence[str]] = None,
     serializer=pickle,
     ext="pkl",
+    ignore_mypy: bool = False,
 ) -> ResultE[Path]:
     """Builds project."""
     imports = imports or []
     result = (
-        init_project_directory(project_path, force=True)
+        safe(init_project_directory)(project_path, force=True)
         .bind(
-            partial(
-                build_backend,
-                filename=filename,
-                template_path=template_path,
-                models=models,
-                imports=imports,
+            safe(
+                partial(
+                    build_backend,
+                    filename=filename,
+                    template_path=template_path,
+                    models=models,
+                    imports=imports,
+                    ignore_mypy=ignore_mypy,
+                )
             )
         )
-        .bind(partial(copy_backend_dockerfile, backend_path=backend_path))
+        .bind(safe(partial(copy_backend_dockerfile, backend_path=backend_path)))
         .bind(
-            partial(
-                build_requirements_txt,
-                backend_path=backend_path,
-                scan_path=scan_path,
+            safe(
+                partial(
+                    build_requirements_txt,
+                    backend_path=backend_path,
+                    scan_path=scan_path,
+                )
             )
         )
         .bind(
-            partial(
-                dumps_models,
-                models=models,
-                models_names=models_names,
-                serializer=serializer,
-                ext=ext,
+            safe(
+                partial(
+                    dumps_models,
+                    models=models,
+                    models_names=models_names,
+                    serializer=serializer,
+                    ext=ext,
+                )
             )
         )
     )
+
+    if not is_successful(result):
+        raise result.failure()
+
     return result

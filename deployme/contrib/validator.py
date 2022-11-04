@@ -1,23 +1,19 @@
 """Module, that contains validators for deployme."""
 
+import re
 from pathlib import Path
 from typing import (
     Optional,
     Union,
 )
 
-from returns.io import (
-    IO,
-    impure,
-)
+from returns.pipeline import is_successful
 from returns.result import (
     Failure,
     Result,
-    ResultE,
     Success,
     safe,
 )
-from returns.unsafe import unsafe_perform_io
 
 from deployme.contrib.supported import (
     ModelType,
@@ -30,7 +26,7 @@ from deployme.utils.conn import (
     find_free_port,
     is_port_in_use,
 )
-from deployme.utils.requirements import PathLike
+from deployme.utils.types import PathLike
 
 StrategyLike = Union[Strategy, str]
 
@@ -46,8 +42,7 @@ __all__ = [
 _DEFAULT_BACKEND_NAME = "flask"
 
 
-@safe
-def _get_docker_client() -> ResultE:
+def _get_docker_client():
     """Returns docker client."""
     # Lazy import (only if docker contrib is used)
     import docker
@@ -57,66 +52,68 @@ def _get_docker_client() -> ResultE:
 
 def validate_ret_strategy(
     strategy: StrategyLike,
-) -> Result[Strategy, ValueError]:
+) -> Strategy:
     """Validates strategy and returns it if it is valid."""
     if isinstance(strategy, Strategy):
-        return Success(strategy)
+        return strategy
     normalized = strategy.upper()
     if normalized in Strategy.__members__:
-        return Success(Strategy(normalized))
-    return Failure(ValueError(f"Unknown strategy `{strategy}`"))
+        return Strategy(normalized)
+    raise ValueError(f"Unknown strategy `{strategy}`")
 
 
 def validate_ret_model(model) -> Result[ModelType, ValueError]:
     """Validates model and returns it type if it is valid."""
     try:
         mt = ModelType.from_model(model)
-        return Success(mt)
+        return mt
     except ValueError as exc:
-        return Failure(ValueError(f"Unknown model passed: {exc}"))
+        raise ValueError(f"Unknown model passed: {exc}")
 
 
-def validate_ret_port(port: Optional[int]) -> ResultE[int]:
+def validate_ret_port(port: Optional[int]) -> int:
     """Validates port and returns it if it is valid."""
     if port is None:
-        free: IO[int] = impure(find_free_port)()
-        return Success(unsafe_perform_io(free))
+        return find_free_port()
     if port < 0 or port > 65535:
-        return Failure(ValueError(f"Port `{port}` is not valid"))
-    if unsafe_perform_io(impure(is_port_in_use)(port)):
-        return Failure(ValueError(f"Port `{port}` is already in use"))
-    return Success(port)
+        raise ValueError(f"Port `{port}` is not valid")
+    if is_port_in_use(port):
+        raise ValueError(f"Port `{port}` is already in use")
+    return port
 
 
-def validate_ret_backend(
-    backend: Optional[Union[str, PathLike]]
-) -> ResultE[Path]:
-    """Validates backend and returns it if it is valid."""
-    if not backend:
-        return Success(
-            dispatch_default_backend(  # type: ignore
-                _DEFAULT_BACKEND_NAME, strict=True
-            )
+def validate_ret_backend(backend: Optional[Union[str, PathLike]]) -> Path:
+    """Validates predefined backend name or path to custom backend."""
+    if backend is None:
+        return dispatch_default_backend(  # type: ignore
+            _DEFAULT_BACKEND_NAME, strict=True
         )
     result = dispatch_default_backend(backend)
     if result:
-        return Success(result)
+        return result
     backend = Path(backend)
     if backend.exists() and backend.is_dir():
-        return Success(backend)
-    return Failure(ValueError(f"Backend `{backend}` is not found"))
+        return backend
+    raise ValueError(f"Backend `{backend}` is not found")
 
 
-def validate_ret_container_name(name: Optional[str]) -> ResultE[str]:
+def _check_container_name_by_regex(name: str) -> bool:
+    if not bool(re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_.-]+", name)):
+        return False
+    return True
+
+
+def validate_ret_container_name(name: str):
     """Validates container name and returns it if it is valid."""
     # if container with such name exists, then it is invalid
     import docker.errors
 
-    if name is None:
-        return Success("")
-    return (
+    if not _check_container_name_by_regex(name):
+        raise ValueError(f"Container name `{name}` is not valid")
+
+    result = (
         # take docker client
-        _get_docker_client()
+        safe(_get_docker_client)()
         # attempt to get container by name
         .bind(safe(lambda client: client.containers.get(name)))  # type: ignore
         # if it is found, then it is invalid
@@ -135,3 +132,8 @@ def validate_ret_container_name(name: Optional[str]) -> ResultE[str]:
             )
         )
     )
+
+    if not is_successful(result):
+        raise result.failure()
+
+    return result.unwrap()
