@@ -1,19 +1,19 @@
-name: test
+name: Testing
 
 on:
   push:
     branches:
-    - main
+      - main
   pull_request:
     branches:
-    - main
+      - main
 
 jobs:
   test:
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-latest]
+        os: [ ubuntu-latest ]
         python-version: [ "3.8", "3.10" ]
     runs-on: ${{ matrix.os }}
     steps:
@@ -33,11 +33,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Install dev requirements
-        run: pip install pytest pytest-cov
-
-      - uses: docker-practice/actions-setup-docker@master
-      - name: Docker version
-        run: docker --version
+        run: pip install -r requirements-dev.txt
 
       #----------------------------------------------
       #              run test suite
@@ -46,9 +42,16 @@ jobs:
         run: |
           pytest --log-level=INFO --cov=deployme --cov-report=xml tests/
 
-      - name: Publish codecov report
+      - name: Publish coverage report to Codecov
         uses: codecov/codecov-action@v3
-        if: matrix.python-version == '3.10' && matrix.os == 'ubuntu-latest'
+        if: matrix.python-version == '3.8' && matrix.os == 'ubuntu-latest'
         with:
           file: ./coverage.xml
           fail_ci_if_error: true
+
+      - name: Publish coverage to Codacy
+        uses: codacy/codacy-coverage-reporter-action@v1.3.0
+        if: matrix.python-version == '3.8' && matrix.os == 'ubuntu-latest'
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: ./coverage.xml

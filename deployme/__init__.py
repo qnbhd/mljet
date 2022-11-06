@@ -13,6 +13,6 @@ The most common solution is to wrap it in some kind
 of web framework (like Flask).
 """
 
-from deployme.docker_.docker_builder import deploy_to_docker
+from deployme.contrib import cook
 
 __version__ = "0.0.4"

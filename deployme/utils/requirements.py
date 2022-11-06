@@ -6,12 +6,15 @@ import json
 import logging
 import pathlib
 from itertools import chain
-from typing import Iterable, TypeVar, Union
+from typing import (
+    Iterable,
+    Union,
+)
 
 import importlib_metadata
 from merge_requirements.manage_file import Merge
 
-PathLike = TypeVar("PathLike", str, pathlib.Path)
+from deployme.utils.types import PathLike
 
 log = logging.getLogger(__name__)
 
@@ -71,10 +74,7 @@ def cleanup_deps(deps: list, ignore_prefixes: list) -> list:
 
     for dep in deps:
 
-        if (
-            next((p for p in ignore_prefixes if p in dep), None)
-            is not None
-        ):
+        if next((p for p in ignore_prefixes if p in dep), None) is not None:
             continue
 
         cleaned.append(dep)
@@ -162,9 +162,7 @@ def extract_modules_from_node(
 
     if isinstance(node, ast.Import):
 
-        for name in filter(
-            lambda x: x.name in package2module, node.names
-        ):
+        for name in filter(lambda x: x.name in package2module, node.names):
             n = package2module.get(name.name)
 
             if n not in ignore_mods and n in packages:
