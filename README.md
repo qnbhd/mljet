@@ -1,7 +1,20 @@
-# DeployMe 
+# DeployMe
 
-[![Actions Status](https://github.com/qnbhd/deployme/actions/workflows/checks.yml/badge.svg)](https://github.com/qnbhd/deployme/actions)
-[![Actions Status](https://github.com/qnbhd/deployme/actions/workflows/deployme.yml/badge.svg)](https://github.com/qnbhd/deployme/actions)
+<p align="center">
+    <img width="600" height="250" src="https://user-images.githubusercontent.com/6369915/200181171-8052e5f1-5014-4a98-bc2e-15c176d9abfe.svg">
+</p>
+
+<div align="center">
+
+![Codacy grade](https://img.shields.io/codacy/grade/cc8845c151cc45919bfd193e266df293?style=for-the-badge)
+![GitHub branch checks state](https://img.shields.io/github/checks-status/qnbhd/deployme/main?style=for-the-badge)
+![Codecov](https://img.shields.io/codecov/c/github/qnbhd/deployme?style=for-the-badge)
+    
+    
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/deployme?style=for-the-badge)
+
+</div>
+
 
 If you have been working on ML models, then you have probably faced the task of deploying these models.
 Perhaps you are participating in a hackathon or want to show your work to management.
