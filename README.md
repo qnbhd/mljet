@@ -69,6 +69,13 @@ For direct post-requests you can use Curl:
 curl -X POST "http://127.0.0.1:5001/predict" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"data\":[{\"sepal length (cm)\":5.8,\"sepal width (cm)\":2.7,\"petal length (cm)\":3.9,\"petal width (cm)\":1.2}]}"
 ```
 
+## Models support
+
+Currently, we support the following models:
+
+- `sklearn`
+- `xgboost`
+
 ## RoadMap
 
 1. Deploy to Heroku & clusters
