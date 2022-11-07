@@ -35,6 +35,9 @@ jobs:
       - name: Install dev requirements
         run: pip install -r requirements-dev.txt
 
+      - name: Install supported ML frameworks
+        run: pip install scikit-learn xgboost
+
       #----------------------------------------------
       #              run test suite
       #----------------------------------------------
