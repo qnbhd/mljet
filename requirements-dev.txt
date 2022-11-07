@@ -19,3 +19,7 @@ sanic-ext
 joblib
 dill
 mock-open
+sphinx
+furo
+sphinx-autodoc-typehints
+sphinx_git
