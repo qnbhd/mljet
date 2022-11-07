@@ -1,7 +1,7 @@
 # DeployMe
 
 <p align="center">
-    <img width="600" height="250" src="https://user-images.githubusercontent.com/6369915/200182618-6f685a7f-8599-4a7c-97ef-11be55f31e8b.svg">
+    <img width="600" height="250" src="https://user-images.githubusercontent.com/6369915/200409761-6c545b7a-6123-4d82-8ad2-55ee020999d2.svg">
 </p>
 
 <div align="center">
