@@ -27,7 +27,21 @@ Our team believes that it can be made even easier!
 
 Our tool automatically collects all the necessary files and dependencies, creates a docker container, and launches it! And all this in one line of source code.
 
-![Pipeline](docs/images/pipeline.png)
+# Pipeline
+
+
+<p align="center">
+    <img width="800" height="400" src="https://user-images.githubusercontent.com/6369915/200405712-2b74aa9d-a039-4643-aec6-b8bef7557175.svg">
+</p>
+
+
+1. First, we initialize the project directory for the next steps;
+2. Next, we serialize your machine learning models (for example, with Joblib or Pickle);
+3. Next, we create a final `.py` file based on the templates that contains the endpoint handlers. Handlers are chosen based on models, and templates based on your preferences (templates are also `.py` files using, for example, Sanic or Flask);
+4. Copy or additionally generate the necessary files (e.g. Dockerfile);
+5. The next step is to compile the API documentation for your project;
+6. After these steps, we build a Docker container, or a Python package, or we just leave the final directory and then we can deploy your project in Kubernetes, or in Heroku, for example.
+
 
 ## Prerequisites
 
