@@ -13,7 +13,9 @@
     
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/deployme?style=for-the-badge)
 
+[<img height="40" width="120" src="https://user-images.githubusercontent.com/6369915/200408291-f0a22126-00b4-4680-ad29-6f3fc48b4e2e.png">](https://deployme.readthedocs.io/en/latest/)
 </div>
+
 
 
 If you have been working on ML models, then you have probably faced the task of deploying these models.
@@ -30,9 +32,11 @@ Our tool automatically collects all the necessary files and dependencies, create
 # Pipeline
 
 
+
 <p align="center">
     <img width="800" height="400" src="https://user-images.githubusercontent.com/6369915/200405712-2b74aa9d-a039-4643-aec6-b8bef7557175.svg">
 </p>
+
 
 
 1. First, we initialize the project directory for the next steps;
@@ -40,7 +44,8 @@ Our tool automatically collects all the necessary files and dependencies, create
 3. Next, we create a final `.py` file based on the templates that contains the endpoint handlers. Handlers are chosen based on models, and templates based on your preferences (templates are also `.py` files using, for example, Sanic or Flask);
 4. Copy or additionally generate the necessary files (e.g. Dockerfile);
 5. The next step is to compile the API documentation for your project;
-6. After these steps, we build a Docker container, or a Python package, or we just leave the final directory and then we can deploy your project in Kubernetes, or in Heroku, for example.
+6. After these steps, we build a Docker container, or a Python package, or we just leave the final directory and then we can deploy your project in Kubernetes, or in Heroku.
+
 
 
 ## Prerequisites
