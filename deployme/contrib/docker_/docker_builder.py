@@ -3,12 +3,10 @@
 import logging
 import re
 import signal
+from functools import lru_cache
 from pathlib import Path
 
-import docker
 import pandas as pd
-
-docker_client = docker.from_env()
 
 log = logging.getLogger(__name__)
 
@@ -16,6 +14,20 @@ _URL_REGEX = re.compile(
     r"https?://(www\.)?[-a-zA-Z\d@:%._+~#=]{1,256}\.[a-zA-Z\d()]"
     r"{1,6}\b([-a-zA-Z\d()@:%_+.~#?&/=]*)"
 )
+
+
+@lru_cache(None)
+def _get_docker_client():
+    """
+    Get a Docker client.
+
+    Returns:
+        docker.client.DockerClient: Docker client
+
+    """
+    import docker
+
+    return docker.from_env()
 
 
 def build_data(project_path: Path, example_data: pd.DataFrame):
@@ -53,7 +65,7 @@ def build_image(project_path: Path, image_name: str, base_image: str):
 
     log.info("🍻 Building Docker image ...")
 
-    docker_client.images.build(
+    _get_docker_client().images.build(
         buildargs={"BASE_IMAGE": base_image},
         tag=image_name,
         path=str(project_path),
@@ -87,7 +99,7 @@ def run_image(
 
     log.info(f"🐳 Running container {container_name} ...")
 
-    container = docker_client.containers.run(
+    container = _get_docker_client().containers.run(
         image=image_name,
         environment={
             "MODEL_TYPE": model_type,
