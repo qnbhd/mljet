@@ -1,4 +1,4 @@
-deployme.contrib package
+deployme.contrib
 ========================
 
 Subpackages

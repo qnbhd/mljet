@@ -1,4 +1,4 @@
-deployme.utils package
+deployme.utils
 ======================
 
 Submodules

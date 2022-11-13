@@ -3,8 +3,9 @@
 
 # You can set these variables from the command line, and also
 # from the environment for the first two.
-SPHINXOPTS    ?=
-SPHINXBUILD   ?= sphinx-build
+SPHINXOPTS    = -W --keep-going
+SPHINXBUILD   = sphinx-build
+SPHINXPROJ    = DeployMe
 SOURCEDIR     = source
 BUILDDIR      = build
 
@@ -18,3 +19,7 @@ help:
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+clean:
+	rm -rf $(BUILDDIR)/*
+	rm -rf source/examples/

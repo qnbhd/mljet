@@ -1,4 +1,4 @@
-deployme.cookie.templates.backends package
+deployme.cookie.templates.backends
 ==========================================
 
 Submodules

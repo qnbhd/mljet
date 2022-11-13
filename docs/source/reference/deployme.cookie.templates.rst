@@ -1,4 +1,4 @@
-deployme.cookie.templates package
+deployme.cookie.templates
 =================================
 
 Subpackages

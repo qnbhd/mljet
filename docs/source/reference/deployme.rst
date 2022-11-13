@@ -1,4 +1,4 @@
-deployme package
+deployme
 ================
 
 Subpackages

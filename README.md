@@ -1,7 +1,7 @@
 # DeployMe
 
 <p align="center">
-    <img width="600" height="250" src="https://user-images.githubusercontent.com/6369915/200409761-6c545b7a-6123-4d82-8ad2-55ee020999d2.svg">
+    <img width="600" height="250" src="docs/deployme-logo-p.svg">
 </p>
 
 <div align="center">
@@ -34,7 +34,7 @@ Our tool automatically collects all the necessary files and dependencies, create
 
 
 <p align="center">
-    <img width="800" height="400" src="https://user-images.githubusercontent.com/6369915/200405712-2b74aa9d-a039-4643-aec6-b8bef7557175.svg">
+    <img width="800" height="400" src="docs/pipeline.svg">
 </p>
 
 

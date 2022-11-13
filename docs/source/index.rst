@@ -6,8 +6,8 @@
 Welcome to deployme's documentation!
 ====================================
 
-.. raw:: html
-   :file: deployme-logo-p.svg
+.. figure:: deployme-logo-p.svg
+    :align: center
 
 DeployMe
 ===============================================
@@ -23,6 +23,22 @@ Key Features
 * Support for multiple model formats
 * Support for difference web-frameworks
 * Independence of final projects from this tool
+
+Pipeline
+--------
+
+.. figure:: images/pipeline.svg
+    :align: center
+
+    Pipeline
+
+- First, we initialize the project directory for the next steps;
+- Next, we serialize your machine learning models (for example, with Joblib or Pickle);
+- Next, we create a final .py file based on the templates that contains the endpoint handlers. Handlers are chosen based on models, and templates based on your preferences (templates are also .py files using, for example, Sanic or Flask);
+- Copy or additionally generate the necessary files (e.g. Dockerfile);
+- The next step is to compile the API documentation for your project;
+- After these steps, we build a Docker container, or a Python package, or we just leave the final directory and then we can deploy your project in Kubernetes, or in Heroku.
+
 
 Code example
 --------------
@@ -65,19 +81,13 @@ Templin Konstantin <1qnbhd@gmail.com>
 
 Kristina Zheltova <masterkristall@gmail.com>
 
-Contents
-==================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
+   :hidden:
 
    installation
+   tutorial/index
+   developers-guide/index
    reference/index
    changelog
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
