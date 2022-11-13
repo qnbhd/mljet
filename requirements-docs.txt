@@ -28,3 +28,4 @@ sphinx-copybutton
 sphinx-gallery
 matplotlib
 plotly
+xgboost
