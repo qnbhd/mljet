@@ -34,9 +34,9 @@ def get_containers_list():
     not _docker_installed(), reason="Docker not installer or not running"
 )
 @given(
-    name=st.from_regex(r"[a-zA-Z0-9][a-zA-Z0-9_.-]+", fullmatch=True).filter(
-        lambda x: x not in get_containers_list()
-    )
+    name=st.from_regex(
+        r"[a-zA-Z0-9][a-zA-Z0-9_.-]{10,}", fullmatch=True
+    ).filter(lambda x: x not in get_containers_list())
 )
 def test_validate_ret_container_name(name):
     assert validate_ret_container_name(name) == name

@@ -21,7 +21,7 @@ def main():
     # fit model
     bst.fit(X_train, y_train)
 
-    cook(strategy="docker", model=bst, port=5010, verbose=True)
+    cook(strategy="local", model=bst, port=5010, verbose=True)
 
 
 if __name__ == "__main__":

@@ -2,6 +2,9 @@ API Reference
 =============
 
 .. toctree::
-    :maxdepth: 3
+   :maxdepth: 1
 
-    deployme
+   deployme
+   deployme.contrib
+   deployme.cookie
+   deployme.utils

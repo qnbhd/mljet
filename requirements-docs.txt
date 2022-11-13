@@ -24,3 +24,7 @@ sphinx
 furo
 sphinx-autodoc-typehints
 sphinx_git
+sphinx-copybutton
+sphinx-gallery
+matplotlib
+plotly

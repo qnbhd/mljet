@@ -38,7 +38,13 @@ from deployme.utils.types import PathLike
 
 _Module = Union[str, ModuleType]
 
-__all__ = ["build_backend"]
+__all__ = [
+    "MypyValidationError",
+    "replace_functions_by_names",
+    "insert_import",
+    "mypy_run",
+    "build_backend",
+]
 
 pyfunc_with_body = re.compile(
     r"(?P<indent>[ \t]*)(async def|def)[ \t]*(?P<name>\w+)\s*\((?P<params>.*?)\)(?:[ "
@@ -143,10 +149,14 @@ def build_backend(
         - template should have associated methods-endpoints.
         - template should have typing, that is pass mypy check.
 
+    Some:
+        Reporting intermediate ddd data such as the current trial number
+        back to the framework, as done in :class:`~deployme.cookie.cutter.MyPyValidationError`.
+
     Raises:
-        MypyValidationError: if template is not passing mypy check.
-        ValidationError: if template is not passing validation.
-        ValueError: if methods_to_replace and methods have different length.
+        :class:`MypyValidationError`: if template is not passing mypy check.
+        :class:`ValidationError`: if template is not passing validation.
+        :class:`TypeError`: if template is not passing validation.
         FileNotFoundError: if template is not found.
 
     .. note::

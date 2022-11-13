@@ -1,4 +1,4 @@
-deployme.cookie.templates.ml package
+deployme.cookie.templates.ml
 ====================================
 
 Submodules

@@ -1,4 +1,4 @@
-deployme.cookie package
+deployme.cookie
 =======================
 
 Subpackages
