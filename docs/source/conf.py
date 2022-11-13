@@ -101,6 +101,7 @@ sphinx_gallery_conf = {
     "within_subsection_order": FileNameSortKey,
     "filename_pattern": r"/*\.py",
     "first_notebook_cell": None,
+    'plot_gallery': False,
 }
 
 # matplotlib plot directive

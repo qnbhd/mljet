@@ -14,18 +14,14 @@ and XGBoost, see `XGBoost <https://xgboost.readthedocs.io/en/latest/build.html>`
 # Firstly, import :mod:`deployme`.
 
 
-from pathlib import Path
-
-from sklearn.datasets import load_iris
-from xgboost import XGBClassifier
-
 import deployme
 
 ###################################################################################################
 # Import :class:`xgboost.XGBClassifier` as classifier
 # and :mod:`sklearn.datasets` to load the iris dataset.
 
-
+from sklearn.datasets import load_iris
+from xgboost import XGBClassifier
 
 
 ###################################################################################################

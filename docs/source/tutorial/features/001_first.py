@@ -22,18 +22,14 @@ In this example, we simply create a project with scikit-learn.
 ###################################################################################################
 # Firstly, import :mod:`deployme`.
 
-
-from sklearn.datasets import load_iris
-from sklearn.ensemble import RandomForestClassifier
-
 import deployme
 
 ###################################################################################################
 # Import :class:`sklearn.ensemble.RandomForestClassifier` as classifier
 # and :mod:`sklearn.datasets` to load the iris dataset.
 
-
-
+from sklearn.datasets import load_iris
+from sklearn.ensemble import RandomForestClassifier
 
 ###################################################################################################
 # Let's load dataset and create and train a simple model.

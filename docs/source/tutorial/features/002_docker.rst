@@ -31,7 +31,7 @@ and XGBoost, see `XGBoost <https://xgboost.readthedocs.io/en/latest/build.html>`
 
 Firstly, import :mod:`deployme`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-20
+.. GENERATED FROM PYTHON SOURCE LINES 15-19
 
 .. code-block:: default
 
@@ -40,41 +40,26 @@ Firstly, import :mod:`deployme`.
     import deployme
 
 
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 21-23
+.. GENERATED FROM PYTHON SOURCE LINES 20-22
 
 Import :class:`xgboost.XGBClassifier` as classifier
 and :mod:`sklearn.datasets` to load the iris dataset.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-30
+.. GENERATED FROM PYTHON SOURCE LINES 22-27
 
 .. code-block:: default
 
 
-
-    from xgboost import XGBClassifier
     from sklearn.datasets import load_iris
-    from pathlib import Path
+    from xgboost import XGBClassifier
 
 
 
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 31-32
+.. GENERATED FROM PYTHON SOURCE LINES 28-29
 
 Let's load dataset and create and train a simple model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-39
+.. GENERATED FROM PYTHON SOURCE LINES 29-36
 
 .. code-block:: default
 
@@ -86,43 +71,11 @@ Let's load dataset and create and train a simple model.
 
 
 
-
-
-
-
-.. raw:: html
-
-    <div class="output_subarea output_html rendered_html output_result">
-    <style>#sk-container-id-2 {color: black;background-color: white;}#sk-container-id-2 pre{padding: 0;}#sk-container-id-2 div.sk-toggleable {background-color: white;}#sk-container-id-2 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-2 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-2 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-2 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-2 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-2 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-2 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-2 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-2 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-2 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-2 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-2 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-2 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-2 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-2 div.sk-item {position: relative;z-index: 1;}#sk-container-id-2 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-2 div.sk-item::before, #sk-container-id-2 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-2 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-2 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-2 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-2 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-2 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-2 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-2 div.sk-label-container {text-align: center;}#sk-container-id-2 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-2 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-2" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>XGBClassifier(base_score=0.5, booster=&#x27;gbtree&#x27;, callbacks=None,
-                  colsample_bylevel=1, colsample_bynode=1, colsample_bytree=1,
-                  early_stopping_rounds=None, enable_categorical=False,
-                  eval_metric=None, feature_types=None, gamma=0, gpu_id=-1,
-                  grow_policy=&#x27;depthwise&#x27;, importance_type=None,
-                  interaction_constraints=&#x27;&#x27;, learning_rate=0.300000012,
-                  max_bin=256, max_cat_threshold=64, max_cat_to_onehot=4,
-                  max_delta_step=0, max_depth=6, max_leaves=0, min_child_weight=1,
-                  missing=nan, monotone_constraints=&#x27;()&#x27;, n_estimators=100,
-                  n_jobs=0, num_parallel_tree=1, objective=&#x27;multi:softprob&#x27;,
-                  predictor=&#x27;auto&#x27;, ...)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-2" type="checkbox" checked><label for="sk-estimator-id-2" class="sk-toggleable__label sk-toggleable__label-arrow">XGBClassifier</label><div class="sk-toggleable__content"><pre>XGBClassifier(base_score=0.5, booster=&#x27;gbtree&#x27;, callbacks=None,
-                  colsample_bylevel=1, colsample_bynode=1, colsample_bytree=1,
-                  early_stopping_rounds=None, enable_categorical=False,
-                  eval_metric=None, feature_types=None, gamma=0, gpu_id=-1,
-                  grow_policy=&#x27;depthwise&#x27;, importance_type=None,
-                  interaction_constraints=&#x27;&#x27;, learning_rate=0.300000012,
-                  max_bin=256, max_cat_threshold=64, max_cat_to_onehot=4,
-                  max_delta_step=0, max_depth=6, max_leaves=0, min_child_weight=1,
-                  missing=nan, monotone_constraints=&#x27;()&#x27;, n_estimators=100,
-                  n_jobs=0, num_parallel_tree=1, objective=&#x27;multi:softprob&#x27;,
-                  predictor=&#x27;auto&#x27;, ...)</pre></div></div></div></div></div>
-    </div>
-    <br />
-    <br />
-
-.. GENERATED FROM PYTHON SOURCE LINES 40-41
+.. GENERATED FROM PYTHON SOURCE LINES 37-38
 
 Now, we can deploy the model to `docker` with :func:`deployme.contrib.entrypoint.cook`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-52
+.. GENERATED FROM PYTHON SOURCE LINES 38-49
 
 .. code-block:: default
 
@@ -138,31 +91,7 @@ Now, we can deploy the model to `docker` with :func:`deployme.contrib.entrypoint
     )
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    [18:39:03] INFO     Cooking project structure                                                                    local.py:36
-    [18:39:04] INFO     Was founded next requirements: {                                                  project_builder.py:196
-                            "xgboost": "1.7.1",                                                                                 
-                            "scikit-learn": "1.1.3",                                                                            
-                            "requests": "2.28.1"                                                                                
-                        }                                                                                                       
-               INFO     Project structure successfully built                                                         local.py:73
-               INFO     Detecting base image ...                                                                    runner.py:48
-               INFO     Python version detected: 3.9.13                                                             runner.py:54
-               INFO     Building Docker image ...                                                           docker_builder.py:66
-    [18:39:58] INFO     Running container beautiful_saha ...                                               docker_builder.py:100
-               INFO     Service running on http://127.0.0.1:5000                                           docker_builder.py:114
-
-    'beautiful_saha'
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 53-79
+.. GENERATED FROM PYTHON SOURCE LINES 50-76
 
 Let's see on passed parameters.
 
@@ -191,30 +120,25 @@ For this example, we use requests, see `Requests <https://requests.readthedocs.i
 You can use any other tool, for example `Postman <https://www.postman.com/>`_.
 Firstly, import requests.
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-82
-
-.. code-block:: default
-
-
-    import requests
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 83-84
-
-Let's sleep for 5 seconds and check the response.
-
-.. GENERATED FROM PYTHON SOURCE LINES 84-95
+.. GENERATED FROM PYTHON SOURCE LINES 76-81
 
 .. code-block:: default
 
 
     import time
+
+    import requests
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 82-83
+
+Let's sleep for 5 seconds and check the response.
+
+.. GENERATED FROM PYTHON SOURCE LINES 83-93
+
+.. code-block:: default
+
+
 
     time.sleep(5)
 
@@ -226,21 +150,9 @@ Let's sleep for 5 seconds and check the response.
     print(response.json())
 
 
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
-
-
-
-
-
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  0.929 seconds)
+   **Total running time of the script:** ( 0 minutes  0.000 seconds)
 
 
 .. _sphx_glr_download_tutorial_features_002_docker.py:

@@ -40,10 +40,9 @@ In this example, we simply create a project with scikit-learn.
 
 Firstly, import :mod:`deployme`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-29
+.. GENERATED FROM PYTHON SOURCE LINES 24-27
 
 .. code-block:: default
-
 
 
     import deployme
@@ -55,20 +54,18 @@ Firstly, import :mod:`deployme`.
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 30-32
+.. GENERATED FROM PYTHON SOURCE LINES 28-30
 
 Import :class:`sklearn.ensemble.RandomForestClassifier` as classifier
 and :mod:`sklearn.datasets` to load the iris dataset.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-38
+.. GENERATED FROM PYTHON SOURCE LINES 30-34
 
 .. code-block:: default
 
 
-
-    from sklearn.ensemble import RandomForestClassifier
     from sklearn.datasets import load_iris
+    from sklearn.ensemble import RandomForestClassifier
 
 
 
@@ -77,12 +74,11 @@ and :mod:`sklearn.datasets` to load the iris dataset.
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 39-40
+.. GENERATED FROM PYTHON SOURCE LINES 35-36
 
 Let's load dataset and create and train a simple model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-47
+.. GENERATED FROM PYTHON SOURCE LINES 36-43
 
 .. code-block:: default
 
@@ -106,7 +102,7 @@ Let's load dataset and create and train a simple model.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-72
+.. GENERATED FROM PYTHON SOURCE LINES 44-68
 
 Now, we can deploy the model with :func:`deployme.contrib.entrypoint.cook`.
 Main arguments are ``model`` and ``strategy``.
@@ -133,7 +129,7 @@ It contains:
 - `server.py` - main file for the model
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-75
+.. GENERATED FROM PYTHON SOURCE LINES 68-71
 
 .. code-block:: default
 
@@ -148,19 +144,19 @@ It contains:
 
  .. code-block:: none
 
-    [18:39:02] INFO     Cooking project structure                                                                    local.py:36
-               INFO     Was founded next requirements: {                                                  project_builder.py:196
-                            "xgboost": "1.7.1",                                                                                 
-                            "scikit-learn": "1.1.3",                                                                            
-                            "requests": "2.28.1"                                                                                
-                        }                                                                                                       
-               INFO     Project structure successfully built                                                         local.py:73
+    [21:58:10] INFO     Cooking project structure                                                                                                          local.py:36
+    [21:58:11] INFO     Was founded next requirements: {                                                                                        project_builder.py:196
+                            "scikit-learn": "1.1.3",                                                                                                                  
+                            "xgboost": "1.7.1",                                                                                                                       
+                            "requests": "2.28.1"                                                                                                                      
+                        }                                                                                                                                             
+               INFO     Project structure successfully built                                                                                               local.py:73
 
     True
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-100
+.. GENERATED FROM PYTHON SOURCE LINES 72-96
 
 Let's see on :func:`deployme.contrib.entrypoint.cook` signature.
 This function accepts a lot of parameters, but we see only the most important ones.
@@ -190,7 +186,7 @@ Now is implemented :mod:`sanic` and :mod:`flask` backends.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.556 seconds)
+   **Total running time of the script:** ( 0 minutes  0.711 seconds)
 
 
 .. _sphx_glr_download_tutorial_features_001_first.py:
