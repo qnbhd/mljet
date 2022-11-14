@@ -5,7 +5,7 @@ import pytest
 # noinspection PyUnresolvedReferences,PyProtectedMember
 from deployme.cookie.validator import (
     ValidationError,
-    check_needed_methods,
+    is_needed_methods_exists,
 )
 
 TEXT1 = """
@@ -33,4 +33,4 @@ async def b():
 )
 def test_check_needed_methods(source, methods, expectation):
     with expectation:
-        check_needed_methods(source=source, methods=methods)
+        is_needed_methods_exists(source=source, methods=methods)

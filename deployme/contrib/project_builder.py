@@ -30,15 +30,19 @@ from returns.result import (
     safe,
 )
 
-from deployme.contrib.analyzer import get_methods_names_and_associated_wrappers
+from deployme.contrib.analyzer import get_associated_methods_wrappers
 from deployme.cookie.cutter import build_backend as cook_backend
 from deployme.utils.requirements import (
     CustomMerge,
     make_requirements_txt,
 )
-from deployme.utils.types import PathLike
+from deployme.utils.types import (
+    Estimator,
+    PathLike,
+    Serializer,
+)
 
-get_mna_aw = safe(get_methods_names_and_associated_wrappers)
+get_mna_aw = safe(get_associated_methods_wrappers)
 
 log = logging.getLogger(__name__)
 
@@ -55,7 +59,7 @@ def managed_write(
         return Success(Path(filepath))
 
 
-def init_project_directory(path: PathLike, force=False) -> Path:
+def init_project_directory(path: PathLike, force: bool = False) -> Path:
     """Initializes project directory."""
     path = Path(path)
     # check if path exists
@@ -70,16 +74,16 @@ def init_project_directory(path: PathLike, force=False) -> Path:
 
 def dumps_models(
     path: PathLike,
-    models: Sequence,
+    models: Sequence[Estimator],
     models_names: Sequence[str],
-    serializer=pickle,
-    ext="pkl",
+    serializer: Serializer = pickle,  # type: ignore
+    ext: str = "pkl",
 ) -> Path:
     """Dumps models to models_path."""
     models_path = Path(path) / "models"
     if len(models) != len(models_names):
         raise ValueError("models and models_names must be same length")
-    result = Fold.collect(  # type: ignore
+    dump_result = Fold.collect(  # type: ignore
         [
             # write serialized model to models_path
             managed_write(
@@ -98,8 +102,8 @@ def dumps_models(
         Success(()),
     )
 
-    if not is_successful(result):
-        raise result.failure()  # type: ignore
+    if not is_successful(dump_result):
+        raise dump_result.failure()  # type: ignore
 
     return Path(path)
 
@@ -111,7 +115,7 @@ def build_backend(
     models: Sequence,
     imports: Optional[Sequence[str]] = None,
     ignore_mypy: bool = False,
-):
+) -> Path:
     path_wrapped = Path(path)
     imports = imports or []
     cook = safe(
@@ -122,7 +126,7 @@ def build_backend(
             ignore_mypy=ignore_mypy,
         )
     )
-    result = (
+    build_result = (
         # get methods and associated wrappers
         Fold.collect(
             [
@@ -157,10 +161,10 @@ def build_backend(
         )
     )
 
-    if not is_successful(result):
-        raise result.failure()
+    if not is_successful(build_result):
+        raise build_result.failure()
 
-    return path
+    return Path(path)
 
 
 def copy_backend_dockerfile(
@@ -186,18 +190,19 @@ def build_requirements_txt(
     make_reqs_txt = safe(make_requirements_txt)
 
     # try to scan and make requirements.txt
-    result = make_reqs_txt(
+    make_result = make_reqs_txt(
         scan_path, out_path=target_reqs_path, ignore_mods=["deployme"]
     )
 
-    if not is_successful(result):
-        raise result.failure()
+    if not is_successful(make_result):
+        raise make_result.failure()
 
     log.info(
-        f"Was founded next requirements: {json.dumps(flatten(result), indent=4)}"
+        f"Was founded next requirements:"
+        f" {json.dumps(make_result.unwrap(), indent=4)}"
     )
 
-    result = flow(
+    merge_reqs_result = flow(
         # setup merge-reqs
         CustomMerge(ManageFile(backend_reqs, target_reqs_path)),
         # merge backend requirements with project requirements
@@ -215,8 +220,8 @@ def build_requirements_txt(
         ),
     )
 
-    if not is_successful(result):
-        raise result.failure()
+    if not is_successful(merge_reqs_result):
+        raise merge_reqs_result.failure()
 
     return Path(project_path)
 
@@ -230,13 +235,13 @@ def full_build(
     models_names: Sequence[str],
     filename: str = "backend.py",
     imports: Optional[Sequence[str]] = None,
-    serializer=pickle,
-    ext="pkl",
+    serializer: Serializer = pickle,  # type: ignore
+    ext: str = "pkl",
     ignore_mypy: bool = False,
 ) -> ResultE[Path]:
     """Builds project."""
     imports = imports or []
-    result = (
+    build_result = (
         safe(init_project_directory)(project_path, force=True)
         .bind(
             safe(
@@ -273,7 +278,7 @@ def full_build(
         )
     )
 
-    if not is_successful(result):
-        raise result.failure()
+    if not is_successful(build_result):
+        raise build_result.failure()
 
-    return result
+    return build_result

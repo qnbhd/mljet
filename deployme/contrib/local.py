@@ -2,6 +2,10 @@
 
 import logging
 from pathlib import Path
+from typing import (
+    Optional,
+    Union,
+)
 
 from returns.iterables import Fold
 from returns.pipeline import is_successful
@@ -17,17 +21,21 @@ from deployme.contrib.validator import (
     validate_ret_port,
 )
 from deployme.utils.logging_ import init
+from deployme.utils.types import (
+    Estimator,
+    PathLike,
+)
 
 log = logging.getLogger(__name__)
 
 
 def local(
-    model,
-    backend=None,
-    port=5000,
-    scan_path=None,
-    verbose=False,
-    ignore_mypy=False,
+    model: Estimator,
+    backend: Union[str, Path, None] = None,
+    port: int = 5000,
+    scan_path: Optional[PathLike] = None,
+    verbose: bool = False,
+    ignore_mypy: bool = False,
 ) -> bool:
     """Cook project"""
 
@@ -48,7 +56,7 @@ def local(
         raise val_result.failure()
 
     # TODO (qnbhd): Maybe reuse model type?
-    port, backend_path, _ = val_result.unwrap()
+    port, backend_path, _ = val_result.unwrap()  # type: ignore
 
     assert isinstance(backend_path, Path)
 

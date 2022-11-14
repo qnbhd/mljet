@@ -45,14 +45,14 @@ def _parse_defs(source: str) -> Dict[str, List[str]]:
         A dictionary with the methods as keys and their arguments as values
     """
 
-    result = _FUN_TEMPLATE.findall(source)
+    defs = _FUN_TEMPLATE.findall(source)
     return {
-        method[1]: [x.strip() for x in method[2].split(",")]
-        for method in result
+        method[1]: [arg.strip() for arg in method[2].split(",")]
+        for method in defs
     }
 
 
-def _get_assoc_endpoint_name(name: str) -> str:
+def _get_assoc_endpoint(name: str) -> str:
     """
     Get the name of the associated endpoint.
 
@@ -66,7 +66,7 @@ def _get_assoc_endpoint_name(name: str) -> str:
     return f"_{name}"
 
 
-def check_entrypoint(*, source: str) -> bool:
+def is_entrypoint_exists(*, source: str) -> bool:
     """
     Check the __main__ entrypoint.
 
@@ -74,16 +74,16 @@ def check_entrypoint(*, source: str) -> bool:
         source: The source code of the template
 
     Returns:
-        Success if the entrypoint is present, Failure otherwise
+        True if the entrypoint is present, False otherwise
     """
 
-    result = bool(_ENTRYPOINT_TEMPLATE.search(source))
-    if not result:
+    is_exists = bool(_ENTRYPOINT_TEMPLATE.search(source))
+    if not is_exists:
         raise ValidationError("The __main__ entrypoint is missing")
-    return result
+    return is_exists
 
 
-def check_needed_methods(*, source: str, methods: Sequence[str]) -> bool:
+def is_needed_methods_exists(*, source: str, methods: Sequence[str]) -> bool:
     """
     Check if the needed methods are present in the template.
 
@@ -92,20 +92,22 @@ def check_needed_methods(*, source: str, methods: Sequence[str]) -> bool:
         methods: The needed methods
 
     Returns:
-        Success if the needed methods are present, Failure otherwise
+        True if the needed methods are present, False otherwise
     """
 
     parsed = _parse_defs(source)
     existing_methods = frozenset(parsed.keys())
-    result = all(method in existing_methods for method in methods)
+    existence = all(method in existing_methods for method in methods)
 
-    if not result:
+    if not existence:
         raise ValidationError("The needed methods are missing")
 
-    return result
+    return existence
 
 
-def check_associated_endpoints(*, source: str, methods: Sequence[str]) -> bool:
+def is_associated_endpoints_exists(
+    *, source: str, methods: Sequence[str]
+) -> bool:
     """
     Check if the needed methods associated endpoints
     are present in the template.
@@ -115,22 +117,21 @@ def check_associated_endpoints(*, source: str, methods: Sequence[str]) -> bool:
         methods: Sequence of the methods
 
     Returns:
-        Success if the associated endpoints are present, Failure otherwise
+        True if the associated endpoints are present, False otherwise
     """
 
     parsed = _parse_defs(source)
     existing_methods = frozenset(parsed.keys())
 
-    result = all(
-        _get_assoc_endpoint_name(method) in existing_methods
-        for method in methods
+    is_exists = all(
+        _get_assoc_endpoint(method) in existing_methods for method in methods
     )
-    if not result:
+    if not is_exists:
         raise ValidationError("The needed associated endpoints are missing")
-    return result
+    return is_exists
 
 
-def validate(source: str, methods: Sequence[str]):
+def validate(source: str, methods: Sequence[str]) -> bool:
     """
     Validate the template.
 
@@ -139,19 +140,21 @@ def validate(source: str, methods: Sequence[str]):
         methods: Sequence of the methods
 
     Returns:
-        Success if the template is valid, Failure otherwise
+        True if the template is valid, False otherwise
     """
 
-    result = Fold.collect(
+    validation_result = Fold.collect(
         (
-            safe(check_needed_methods)(source=source, methods=methods),
-            safe(check_associated_endpoints)(source=source, methods=methods),
-            safe(check_entrypoint)(source=source),
+            safe(is_needed_methods_exists)(source=source, methods=methods),
+            safe(is_associated_endpoints_exists)(
+                source=source, methods=methods
+            ),
+            safe(is_entrypoint_exists)(source=source),
         ),
         Success(()),
     )
 
-    if not is_successful(result):
-        raise result.failure()
+    if not is_successful(validation_result):
+        raise validation_result.failure()
 
-    return result.unwrap()
+    return True

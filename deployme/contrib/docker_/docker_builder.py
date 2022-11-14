@@ -5,6 +5,10 @@ import re
 import signal
 from functools import lru_cache
 from pathlib import Path
+from typing import (
+    NoReturn,
+    Union,
+)
 
 import pandas as pd
 
@@ -17,7 +21,7 @@ _URL_REGEX = re.compile(
 
 
 @lru_cache(None)
-def _get_docker_client():
+def _get_docker_client():  # noqa: ANN202
     """
     Get a Docker client.
 
@@ -73,14 +77,14 @@ def build_image(project_path: Path, image_name: str, base_image: str):
     )
 
 
-def run_image(
+def run_image(  # type: ignore
     image_name: str,
     model_type: str,
     n_workers: int,
     container_name: str,
     port: int = 5000,
-    silent=True,
-):
+    silent: bool = True,
+) -> Union[None, NoReturn]:
     """
     Run a Docker image with the project.
 
@@ -112,7 +116,7 @@ def run_image(
 
     if silent:
         log.info(f"🚀 Service running on http://127.0.0.1:{port}")
-        return
+        return None
 
     def teardown():
         log.info("👋 Stopping container ...")
@@ -123,7 +127,7 @@ def run_image(
     signal.signal(signal.SIGHUP, lambda *_: teardown())
     signal.signal(signal.SIGTERM, lambda *_: teardown())
 
-    to_drop = ["INFO:", "WARNING:", "ERROR:", "CRITICAL:"]
+    to_drop = ("INFO:", "WARNING:", "ERROR:", "CRITICAL:")
 
     try:
         for line in container.logs(stream=True):

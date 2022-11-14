@@ -5,15 +5,15 @@ import pytest
 # noinspection PyUnresolvedReferences,PyProtectedMember
 from deployme.cookie.validator import (
     ValidationError,
-    _get_assoc_endpoint_name,
-    check_associated_endpoints,
+    _get_assoc_endpoint,
+    is_associated_endpoints_exists,
 )
 
 TEXT1 = f"""
 def predict(model, data):
     return model.predict(data).tolist()
 
-async def {_get_assoc_endpoint_name("predict")}(model, data):
+async def {_get_assoc_endpoint("predict")}(model, data):
     return ...
 """
 
@@ -31,7 +31,7 @@ def predict_proba(model, data):
 @three
 @spam
 @eggs
-def {_get_assoc_endpoint_name("predict_proba")}(model, data):
+def {_get_assoc_endpoint("predict_proba")}(model, data):
     return ...
 """
 
@@ -47,4 +47,4 @@ def {_get_assoc_endpoint_name("predict_proba")}(model, data):
 )
 def test_check_associated_endpoints(source, methods, expectation):
     with expectation:
-        check_associated_endpoints(source=source, methods=methods)
+        is_associated_endpoints_exists(source=source, methods=methods)

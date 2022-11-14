@@ -26,7 +26,7 @@ EXCLUDED_LOGGERS = (
 class RichEmojiFilteredHandler(RichHandler):
     """Extended rich handler with emoji filter support."""
 
-    def __init__(self, *args, enable_emoji=False, **kwargs):
+    def __init__(self, *args, enable_emoji: bool = False, **kwargs):
         super().__init__(*args, **kwargs)
         self.enable_emoji = enable_emoji
 
@@ -41,7 +41,7 @@ class RichEmojiFilteredHandler(RichHandler):
         return formatted
 
 
-def init(verbose: bool = False, enable_emoji=False, rich=True) -> None:
+def init(verbose: bool = False, enable_emoji: bool = False, rich: bool = True):
     """
     Init logging.
         Args:
