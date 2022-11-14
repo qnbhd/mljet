@@ -81,10 +81,20 @@ html_theme_options = {
     "source_repository": "https://github.com/qnbhd/deployme",
     "source_branch": "main",
     "source_directory": "docs/",
+    "light_css_variables": {
+        "color-brand-primary": "#8b43ee",
+        "color-brand-content": "#8b43ee",
+    },
+    "dark_css_variables": {
+        "color-brand-primary": "#8b43ee",
+        "color-brand-content": "#8b43ee",
+    },
 }
 
 html_logo = "deployme-logo-p.svg"
 html_show_sourcelink = False
+
+pygments_dark_style = "one-dark"
 
 # Extensions
 

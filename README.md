@@ -1,7 +1,7 @@
 # DeployMe
 
 <p align="center">
-    <img width="600" height="250" src="docs/deployme-logo-p.svg">
+    <img width="600" height="250" src="docs/source/deployme-logo-p.svg">
 </p>
 
 <div align="center">
