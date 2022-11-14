@@ -38,7 +38,7 @@ def test_dumps_models_correct_custom_serializer(serializer):
         Path("models").mkdir(parents=True, exist_ok=True)
         dumps_models(
             "models",
-            [list([1, 2, 3]), dict()],
+            [[1, 2, 3], dict()],
             ["model1", "model2"],
             serializer=serializer,
             ext="compressed",

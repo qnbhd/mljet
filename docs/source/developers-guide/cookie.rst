@@ -8,7 +8,7 @@ and create final .py files with template-based services.
 **Cookie** has next structure:
 
 .. code::
-    
+
     ├── cutter.py        -- Cutter for create final .py files
     ├── templates        -- Templates for services
     │     ├── backends   -- Folder with backends templates

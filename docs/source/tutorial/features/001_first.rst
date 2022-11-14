@@ -146,10 +146,10 @@ It contains:
 
     [21:58:10] INFO     Cooking project structure                                                                                                          local.py:36
     [21:58:11] INFO     Was founded next requirements: {                                                                                        project_builder.py:196
-                            "scikit-learn": "1.1.3",                                                                                                                  
-                            "xgboost": "1.7.1",                                                                                                                       
-                            "requests": "2.28.1"                                                                                                                      
-                        }                                                                                                                                             
+                            "scikit-learn": "1.1.3",
+                            "xgboost": "1.7.1",
+                            "requests": "2.28.1"
+                        }
                INFO     Project structure successfully built                                                                                               local.py:73
 
     True

@@ -94,14 +94,14 @@ def test_cook_classification_docker(model, backend):
     # TODO (qnbhd): Need to add healthcheck to the container
     time.sleep(10)
 
-    log.info("Sending request to http://localhost:{}/predict".format(port))
-    log.info("Request: {}".format(json.dumps(js)))
+    log.info(f"Sending request to http://localhost:{port}/predict")
+    log.info(f"Request: {json.dumps(js)}")
 
     response = requests.post(
         f"http://localhost:{port}/predict", json={"data": X_test.tolist()}
     )
 
-    log.info("Response: {}".format(response.text))
+    log.info(f"Response: {response.text}")
 
     numpy.testing.assert_array_equal(
         response.json(), model.predict(X_test).tolist()

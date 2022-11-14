@@ -92,5 +92,3 @@ After tests we can check that the tree is the same as the original one.
         |    ├── test.txt
         """
         )
-
-
