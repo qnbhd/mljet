@@ -41,4 +41,3 @@ Description
 * **project_builder.py** - Module for build project
 * **supported.py** - List of supported models, targets, etc.
 * **validator.py** - Module for validate project
-

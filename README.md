@@ -9,8 +9,8 @@
 ![Codacy grade](https://img.shields.io/codacy/grade/cc8845c151cc45919bfd193e266df293?style=for-the-badge)
 ![GitHub branch checks state](https://img.shields.io/github/checks-status/qnbhd/deployme/main?style=for-the-badge)
 ![Codecov](https://img.shields.io/codecov/c/github/qnbhd/deployme?style=for-the-badge)
-    
-    
+
+
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/deployme?style=for-the-badge)
 
 [<img height="40" width="120" src="https://user-images.githubusercontent.com/6369915/200408291-f0a22126-00b4-4680-ad29-6f3fc48b4e2e.png">](https://deployme.readthedocs.io/en/latest/)
