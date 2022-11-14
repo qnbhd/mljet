@@ -1,8 +1,11 @@
 """Dispatcher for supported model types."""
-import importlib.util
 import logging
 import sys
 from functools import lru_cache
+from importlib.util import (
+    module_from_spec,
+    spec_from_file_location,
+)
 from pathlib import Path
 from types import ModuleType
 from typing import (
@@ -25,25 +28,31 @@ def get_all_supported_ml_kinds() -> Dict[str, ModuleType]:
     """Returns all default backends."""
     supported2mod = {}
 
-    for x in filter(
+    backends_files = filter(
         lambda y: (
             y.is_file()
             and not y.name.startswith("__")
             and y.name != Path(__file__).name
         ),
         BASES_PATH.rglob("*.py"),
-    ):
-        spec = importlib.util.spec_from_file_location(x.stem, x)
+    )
+
+    for file in backends_files:
+        spec = spec_from_file_location(file.stem, file)
+
         if not spec:
             continue
-        mod = importlib.util.module_from_spec(spec)
-        sys.modules[x.stem] = mod
+
+        mod = module_from_spec(spec)
+        sys.modules[file.stem] = mod
         spec.loader.exec_module(mod)  # type: ignore
         used_for = getattr(mod, "USED_FOR", [])
+
         if not used_for:
             log.critical(
-                f"Module {x.stem} exists but has no `USED_FOR`, skipping"
+                f"Module {file.stem} exists but has no `USED_FOR`, skipping"
             )
+
         for mt in used_for:
             supported2mod[mt] = mod
     return supported2mod

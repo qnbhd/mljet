@@ -4,29 +4,39 @@ import logging
 import platform
 import shutil
 from pathlib import Path
+from typing import (
+    Optional,
+    Union,
+)
 
 from deployme.contrib.local import local as local_runner
 from deployme.contrib.supported import ModelType
 from deployme.contrib.validator import validate_ret_container_name
 from deployme.utils import get_random_name
+from deployme.utils.types import (
+    Estimator,
+    PathLike,
+)
 
 log = logging.getLogger(__name__)
 
+_DEFAULT_BASE_IMAGE = "python:3.10"
+
 
 def docker(
-    model,
-    backend=None,
-    tag=None,
-    base_image=None,
-    container_name=None,
-    need_run=True,
-    port=5000,
-    scan_path=None,
-    n_workers=1,
-    silent=True,
-    verbose=False,
-    remove_project_dir=False,
-):
+    model: Estimator,
+    backend: Union[str, Path, None] = None,
+    tag: Optional[str] = None,
+    base_image: Optional[str] = None,
+    container_name: Optional[str] = None,
+    need_run: bool = True,
+    port: int = 5000,
+    scan_path: Optional[PathLike] = None,
+    n_workers: int = 1,
+    silent: bool = True,
+    verbose: bool = False,
+    remove_project_dir: bool = False,
+) -> str:
     """Cook docker image."""
     # Lazy docker import
     from deployme.contrib.docker_.docker_builder import (
@@ -54,6 +64,8 @@ def docker(
     log.info(f"Python version detected: {python_version}")
 
     tag = tag or get_random_name()
+
+    base_image = base_image or _DEFAULT_BASE_IMAGE
 
     build_image(
         project_path,

@@ -5,6 +5,8 @@ from enum import Enum
 from sklearn.base import BaseEstimator
 from sklearn.pipeline import Pipeline
 
+from deployme.utils.types import Estimator
+
 
 class ModelType(str, Enum):
     """
@@ -24,7 +26,7 @@ class ModelType(str, Enum):
     # such as `XGBoost` or `CatBoost`
 
     @classmethod
-    def from_model(cls, model):
+    def from_model(cls, model: Estimator):
         """
         Get model type from model.
 

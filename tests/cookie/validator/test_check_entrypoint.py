@@ -5,7 +5,7 @@ import pytest
 # noinspection PyUnresolvedReferences,PyProtectedMember
 from deployme.cookie.validator import (
     ValidationError,
-    check_entrypoint,
+    is_entrypoint_exists,
 )
 
 TEXT1 = """
@@ -50,4 +50,4 @@ def main():
 )
 def test_check_entrypoint(source, expectation):
     with expectation:
-        check_entrypoint(source=source)
+        is_entrypoint_exists(source=source)

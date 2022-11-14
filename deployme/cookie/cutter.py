@@ -56,17 +56,19 @@ class MypyValidationError(Exception):
     """Exception raised when the template is not passing mypy check."""
 
 
-def replace_functions_by_names(source, names2repls: Dict[str, Callable]):
+def replace_functions_by_names(
+    source: str, names2repls: Dict[str, Callable]
+) -> str:
     """Replace functions by names in source code with `repl_codes`."""
     new_source = source
     replaced = []
 
-    for m in pyfunc_with_body.finditer(source):
-        source_with_signature = m.group(0)
-        name = m.group("name")
+    for func in pyfunc_with_body.finditer(source):
+        source_with_signature = func.group(0)
+        name = func.group("name")
         if name not in names2repls:
             continue
-        argspec = m.group("params")
+        argspec = func.group("params")
         argscount = len(argspec.split(","))
         if argscount != len(inspect.getfullargspec(names2repls[name]).args):
             raise TypeError(
@@ -86,7 +88,7 @@ def replace_functions_by_names(source, names2repls: Dict[str, Callable]):
     return process_black(new_source, mode=FileMode())
 
 
-def insert_import(text: str, deps: Sequence[str]):
+def insert_import(text: str, deps: Sequence[str]) -> str:
     """
     Inserts import into text.
 
@@ -106,7 +108,7 @@ def insert_import(text: str, deps: Sequence[str]):
     return "\n".join([*[f"import {dep}" for dep in deps], text])
 
 
-def mypy_run(text):
+def mypy_run(text: str) -> str:
     """
     Run mypy check on template.
 
@@ -181,8 +183,8 @@ def build_backend(
 
     template_path = str(template_path)
 
-    with open(template_path, encoding="utf-8") as f:
-        text = f.read()
+    with open(template_path, encoding="utf-8") as fin:
+        text = fin.read()
 
     # merge validation's results into one
     validation_result: ResultE = Fold.collect(  # type: ignore

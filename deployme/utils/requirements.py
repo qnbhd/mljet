@@ -7,7 +7,10 @@ import logging
 import pathlib
 from itertools import chain
 from typing import (
+    Dict,
     Iterable,
+    List,
+    Optional,
     Union,
 )
 
@@ -25,45 +28,49 @@ class CustomMerge(Merge):
     in merge_requirements.manage_file
     """
 
-    def pickup_deps(self, ignore_prefixes: list, unique=True):
+    def pickup_deps(
+        self, ignore_prefixes: List[str], unique: bool = True
+    ) -> List[str]:
         """
         Custom method to pick up dependencies
 
         Args:
-            ignore_prefixes (list): list of prefixes to ignore
-            unique (bool): if True, return unique dependencies
+            ignore_prefixes: list of prefixes to ignore
+            unique: if True, return unique dependencies
 
         Returns:
-            list: list of dependencies
+            List of dependencies
 
         """
 
         array = []
 
-        for key, value in self.dict_libs.items():
-            if len(value) > 0:
-                array.append("".join(f"{key}=={value}"))
+        for package, version in self.dict_libs.items():
+            if len(version) > 0:
+                array.append("".join(f"{package}=={version}"))
             else:
-                array.append("".join(f"{key}"))
+                array.append("".join(f"{package}"))
 
-        result = cleanup_deps(array, ignore_prefixes)
+        dependencies = cleanup_dependencies(array, ignore_prefixes)
 
         if unique:
-            result = list(set(result))
+            dependencies = list(set(dependencies))
 
-        return result
+        return dependencies
 
 
-def cleanup_deps(deps: list, ignore_prefixes: list) -> list:
+def cleanup_dependencies(
+    deps: List[str], ignore_prefixes: List[str]
+) -> List[str]:
     """
     Cleanup dependencies from unwanted prefixes
 
     Args:
-        deps (list): List of dependencies
-        ignore_prefixes (list): List of prefixes to ignore
+        deps: List of dependencies
+        ignore_prefixes: List of prefixes to ignore
 
     Returns:
-        list: List of dependencies without unwanted prefixes
+        List: List of dependencies without unwanted prefixes
 
     Raises:
         None
@@ -74,7 +81,10 @@ def cleanup_deps(deps: list, ignore_prefixes: list) -> list:
 
     for dep in deps:
 
-        if next((p for p in ignore_prefixes if p in dep), None) is not None:
+        if (
+            next((prefix for prefix in ignore_prefixes if prefix in dep), None)
+            is not None
+        ):
             continue
 
         cleaned.append(dep)
@@ -96,25 +106,25 @@ def get_source_from_notebook(path: PathLike) -> str:
         RuntimeError: If the notebook is not valid JSON
     """
 
-    with open(path, encoding="utf-8") as f:
-        j = json.load(f)
+    with open(path, encoding="utf-8") as fin:
+        source_js = json.load(fin)
 
-    content = []
+    code = []
 
-    if j["nbformat"] >= 4:
-        for cell in j["cells"]:
+    if source_js["nbformat"] >= 4:
+        for cell in source_js["cells"]:
             for line in cell["source"]:
-                content.append(line)
+                code.append(line)
     else:
-        for cell in j["worksheets"][0]["cells"]:
+        for cell in source_js["worksheets"][0]["cells"]:
             for line in cell["input"]:
-                content.append(line)
+                code.append(line)
 
-    return "\n".join(content)
+    return "\n".join(code)
 
 
 @functools.lru_cache(None)
-def freeze() -> dict:
+def freeze() -> Dict[str, str]:
     """
     Get a dictionary of installed packages and their versions
 
@@ -143,8 +153,9 @@ def get_pkgs_distributions() -> dict:
     }
 
 
-def extract_modules_from_node(
-    node: Union[ast.Import, ast.ImportFrom], ignore_mods=None
+def extract_modules(
+    node: Union[ast.Import, ast.ImportFrom],
+    ignore_mods: Optional[List[str]] = None,
 ) -> dict:
     """
     Extract the modules from an import node
@@ -158,33 +169,35 @@ def extract_modules_from_node(
     packages = freeze()
     package2module = get_pkgs_distributions()
 
+    ignore_mods = ignore_mods or []
+
     pool = {}
 
     if isinstance(node, ast.Import):
 
-        for name in filter(lambda x: x.name in package2module, node.names):
-            n = package2module.get(name.name)
+        for pkg_name in filter(lambda x: x.name in package2module, node.names):
+            mod = package2module.get(pkg_name.name)
 
-            if n not in ignore_mods and n in packages:
-                pool[n] = packages[n]
+            if mod not in ignore_mods and mod in packages:
+                pool[mod] = packages[mod]
 
     if isinstance(node, ast.ImportFrom) and node.module:
-        basemod, *_ = node.module.partition(".")
+        base_mod, *_ = node.module.partition(".")
 
-        n = package2module.get(basemod)
+        mod = package2module.get(base_mod)
 
-        if n not in ignore_mods and n and n in packages:
-            pool[n] = packages[n]
+        if mod not in ignore_mods and mod and mod in packages:
+            pool[mod] = packages[mod]
 
     return pool
 
 
 def scan_requirements(
     path: PathLike,
-    extensions=None,
-    ignore_mods=None,
-    ignore_names=None,
-):
+    extensions: Optional[List[str]] = None,
+    ignore_mods: Optional[List[str]] = None,
+    ignore_names: Optional[List[str]] = None,
+) -> Dict[str, str]:
     """
     Scan a directory of file for requirements.
 
@@ -214,20 +227,20 @@ def scan_requirements(
 
     if base.is_dir():
         gen = filter(
-            lambda x: all(u not in x.parts for u in ignore_names),
+            lambda x: all(name not in x.parts for name in ignore_names),  # type: ignore
             chain(*[base.glob(f"*.{ext}") for ext in extensions]),
         )
 
     for script in gen:
 
         if script.suffix == ".ipynb":
-            content = get_source_from_notebook(script)
+            source_code = get_source_from_notebook(script)
         else:
-            with open(script, encoding="utf-8") as f:
-                content = f.read()
+            with open(script, encoding="utf-8") as fin:
+                source_code = fin.read()
 
         try:
-            tree = ast.parse(content)
+            tree = ast.parse(source_code)
         except SyntaxError:
             log.info(
                 f"File `{script}` skipped, because it is"
@@ -240,7 +253,7 @@ def scan_requirements(
             ast.walk(tree),
         ):
             # noinspection PyTypeChecker
-            mods = extract_modules_from_node(
+            mods = extract_modules(
                 node, ignore_mods=ignore_mods  # type: ignore
             )
             pool.update(mods)
@@ -251,10 +264,10 @@ def scan_requirements(
 def make_requirements_txt(
     path: PathLike,
     out_path: PathLike = "requirements.txt",  # type: ignore
-    strict=True,
-    extensions=None,
-    ignore_mods=None,
-):
+    strict: Optional[bool] = True,
+    extensions: Optional[List[str]] = None,
+    ignore_mods: Optional[List[str]] = None,
+) -> Dict[str, str]:
     """
     Make a requirements.txt file from a directory of files.
 
@@ -278,8 +291,8 @@ def make_requirements_txt(
 
     specifier = "==" if strict else ">="
 
-    with open(out_path, "w", encoding="utf-8") as f:
+    with open(out_path, "w", encoding="utf-8") as fin:
         for pkg, version in requirements.items():
-            f.write(f"{pkg}{specifier}{version}\n")
+            fin.write(f"{pkg}{specifier}{version}\n")
 
     return requirements

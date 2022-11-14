@@ -10,7 +10,6 @@ from typing import (
 from returns.pipeline import is_successful
 from returns.result import (
     Failure,
-    Result,
     Success,
     safe,
 )
@@ -26,7 +25,10 @@ from deployme.utils.conn import (
     find_free_port,
     is_port_in_use,
 )
-from deployme.utils.types import PathLike
+from deployme.utils.types import (
+    Estimator,
+    PathLike,
+)
 
 StrategyLike = Union[Strategy, str]
 
@@ -62,7 +64,7 @@ def validate_ret_strategy(
     raise ValueError(f"Unknown strategy `{strategy}`")
 
 
-def validate_ret_model(model) -> Result[ModelType, ValueError]:
+def validate_ret_model(model: Estimator) -> ModelType:
     """Validates model and returns it type if it is valid."""
     try:
         mt = ModelType.from_model(model)
@@ -88,9 +90,9 @@ def validate_ret_backend(backend: Optional[Union[str, PathLike]]) -> Path:
         return dispatch_default_backend(  # type: ignore
             _DEFAULT_BACKEND_NAME, strict=True
         )
-    result = dispatch_default_backend(backend)
-    if result:
-        return result
+    backend_disp_result = dispatch_default_backend(backend)
+    if backend_disp_result:
+        return backend_disp_result
     backend = Path(backend)
     if backend.exists() and backend.is_dir():
         return backend
@@ -98,12 +100,10 @@ def validate_ret_backend(backend: Optional[Union[str, PathLike]]) -> Path:
 
 
 def _check_container_name_by_regex(name: str) -> bool:
-    if not bool(re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_.-]+", name)):
-        return False
-    return True
+    return bool(re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_.-]+", name))
 
 
-def validate_ret_container_name(name: str):
+def validate_ret_container_name(name: str) -> str:
     """Validates container name and returns it if it is valid."""
     # if container with such name exists, then it is invalid
     import docker.errors
@@ -111,7 +111,7 @@ def validate_ret_container_name(name: str):
     if not _check_container_name_by_regex(name):
         raise ValueError(f"Container name `{name}` is not valid")
 
-    result = (
+    validate_cont_name_result = (
         # take docker client
         safe(_get_docker_client)()
         # attempt to get container by name
@@ -133,7 +133,7 @@ def validate_ret_container_name(name: str):
         )
     )
 
-    if not is_successful(result):
-        raise result.failure()
+    if not is_successful(validate_cont_name_result):
+        raise validate_cont_name_result.failure()
 
-    return result.unwrap()
+    return validate_cont_name_result.unwrap()

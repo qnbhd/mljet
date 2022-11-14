@@ -1,3 +1,3 @@
 """Helper functions for the deployme package."""
 
-from .names_generator import get_random_name
+from deployme.utils.names_generator import get_random_name

@@ -2,7 +2,7 @@
 
 import random
 
-left = [
+left = (
     "admiring",
     "adoring",
     "affectionate",
@@ -111,8 +111,8 @@ left = [
     "youthful",
     "zealous",
     "zen",
-]
-right = [
+)
+right = (
     "agnesi",
     "albattani",
     "allen",
@@ -350,7 +350,7 @@ right = [
     "yalow",
     "yonath",
     "zhukovsky",
-]
+)
 
 
 def get_random_name() -> str:

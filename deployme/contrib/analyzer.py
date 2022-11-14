@@ -5,10 +5,12 @@ import warnings
 from typing import (
     Callable,
     Dict,
+    List,
 )
 
 from deployme.contrib.supported import ModelType
 from deployme.cookie.templates.ml.dispatcher import get_dual_methods
+from deployme.utils.types import Estimator
 
 _SUPPORTED_METHODS = (
     "predict",
@@ -16,19 +18,19 @@ _SUPPORTED_METHODS = (
 )
 
 
-def extract_methods_names(model):
+def extract_methods_names(model: Estimator) -> List[str]:
     """Get methods from model."""
     return [
-        x[0]
-        for x in inspect.getmembers(model, inspect.ismethod)
-        if not x[0].startswith("_")
-        and x[0].startswith("predict")
-        and x[0] in _SUPPORTED_METHODS
+        member[0]
+        for member in inspect.getmembers(model, inspect.ismethod)
+        if not member[0].startswith("_")
+        and member[0].startswith("predict")
+        and member[0] in _SUPPORTED_METHODS
     ]
 
 
-def get_methods_names_and_associated_wrappers(
-    model,
+def get_associated_methods_wrappers(
+    model: Estimator,
 ) -> Dict[str, Callable]:
     """Get methods names and associated wrappers."""
     with warnings.catch_warnings():
