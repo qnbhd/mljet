@@ -50,7 +50,7 @@ Our tool automatically collects all the necessary files and dependencies, create
 
 ## Prerequisites
 
-On your PC with local run you must have Docker & Python >= 3.7
+On your PC with local run you must have Docker & Python >= 3.8
 
 ## Installation
 

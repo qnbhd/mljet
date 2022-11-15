@@ -15,6 +15,7 @@ import sys
 
 import plotly.io as pio
 from sphinx_gallery.sorting import FileNameSortKey
+from deployme import __version__
 
 sys.path.insert(0, os.path.abspath("../.."))
 
@@ -26,7 +27,7 @@ copyright = "2022, Konstantin Templin & Kristina Zheltova"
 author = "Konstantin Templin, Kristina Zheltova"
 
 # The full version, including alpha/beta/rc tags
-release = "0.0.5"
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
