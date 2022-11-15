@@ -139,3 +139,5 @@ dmypy.json
 /notebooks/
 /project/
 /tests/project/
+
+node_modules/

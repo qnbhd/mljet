@@ -69,6 +69,13 @@ exclude = [
     'renovate.json',
 ]
 
+[tool.semantic_release]
+version_variable = "deployme/__init__.py:__version__"
+branch = "main"
+build_command = "pip install flit && flit build"
+upload_to_pypi = true
+upload_to_release = true
+
 [tool.black]
 line-length = 80
 target-version = ['py39']
