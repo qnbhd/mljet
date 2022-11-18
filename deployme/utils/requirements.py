@@ -5,6 +5,7 @@ import functools
 import json
 import logging
 import pathlib
+import re
 from itertools import chain
 from typing import (
     Dict,
@@ -15,81 +16,173 @@ from typing import (
 )
 
 import importlib_metadata
-from merge_requirements.manage_file import Merge
+from packaging.version import (
+    Version,
+    parse,
+)
+from pkg_resources import Requirement
 
 from deployme.utils.types import PathLike
 
 log = logging.getLogger(__name__)
 
 
-class CustomMerge(Merge):
+# pep345
+python_package_name_pattern = (
+    r"([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9])"
+)
+# pep440 canonical
+python_version_template = (
+    r"([1-9][0-9]*!)?(0|[1-9][0-9]*)"
+    r"(\.(0|[1-9][0-9]*))*((a|b|rc)(0|[1-9][0-9]*))?"
+    r"(\.post(0|[1-9][0-9]*))?(\.dev(0|[1-9][0-9]*))?"
+)
+# final template
+template = (
+    r"^(?P<package_name>"
+    + python_package_name_pattern
+    + r")"
+    + r"==(?P<version>"
+    + python_version_template
+    + r")$"
+)
+pinned_version_requirement = re.compile(template)
+
+
+def validate(req):
+    if not pinned_version_requirement.match(req):
+        raise ValueError(
+            f"Invalid requirement: {req}, should be pinned with `==`"
+        )
+    return req
+
+
+class _ComparableRequirement:
     """
-    Custom merge method inherited from Merge class
-    in merge_requirements.manage_file
+    Combines :class:`pkg_resources.ComparableRequirement`
+    and :class:`packaging.version.Version`.
+    Adds the ability to check package names and compare them.
+    Supports only pinned versions.
+
+    >>> a = _ComparableRequirement("a==1.0")
+    >>> b = _ComparableRequirement("a==1.0")
+    >>> a == b
+    True
+    >>> b = _ComparableRequirement("a==1.2")
+    >>> a < b
+    True
+    >>> a > b
+    False
+    >>> a == _ComparableRequirement("a==1.0.dev0")
+    False
+
+    .. note::
+        For comparison, names must be equal, otherwise
+        :class:`AssertionError` will be raised.
     """
 
-    def pickup_deps(
-        self, ignore_prefixes: List[str], unique: bool = True
-    ) -> List[str]:
-        """
-        Custom method to pick up dependencies
+    def __init__(self, requirement: str):
+        self._requirement = Requirement.parse(requirement)
+        assert len(self._requirement.specs) == 1, "Only one spec is allowed"
+        assert self._requirement.marker is None, "Markers are not supported"
+        assert self._requirement.extras == (), "Extras are not supported"
+        self._version = parse(self._requirement.specs[0][1])
+        assert isinstance(self._version, Version), (
+            "Requirement must be parsed"
+            " as :class:`packaging.version.Version`"
+        )
 
-        Args:
-            ignore_prefixes: list of prefixes to ignore
-            unique: if True, return unique dependencies
+    @property
+    def name(self):
+        return self._requirement.key
 
-        Returns:
-            List of dependencies
+    @property
+    def version(self):
+        return self._version
 
-        """
+    def _check(self, other):
+        assert isinstance(
+            other, _ComparableRequirement
+        ), "Other must be an instance of :class:`ComparableRequirement`"
+        assert self.name == other.name, "Names must be equal"
+        return other
 
-        array = []
+    def __lt__(self, other):
+        return self.version < self._check(other).version
 
-        for package, version in self.dict_libs.items():
-            if len(version) > 0:
-                array.append("".join(f"{package}=={version}"))
-            else:
-                array.append("".join(f"{package}"))
+    def __le__(self, other):
+        return self.version <= self._check(other).version
 
-        dependencies = cleanup_dependencies(array, ignore_prefixes)
+    def __ge__(self, other):
+        return self.version >= self._check(other).version
 
-        if unique:
-            dependencies = list(set(dependencies))
+    def __gt__(self, other):
+        return self.version > self._check(other).version
 
-        return dependencies
+    def __eq__(self, other):
+        return self.version == self._check(other).version
+
+    def __ne__(self, other):
+        return self.version != self._check(other).version
+
+    def __str__(self):
+        return f"{self.name}=={self.version}"
 
 
-def cleanup_dependencies(
-    deps: List[str], ignore_prefixes: List[str]
-) -> List[str]:
+def merge(*requirements_lists: List[str]) -> List[str]:
     """
-    Cleanup dependencies from unwanted prefixes
+    Merge requirements lists.
 
     Args:
-        deps: List of dependencies
-        ignore_prefixes: List of prefixes to ignore
+        requirements_lists: list of requirements
 
     Returns:
-        List: List of dependencies without unwanted prefixes
+        Merged requirements
+    """
+    requirements_gen = (
+        _ComparableRequirement(validate(requirement))
+        for requirements_list in requirements_lists
+        for requirement in requirements_list
+    )
+    name2version: Dict[str, _ComparableRequirement] = {}
+    for requirement in requirements_gen:
+        name2version[requirement.name] = min(
+            name2version.get(requirement.name, requirement), requirement
+        )
+    return sorted([str(version) for version in name2version.values()])
 
-    Raises:
-        None
 
+def merge_requirements_txt(
+    *files: PathLike, ignore_prefixes: Optional[List[str]] = None
+) -> List[str]:
+    """
+    Merge requirements.txt files.
+
+    Args:
+        files: list of requirements.txt files
+        ignore_prefixes: list of prefixes to ignore
+
+    Returns:
+        Final requirements.txt file content
     """
 
-    cleaned = []
+    ignore_prefixes = ignore_prefixes or []
+    requirements_lists = []
 
-    for dep in deps:
+    for file in files:
+        with open(file, "r") as f:
+            requirements = f.readlines()
+        requirements = [
+            r.strip() for r in filter(lambda x: x.strip(), requirements)
+        ]
+        requirements = [
+            r
+            for r in requirements
+            if all(not r.startswith(p) for p in ignore_prefixes)
+        ]
+        requirements_lists.append(requirements)
 
-        if (
-            next((prefix for prefix in ignore_prefixes if prefix in dep), None)
-            is not None
-        ):
-            continue
-
-        cleaned.append(dep)
-
-    return cleaned
+    return merge(*requirements_lists)
 
 
 def get_source_from_notebook(path: PathLike) -> str:

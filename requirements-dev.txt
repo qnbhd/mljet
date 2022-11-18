@@ -1,5 +1,6 @@
 pytest
 pytest-cov
+pytest-repeat
 black
 isort
 flake8
