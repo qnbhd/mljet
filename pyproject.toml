@@ -34,6 +34,7 @@ dependencies = [
     "sanic==22.9.1",
     "sanic-ext==22.9.1",
     "packaging==21.3",
+    "nbformat==5.7.0",
 ]
 classifiers = [
         "Intended Audience :: Science/Research",

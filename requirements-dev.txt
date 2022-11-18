@@ -24,3 +24,5 @@ sphinx
 furo
 sphinx-autodoc-typehints
 sphinx_git
+jsonschema
+hypothesis-jsonschema

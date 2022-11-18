@@ -22,6 +22,7 @@ from packaging.version import (
 )
 from pkg_resources import Requirement
 
+from deployme.utils.nb import get_code_from_ipynb
 from deployme.utils.types import PathLike
 
 log = logging.getLogger(__name__)
@@ -199,21 +200,9 @@ def get_source_from_notebook(path: PathLike) -> str:
         RuntimeError: If the notebook is not valid JSON
     """
 
-    with open(path, encoding="utf-8") as fin:
-        source_js = json.load(fin)
+    code_cells = get_code_from_ipynb(path)
 
-    code = []
-
-    if source_js["nbformat"] >= 4:
-        for cell in source_js["cells"]:
-            for line in cell["source"]:
-                code.append(line)
-    else:
-        for cell in source_js["worksheets"][0]["cells"]:
-            for line in cell["input"]:
-                code.append(line)
-
-    return "\n".join(code)
+    return "\n".join(code_cells)
 
 
 @functools.lru_cache(None)
