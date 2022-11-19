@@ -12,8 +12,6 @@ from typing import (
     Sequence,
 )
 
-from merge_requirements.manage_file import ManageFile
-from returns.converters import flatten
 from returns.io import (
     IO,
     impure_safe,
@@ -33,8 +31,8 @@ from returns.result import (
 from deployme.contrib.analyzer import get_associated_methods_wrappers
 from deployme.cookie.cutter import build_backend as cook_backend
 from deployme.utils.requirements import (
-    CustomMerge,
     make_requirements_txt,
+    merge_requirements_txt,
 )
 from deployme.utils.types import (
     Estimator,
@@ -204,9 +202,7 @@ def build_requirements_txt(
 
     merge_reqs_result = flow(
         # setup merge-reqs
-        CustomMerge(ManageFile(backend_reqs, target_reqs_path)),
-        # merge backend requirements with project requirements
-        safe(lambda mg: mg.pickup_deps(ignore_prefixes=["deployme"])),
+        safe(merge_requirements_txt)(backend_reqs, target_reqs_path),
         # write to file
         bind(
             safe(

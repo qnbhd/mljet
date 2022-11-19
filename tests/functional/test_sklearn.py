@@ -1,5 +1,6 @@
 import json
 import logging
+import random
 import shutil
 import time
 from pathlib import Path
@@ -73,16 +74,18 @@ def test_cook_classification_docker(model, backend):
     model.fit(X_train, y_train)
     model.predict(X_test)
 
+    name = f"deployme-test-{random.randint(0, 1000)}"
+
     container_name = cook(
         model=model,
         strategy="docker",
-        container_name="test-deployme",
+        container_name=name,
         port=port,
         backend=backend,
         scan_path=Path(__file__).parent,
     )
 
-    assert container_name == "test-deployme"
+    assert container_name == name
 
     client = docker.from_env()
     client.containers.get(container_name)

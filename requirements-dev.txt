@@ -1,5 +1,6 @@
 pytest
 pytest-cov
+pytest-repeat
 black
 isort
 flake8
@@ -23,3 +24,5 @@ sphinx
 furo
 sphinx-autodoc-typehints
 sphinx_git
+jsonschema
+hypothesis-jsonschema
