@@ -1,7 +1,12 @@
 """Module that contains Scikit-learn model method's wrappers."""
 from deployme.contrib.supported import ModelType
 
-USED_FOR = [ModelType.SKLEARN_MODEL, ModelType.SKLEARN_PIPE]
+USED_FOR = [
+    ModelType.SKLEARN,
+    ModelType.XGBOOST,
+    ModelType.CATBOOST,
+    ModelType.LGBM,
+]
 
 
 def predict(model, data) -> list:

@@ -1,6 +1,6 @@
+from catboost import CatBoostClassifier
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
-from xgboost import XGBClassifier
 
 from deployme import cook
 
@@ -12,16 +12,16 @@ def main():
         data["data"], data["target"], test_size=0.2
     )
     # create model instance
-    bst = XGBClassifier(
-        n_estimators=2,
-        max_depth=2,
+    cat = CatBoostClassifier(
+        iterations=2,
+        depth=2,
         learning_rate=1,
-        objective="binary:logistic",
+        loss_function="MultiClass",
     )
     # fit model
-    bst.fit(X_train, y_train)
+    cat.fit(X_train, y_train)
 
-    cook(strategy="local", model=bst, verbose=True)
+    cook(strategy="local", model=cat, verbose=True)
 
 
 if __name__ == "__main__":

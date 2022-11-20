@@ -14,7 +14,7 @@ def main():
     clf = RandomForestClassifier()
     clf.fit(X_train, y_train)
 
-    cook(strategy="docker", model=clf, port=5010, verbose=True)
+    cook(strategy="docker", model=clf, verbose=True)
 
 
 if __name__ == "__main__":

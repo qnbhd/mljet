@@ -176,7 +176,7 @@ It can be any model that implements the `predict` and other methods.
     The model must be picklable.
 
 .. note::
-    Now is supported `sklearn`, `xgboost`.
+    Now is supported `sklearn`, `xgboost`, `catboost`, `lightgbm` models.
 
 Strategy parameter determines the strategy to use.
 

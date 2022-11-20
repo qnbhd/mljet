@@ -87,7 +87,7 @@ deployme.contrib.cook(strategy="local", model=clf)
 #     The model must be picklable.
 #
 # .. note::
-#     Now is supported `sklearn`, `xgboost`.
+#     Now is supported `sklearn`, `xgboost`, `catboost`, `lightgbm` models.
 #
 # Strategy parameter determines the strategy to use.
 #
