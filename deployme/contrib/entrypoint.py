@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 
 def cook(
     *,
-    model: Estimator,
+    model,
     strategy: Union[Strategy, str] = Strategy.DOCKER,
     backend: Optional[Union[str, PathLike]] = None,
     tag: Optional[str] = None,

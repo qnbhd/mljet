@@ -17,7 +17,9 @@ from deployme.utils.requirements import (
 
 @given(
     x=st.lists(
-        st.from_regex(r"numpy==[0-9]\.[0-9]\.[0-9]", fullmatch=True), min_size=1
+        st.from_regex(r"numpy==[0-9]\.[0-9]\.[0-9]", fullmatch=True),
+        min_size=1,
+        max_size=5,
     ),
 )
 def test_merge(x):

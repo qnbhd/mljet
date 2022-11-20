@@ -3,7 +3,11 @@ from pathlib import Path
 import jsonschema
 import nbformat
 import pytest
-from hypothesis import given
+from hypothesis import (
+    HealthCheck,
+    given,
+    settings,
+)
 from hypothesis_jsonschema import from_schema
 
 from deployme.utils.nb import (
@@ -45,6 +49,7 @@ NOTEBOOKS_EXAMPLES_FOLDER = Path(__file__).parent.joinpath("notebooks-examples")
         }
     )
 )
+@settings(suppress_health_check=(HealthCheck.too_slow,))
 def test_get_code_cells_sources_from_notebook(notebook: _Notebook):
     count_of_code_cells = len(
         [

@@ -141,3 +141,5 @@ dmypy.json
 /tests/project/
 
 node_modules/
+
+**/catboost_info/

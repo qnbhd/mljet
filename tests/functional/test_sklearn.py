@@ -41,6 +41,7 @@ log = logging.getLogger(__name__)
     backend=st.sampled_from(list(SUPPORTED_BACKENDS.keys())),
 )
 @settings(deadline=None)
+@pytest.mark.repeat(5)
 def test_cook_classification(model, backend):
     X, y = load_iris(return_X_y=True)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)

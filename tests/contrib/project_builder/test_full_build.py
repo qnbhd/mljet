@@ -1,3 +1,4 @@
+import logging
 import pickle
 from pathlib import Path
 from unittest.mock import patch
@@ -39,6 +40,7 @@ def test_full_build(
     models = [RandomForestClassifier(), LogisticRegression()]
     models_names = ["rf", "lr"]
     template_path = Path(backend_path).joinpath("server.py")
+    logging.disable(logging.CRITICAL)
 
     mocker = DefaultIOMock(to_forward=[template_path])
     with mocker:
@@ -49,6 +51,7 @@ def test_full_build(
                     """
 sanic==20.12.2"""
                 )
+                return {"sanic": "20.12.2"}
 
         with patch(
             "deployme.contrib.project_builder.make_requirements_txt",
@@ -79,3 +82,5 @@ sanic==20.12.2"""
 """
 
     assert expected.replace(" ", "") in mocker.fs_tree.replace(" ", "")
+
+    logging.disable(logging.NOTSET)

@@ -94,6 +94,8 @@ Currently, we support the following models:
 
 - `sklearn`
 - `xgboost`
+- `catboost`
+- `lightgbm`
 
 ## RoadMap
 

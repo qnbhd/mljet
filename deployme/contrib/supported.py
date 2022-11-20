@@ -2,10 +2,8 @@
 
 from enum import Enum
 
-from sklearn.base import BaseEstimator
-from sklearn.pipeline import Pipeline
-
 from deployme.utils.types import Estimator
+from deployme.utils.utils import parse_cls_name
 
 
 class ModelType(str, Enum):
@@ -13,17 +11,22 @@ class ModelType(str, Enum):
     Model type.
     """
 
-    # LightAutoML model
-    LAMA = "LAMA"
-
-    # Sklearn pipeline, such as `Pipeline`
-    SKLEARN_PIPE = "SKLEARN_PIPELINE"
-
     # Sklearn model, such as `LogisticRegression`
-    SKLEARN_MODEL = "SKLEARN_MODEL"
+    SKLEARN = "sklearn"
 
-    # In the future, we could add more types,
-    # such as `XGBoost` or `CatBoost`
+    # CatBoost model, such as `CatBoostClassifier`
+    CATBOOST = "catboost"
+
+    # XGB model, such as `XGBClassifier`
+    XGBOOST = "xgboost"
+
+    # LightGBM model, such as `LGBMClassifier`
+    LGBM = "lightgbm"
+
+    # LightAutoML model
+    LAMA = "lightautoml"
+
+    # In the future, we could add more types.
 
     @classmethod
     def from_model(cls, model: Estimator):
@@ -37,14 +40,19 @@ class ModelType(str, Enum):
             Model type.
         """
 
-        if "lightautoml" in str(type(model)):
-            return cls.LAMA
+        parts = parse_cls_name(model).split(".")
 
-        if isinstance(model, Pipeline):
-            return cls.SKLEARN_PIPE
+        mt = next(
+            (
+                ModelType(p)
+                for p in parts
+                if p in ModelType.__members__.values()
+            ),
+            None,
+        )
 
-        if isinstance(model, BaseEstimator):
-            return cls.SKLEARN_MODEL
+        if mt:
+            return mt
 
         raise ValueError(f"Model `{model}` now isn't supported")
 
@@ -59,3 +67,7 @@ class Strategy(str, Enum):
 
     # In the future, we can add other strategies
     # like deploy to AWS Lambda, etc.
+
+
+if __name__ == "__main__":
+    print(ModelType["LAMA"])
