@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.2.0 (2022-11-20)
+### Feature
+* Add catboost & lightgbm support ([`680e85b`](https://github.com/qnbhd/deployme/commit/680e85bcbbcf2afa6cf78543e423c3831cc32ed9))
+
 ## v0.1.0 (2022-11-15)
 ### Feature
 * Introduce semantic release ([`821732a`](https://github.com/qnbhd/deployme/commit/821732a3095cb234d5b4a6b1e567399d27d4432d))
