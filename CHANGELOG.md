@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.0 (2022-11-21)
+### Feature
+* Add fastapi & aiohttp backends ([`5efc9d4`](https://github.com/qnbhd/deployme/commit/5efc9d44f165b935247839ded17a41dbda8b73c1))
+
 ## v0.2.0 (2022-11-20)
 ### Feature
 * Add catboost & lightgbm support ([`680e85b`](https://github.com/qnbhd/deployme/commit/680e85bcbbcf2afa6cf78543e423c3831cc32ed9))
