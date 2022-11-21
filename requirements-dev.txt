@@ -26,3 +26,6 @@ sphinx-autodoc-typehints
 sphinx_git
 jsonschema
 hypothesis-jsonschema
+fastapi
+uvicorn
+aiohttp
