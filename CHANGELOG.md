@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.4.0 (2022-11-24)
+### Feature
+* Introduce CLI interface, add additional reqs files argument ([`d4b95ee`](https://github.com/qnbhd/deployme/commit/d4b95eed2e24a970d1c8de398a1015ea4f7d209b))
+
 ## v0.3.0 (2022-11-21)
 ### Feature
 * Add fastapi & aiohttp backends ([`5efc9d4`](https://github.com/qnbhd/deployme/commit/5efc9d44f165b935247839ded17a41dbda8b73c1))
