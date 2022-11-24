@@ -6,12 +6,16 @@ import shutil
 from pathlib import Path
 from typing import (
     Optional,
+    Sequence,
     Union,
 )
 
 from deployme.contrib.local import local as local_runner
 from deployme.contrib.supported import ModelType
-from deployme.contrib.validator import validate_ret_container_name
+from deployme.contrib.validator import (
+    validate_ret_container_name,
+    validate_ret_port,
+)
 from deployme.utils import get_random_name
 from deployme.utils.types import (
     Estimator,
@@ -36,6 +40,7 @@ def docker(
     silent: bool = True,
     verbose: bool = False,
     remove_project_dir: bool = False,
+    additional_requirements_files: Optional[Sequence[PathLike]] = None,
 ) -> str:
     """Cook docker image."""
     # Lazy docker import
@@ -47,9 +52,9 @@ def docker(
     local_build_result = local_runner(
         model=model,
         backend=backend,
-        port=port,
         scan_path=scan_path,
         verbose=verbose,
+        additional_requirements_files=additional_requirements_files,
     )
 
     if not local_build_result:
@@ -75,6 +80,8 @@ def docker(
 
     container_name = container_name or get_random_name()
     container_name = validate_ret_container_name(container_name)
+
+    port = validate_ret_port(port)
 
     if need_run:
         run_image(

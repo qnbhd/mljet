@@ -87,9 +87,7 @@ def validate_ret_port(port: Optional[int]) -> int:
 def validate_ret_backend(backend: Optional[Union[str, PathLike]]) -> Path:
     """Validates predefined backend name or path to custom backend."""
     if backend is None:
-        return dispatch_default_backend(  # type: ignore
-            _DEFAULT_BACKEND_NAME, strict=True
-        )
+        return dispatch_default_backend(_DEFAULT_BACKEND_NAME, strict=True)  # type: ignore
     backend_disp_result = dispatch_default_backend(backend)
     if backend_disp_result:
         return backend_disp_result
