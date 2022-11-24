@@ -8,6 +8,7 @@ from functools import partial
 from pathlib import Path
 from typing import (
     Callable,
+    List,
     Optional,
     Sequence,
 )
@@ -87,8 +88,8 @@ def dumps_models(
             managed_write(
                 models_path / f"{name}.{ext}",
                 lambda stream: serializer.dump(
-                    model, stream  # pylint: disable=W0640
-                ),
+                    model, stream
+                ),  # pylint: disable=W0640
                 mode="wb",
                 # if everything is ok, return Success with model name
             ).bind(
@@ -127,10 +128,7 @@ def build_backend(
     build_result = (
         # get methods and associated wrappers
         Fold.collect(
-            [
-                get_mna_aw(model).bind(lambda x: Success(IO(x)))  # type: ignore
-                for model in models
-            ],
+            [get_mna_aw(model).bind(lambda x: Success(IO(x))) for model in models],  # type: ignore
             # push into tuple, wrap into IO
             Success(()),
         )
@@ -179,6 +177,7 @@ def build_requirements_txt(
     project_path: PathLike,
     backend_path: PathLike,
     scan_path: PathLike,
+    additional_requirements_files: Optional[Sequence[PathLike]] = None,
 ) -> Path:
     """Builds requirements.txt"""
 
@@ -195,14 +194,25 @@ def build_requirements_txt(
     if not is_successful(make_result):
         raise make_result.failure()
 
-    log.info(
-        f"Was founded next requirements:"
-        f" {json.dumps(make_result.unwrap(), indent=4)}"
-    )
+    reqs = make_result.unwrap()
+    if not reqs and not additional_requirements_files:
+        log.warning(
+            "No requirements in scan stage found. Service may not work properly."
+            " You can pass `additional_requirements_files` arguments in top-level"
+            " functions or via CLI with `--requirements-file/-r` option."
+        )
+    else:
+        log.info(
+            f"Was founded next requirements:" f" {json.dumps(reqs, indent=4)}"
+        )
+
+    additional_requirements_files = additional_requirements_files or []
 
     merge_reqs_result = flow(
         # setup merge-reqs
-        safe(merge_requirements_txt)(backend_reqs, target_reqs_path),
+        safe(merge_requirements_txt)(
+            backend_reqs, target_reqs_path, *additional_requirements_files
+        ),
         # write to file
         bind(
             safe(
@@ -229,11 +239,12 @@ def full_build(
     scan_path: PathLike,
     models: Sequence,
     models_names: Sequence[str],
-    filename: str = "backend.py",
+    filename: str = "server.py",
     imports: Optional[Sequence[str]] = None,
     serializer: Serializer = pickle,  # type: ignore
     ext: str = "pkl",
     ignore_mypy: bool = False,
+    additional_requirements_files: Optional[Sequence[PathLike]] = None,
 ) -> ResultE[Path]:
     """Builds project."""
     imports = imports or []
@@ -258,6 +269,7 @@ def full_build(
                     build_requirements_txt,
                     backend_path=backend_path,
                     scan_path=scan_path,
+                    additional_requirements_files=additional_requirements_files,
                 )
             )
         )

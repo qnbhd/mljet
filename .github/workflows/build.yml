@@ -33,6 +33,11 @@ jobs:
       - name: Install package
         run: pip install dist/*.whl
 
+      - name: Check CLI
+        run: |
+          deployme about
+          deployme version
+
       - name: Run user examples
         run: |
           pip install scikit-learn xgboost lightgbm catboost

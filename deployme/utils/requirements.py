@@ -173,6 +173,8 @@ def merge_requirements_txt(
     for file in files:
         with open(file, "r") as f:
             requirements = f.readlines()
+        log.info("Merging %s", file)
+        log.debug(json.dumps([x.strip() for x in requirements], indent=4))
         requirements = [
             r.strip() for r in filter(lambda x: x.strip(), requirements)
         ]
@@ -335,9 +337,7 @@ def scan_requirements(
             ast.walk(tree),
         ):
             # noinspection PyTypeChecker
-            mods = extract_modules(
-                node, ignore_mods=ignore_mods  # type: ignore
-            )
+            mods = extract_modules(node, ignore_mods=ignore_mods)  # type: ignore
             pool.update(mods)
 
     return pool

@@ -4,6 +4,7 @@ import logging
 from pathlib import Path
 from typing import (
     Optional,
+    Sequence,
     Union,
 )
 
@@ -18,7 +19,6 @@ from deployme.contrib.project_builder import full_build
 from deployme.contrib.validator import (
     validate_ret_backend,
     validate_ret_model,
-    validate_ret_port,
 )
 from deployme.utils.logging_ import init
 from deployme.utils.types import (
@@ -32,10 +32,10 @@ log = logging.getLogger(__name__)
 def local(
     model: Estimator,
     backend: Union[str, Path, None] = None,
-    port: int = 5000,
     scan_path: Optional[PathLike] = None,
     verbose: bool = False,
     ignore_mypy: bool = False,
+    additional_requirements_files: Optional[Sequence[PathLike]] = None,
 ) -> bool:
     """Cook project"""
 
@@ -45,7 +45,6 @@ def local(
 
     val_result = Fold.collect(
         [
-            safe(validate_ret_port)(port),
             safe(validate_ret_backend)(backend),
             safe(validate_ret_model)(model),
         ],
@@ -56,7 +55,7 @@ def local(
         raise val_result.failure()
 
     # TODO (qnbhd): Maybe reuse model type?
-    port, backend_path, _ = val_result.unwrap()  # type: ignore
+    backend_path, _ = val_result.unwrap()  # type: ignore
 
     assert isinstance(backend_path, Path)
 
@@ -73,6 +72,7 @@ def local(
         ["model"],
         filename="server.py",
         ignore_mypy=ignore_mypy,
+        additional_requirements_files=additional_requirements_files,
     )
 
     if not is_successful(build_result):

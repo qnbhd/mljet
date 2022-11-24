@@ -3,6 +3,7 @@
 import logging
 from typing import (
     Optional,
+    Sequence,
     Union,
 )
 
@@ -13,10 +14,7 @@ from deployme.contrib.docker_.runner import docker as docker_runner
 from deployme.contrib.local import local as local_runner
 from deployme.contrib.supported import Strategy
 from deployme.contrib.validator import validate_ret_strategy
-from deployme.utils.types import (
-    Estimator,
-    PathLike,
-)
+from deployme.utils.types import PathLike
 from deployme.utils.utils import drop_unnecessary_kwargs
 
 log = logging.getLogger(__name__)
@@ -38,6 +36,7 @@ def cook(
     verbose: bool = False,
     remove_project_dir: bool = False,
     ignore_mypy: bool = False,
+    additional_requirements_files: Optional[Sequence[PathLike]] = None,
 ):
     """
     Cook web-service.
@@ -85,6 +84,7 @@ def cook(
         verbose=verbose,
         remove_project_dir=remove_project_dir,
         ignore_mypy=ignore_mypy,
+        additional_requirements_files=additional_requirements_files,
     )
 
 
