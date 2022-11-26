@@ -1,6 +1,8 @@
 """Models analyzed and method's extractor."""
 
 import inspect
+import json
+import logging
 import warnings
 from typing import (
     Callable,
@@ -16,6 +18,8 @@ _SUPPORTED_METHODS = (
     "predict",
     "predict_proba",
 )
+
+log = logging.getLogger(__name__)
 
 
 def extract_methods_names(model: Estimator) -> List[str]:
@@ -37,4 +41,6 @@ def get_associated_methods_wrappers(
         warnings.simplefilter("ignore")
         extracted = extract_methods_names(model)
     mt = ModelType.from_model(model)
-    return dict(zip(extracted, get_dual_methods(mt, extracted)))
+    associated = dict(zip(extracted, get_dual_methods(mt, extracted)))
+    log.info(f"Detected model methods: {json.dumps(extracted, indent=4)}")
+    return associated
