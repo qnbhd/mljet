@@ -3,6 +3,7 @@
 import importlib
 import importlib.util
 import inspect
+import logging
 import re
 from functools import partial
 from pathlib import Path
@@ -36,6 +37,8 @@ from returns.result import (
 from deployme.cookie.validator import validate
 from deployme.utils.types import PathLike
 
+log = logging.getLogger(__name__)
+
 _Module = Union[str, ModuleType]
 
 __all__ = [
@@ -59,7 +62,8 @@ class MypyValidationError(Exception):
 def replace_functions_by_names(
     source: str, names2repls: Dict[str, Callable]
 ) -> str:
-    """Replace functions by names in source code with `repl_codes`."""
+    """Replace functions by names in source code with passed functions."""
+    log.debug("Replacing functions in source code")
     new_source = source
     replaced = []
 
@@ -78,6 +82,7 @@ def replace_functions_by_names(
         repl_code = inspect.getsource(names2repls[name])
         after_black = process_black(repl_code, mode=FileMode())
         new_source = new_source.replace(source_with_signature, after_black)
+        log.debug("Replaced [bold violet]`%s`[/]", name)
         replaced.append(name)
 
     if len(replaced) != len(names2repls):
@@ -99,6 +104,7 @@ def insert_import(text: str, deps: Sequence[str]) -> str:
     Returns:
         Text with inserted import.
     """
+    log.debug("Inserting imports into source code")
 
     if isinstance(deps, str):
         raise TypeError("`deps` must be a sequence of strings, not a string")
@@ -118,6 +124,7 @@ def mypy_run(text: str) -> str:
     Returns:
         Result with mypy output.
     """
+    log.debug("Running mypy check on template")
 
     res = _mypy_run(["-c", text])
     if res[2]:
@@ -186,6 +193,7 @@ def build_backend(
     with open(template_path, encoding="utf-8") as fin:
         text = fin.read()
 
+    log.info("Validating backend template")
     # merge validation's results into one
     validation_result: ResultE = Fold.collect(  # type: ignore
         (
@@ -205,6 +213,7 @@ def build_backend(
         # take first error
         raise validation_result.failure()  # type: ignore
 
+    log.info("Building backend from template")
     # Built pipeline:
     # 1. Replace methods in template with passed methods.
     # 2. Insert imports into template.

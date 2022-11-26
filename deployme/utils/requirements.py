@@ -173,7 +173,7 @@ def merge_requirements_txt(
     for file in files:
         with open(file, "r") as f:
             requirements = f.readlines()
-        log.info("Merging %s", file)
+        log.debug("Merging %s", file)
         log.debug(json.dumps([x.strip() for x in requirements], indent=4))
         requirements = [
             r.strip() for r in filter(lambda x: x.strip(), requirements)
@@ -185,7 +185,9 @@ def merge_requirements_txt(
         ]
         requirements_lists.append(requirements)
 
-    return merge(*requirements_lists)
+    merged = merge(*requirements_lists)
+    log.info(f"Final requirements: {json.dumps(merged, indent=4)}")
+    return merged
 
 
 def get_source_from_notebook(path: PathLike) -> str:

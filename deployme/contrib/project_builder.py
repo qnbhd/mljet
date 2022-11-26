@@ -60,6 +60,7 @@ def managed_write(
 
 def init_project_directory(path: PathLike, force: bool = False) -> Path:
     """Initializes project directory."""
+    log.info("Initializing project directory")
     path = Path(path)
     # check if path exists
     if path.exists() and not force:
@@ -79,6 +80,7 @@ def dumps_models(
     ext: str = "pkl",
 ) -> Path:
     """Dumps models to models_path."""
+    log.info("Serializing models")
     models_path = Path(path) / "models"
     if len(models) != len(models_names):
         raise ValueError("models and models_names must be same length")
@@ -187,6 +189,7 @@ def build_requirements_txt(
     make_reqs_txt = safe(make_requirements_txt)
 
     # try to scan and make requirements.txt
+    log.info("Scanning and making requirements.txt")
     make_result = make_reqs_txt(
         scan_path, out_path=target_reqs_path, ignore_mods=["deployme"]
     )

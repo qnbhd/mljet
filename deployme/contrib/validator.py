@@ -1,5 +1,6 @@
 """Module, that contains validators for deployme."""
 
+import logging
 import re
 from pathlib import Path
 from typing import (
@@ -44,6 +45,9 @@ __all__ = [
 _DEFAULT_BACKEND_NAME = "flask"
 
 
+log = logging.getLogger(__name__)
+
+
 def _get_docker_client():
     """Returns docker client."""
     # Lazy import (only if docker contrib is used)
@@ -56,6 +60,7 @@ def validate_ret_strategy(
     strategy: StrategyLike,
 ) -> Strategy:
     """Validates strategy and returns it if it is valid."""
+    log.debug("Validating strategy: %s", strategy)
     if isinstance(strategy, Strategy):
         return strategy
     normalized = strategy.upper()
@@ -66,8 +71,12 @@ def validate_ret_strategy(
 
 def validate_ret_model(model: Estimator) -> ModelType:
     """Validates model and returns it type if it is valid."""
+    log.debug("Validating model")
     try:
         mt = ModelType.from_model(model)
+        log.info(
+            "Detected model type: [bold violet]`%s`[/]", str(mt.value).lower()
+        )
         return mt
     except ValueError as exc:
         raise ValueError(f"Unknown model passed: {exc}")
@@ -75,17 +84,23 @@ def validate_ret_model(model: Estimator) -> ModelType:
 
 def validate_ret_port(port: Optional[int]) -> int:
     """Validates port and returns it if it is valid."""
+    log.debug("Validating port")
     if port is None:
-        return find_free_port()
+        log.debug("Port is not specified, trying to find free port")
+        founded_port = find_free_port()
+        log.debug("Found free port: %s", founded_port)
+        return founded_port
     if port < 0 or port > 65535:
         raise ValueError(f"Port `{port}` is not valid")
     if is_port_in_use(port):
         raise ValueError(f"Port `{port}` is already in use")
+    log.debug("Using specified port: %s", port)
     return port
 
 
 def validate_ret_backend(backend: Optional[Union[str, PathLike]]) -> Path:
     """Validates predefined backend name or path to custom backend."""
+    log.debug("Validating backend path/name")
     if backend is None:
         return dispatch_default_backend(_DEFAULT_BACKEND_NAME, strict=True)  # type: ignore
     backend_disp_result = dispatch_default_backend(backend)
@@ -98,6 +113,7 @@ def validate_ret_backend(backend: Optional[Union[str, PathLike]]) -> Path:
 
 
 def _check_container_name_by_regex(name: str) -> bool:
+    """Checks container name by regex."""
     return bool(re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_.-]+", name))
 
 
@@ -105,6 +121,8 @@ def validate_ret_container_name(name: str) -> str:
     """Validates container name and returns it if it is valid."""
     # if container with such name exists, then it is invalid
     import docker.errors
+
+    log.debug("Validating container name: %s", name)
 
     if not _check_container_name_by_regex(name):
         raise ValueError(f"Container name `{name}` is not valid")

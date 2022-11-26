@@ -67,7 +67,3 @@ class Strategy(str, Enum):
 
     # In the future, we can add other strategies
     # like deploy to AWS Lambda, etc.
-
-
-if __name__ == "__main__":
-    print(ModelType["LAMA"])

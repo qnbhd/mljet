@@ -60,7 +60,7 @@ def docker(
     if not local_build_result:
         raise RuntimeError("Failed to build local project")
 
-    log.info("🔎 Detecting base image ...")
+    log.info("🔎 Detecting base image")
     python_version = platform.python_version()
     model_type = ModelType.from_model(model)
 

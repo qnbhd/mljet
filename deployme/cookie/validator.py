@@ -1,5 +1,5 @@
 """Static code analysis of the template."""
-
+import logging
 import re
 from functools import lru_cache
 from typing import (
@@ -14,6 +14,8 @@ from returns.result import (
     Success,
     safe,
 )
+
+log = logging.getLogger(__name__)
 
 _ENTRYPOINT_TEMPLATE = re.compile(
     r"^if\s+__name__\s+==\s+(\"__main__\"|'__main__'):$", re.MULTILINE
@@ -76,6 +78,7 @@ def is_entrypoint_exists(*, source: str) -> bool:
     Returns:
         True if the entrypoint is present, False otherwise
     """
+    log.debug("Checking the __main__ entrypoint")
 
     is_exists = bool(_ENTRYPOINT_TEMPLATE.search(source))
     if not is_exists:
@@ -94,6 +97,7 @@ def is_needed_methods_exists(*, source: str, methods: Sequence[str]) -> bool:
     Returns:
         True if the needed methods are present, False otherwise
     """
+    log.debug("Checking the needed ML model methods")
 
     parsed = _parse_defs(source)
     existing_methods = frozenset(parsed.keys())
@@ -119,6 +123,7 @@ def is_associated_endpoints_exists(
     Returns:
         True if the associated endpoints are present, False otherwise
     """
+    log.debug("Checking the associated endpoints")
 
     parsed = _parse_defs(source)
     existing_methods = frozenset(parsed.keys())

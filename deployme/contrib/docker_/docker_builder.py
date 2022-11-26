@@ -67,7 +67,7 @@ def build_image(project_path: Path, image_name: str, base_image: str):
         None
     """
 
-    log.info("🍻 Building Docker image ...")
+    log.info("🍻 Building Docker image")
 
     _get_docker_client().images.build(
         buildargs={"BASE_IMAGE": base_image},
@@ -101,7 +101,7 @@ def run_image(  # type: ignore
 
     """
 
-    log.info(f"🐳 Running container {container_name} ...")
+    log.info(f"🐳 Running container [bold red]{container_name}[/]")
 
     container = _get_docker_client().containers.run(
         image=image_name,
