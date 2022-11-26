@@ -22,6 +22,7 @@ from deployme.utils.requirements import (
         max_size=5,
     ),
 )
+@settings(deadline=None)
 def test_merge(x):
     merge_result = merge(x)
     versions = (parse(r.split("==")[1]) for r in merge_result)
@@ -78,6 +79,7 @@ def test_merge_requirements_txt():
         min_size=1,
     ),
 )
+@settings(deadline=None)
 def test_merge_not_pinned(x):
     with pytest.raises(ValueError):
         merge(x)
@@ -87,6 +89,7 @@ def test_merge_not_pinned(x):
     x=st.from_regex(r"numpy==[0-9]\.[0-9]\.[0-9]", fullmatch=True),
     y=st.from_regex(r"numpy==[0-9]\.[0-9]\.[0-9]", fullmatch=True),
 )
+@settings(deadline=None)
 def test_merge_idempotent(x, y):
     assert merge([x], [y]) == merge(merge([x], [y]))
 
@@ -96,6 +99,7 @@ def test_merge_idempotent(x, y):
     y=st.from_regex(r"numpy==[0-9]\.[0-9]\.[0-9]", fullmatch=True),
     z=st.from_regex(r"numpy==[0-9]\.[0-9]\.[0-9]", fullmatch=True),
 )
+@settings(deadline=None)
 def test_merge_associative(x, y, z):
     assert (
         merge([x], [y], [z])
