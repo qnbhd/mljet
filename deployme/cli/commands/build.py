@@ -6,7 +6,7 @@ from pathlib import Path
 
 import click
 
-from deployme.contrib import local
+from deployme.contrib.actions.project_build import project_build
 from deployme.cookie.templates.backends.dispatcher import SUPPORTED_BACKENDS
 from deployme.utils.logging_ import init
 from deployme.utils.serializers import detect_model_serializer
@@ -77,7 +77,7 @@ def build(
     with open(model_path, "rb") as f:
         model = pickle.load(f)
 
-    local.local(
+    project_build(
         model=model,
         backend=backend,
         scan_path=scan_path,

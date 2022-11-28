@@ -21,6 +21,7 @@ from deployme.contrib.validator import (
     validate_ret_model,
 )
 from deployme.utils.logging_ import init
+from deployme.utils.pipelines.stage import stage
 from deployme.utils.types import (
     Estimator,
     PathLike,
@@ -29,7 +30,8 @@ from deployme.utils.types import (
 log = logging.getLogger(__name__)
 
 
-def local(
+@stage("project-build")
+def project_build(
     model: Estimator,
     backend: Union[str, Path, None] = None,
     scan_path: Optional[PathLike] = None,
