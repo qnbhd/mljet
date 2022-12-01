@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.0 (2022-12-01)
+### Feature
+* Introduce actions ([`4847b24`](https://github.com/qnbhd/deployme/commit/4847b243d0291999853dfd645b1c7ed39f6887ce))
+
 ## v0.4.0 (2022-11-24)
 ### Feature
 * Introduce CLI interface, add additional reqs files argument ([`d4b95ee`](https://github.com/qnbhd/deployme/commit/d4b95eed2e24a970d1c8de398a1015ea4f7d209b))
