@@ -10,12 +10,16 @@ from typing import (
 from returns.pipeline import is_successful
 from returns.result import safe
 
-from deployme.contrib.docker_.runner import docker as docker_runner
-from deployme.contrib.local import local as local_runner
+from deployme.contrib.actions.docker_build import docker_build
+from deployme.contrib.actions.project_build import project_build
 from deployme.contrib.supported import Strategy
 from deployme.contrib.validator import validate_ret_strategy
+from deployme.utils.pipelines.pipeline import (
+    Context,
+    Pipeline,
+    RunResult,
+)
 from deployme.utils.types import PathLike
-from deployme.utils.utils import drop_unnecessary_kwargs
 
 log = logging.getLogger(__name__)
 
@@ -37,7 +41,7 @@ def cook(
     remove_project_dir: bool = False,
     ignore_mypy: bool = False,
     additional_requirements_files: Optional[Sequence[PathLike]] = None,
-):
+) -> RunResult:
     """
     Cook web-service.
 
@@ -56,6 +60,7 @@ def cook(
         verbose: verbose mode
         remove_project_dir: remove project directory after build
         ignore_mypy: ignore mypy errors
+        additional_requirements_files: additional requirements files
 
     Returns:
         Result of build, maybe bool or container name (if docker strategy)
@@ -69,7 +74,7 @@ def cook(
 
     strategy = strategy_cont.unwrap()
 
-    return dispatch(
+    return _dispatch(
         strategy=strategy,
         model=model,
         backend=backend,
@@ -88,9 +93,12 @@ def cook(
     )
 
 
-def dispatch(strategy, **kwargs):
-    if strategy == Strategy.DOCKER:
-        return docker_runner(**drop_unnecessary_kwargs(docker_runner, kwargs))
+def _dispatch(strategy, **kwargs) -> RunResult:
+    context = Context(parameters=kwargs)
+    pipeline = Pipeline(context)
     if strategy == Strategy.LOCAL:
-        return local_runner(**drop_unnecessary_kwargs(local_runner, kwargs))
-    raise ValueError(f"Strategy {strategy} is not supported")
+        pipeline.add(project_build)
+    elif strategy == Strategy.DOCKER:
+        pipeline.add(project_build)
+        pipeline.add(docker_build)
+    return pipeline()

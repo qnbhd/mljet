@@ -4,61 +4,42 @@ import logging
 import platform
 import shutil
 from pathlib import Path
-from typing import (
-    Optional,
-    Sequence,
-    Union,
-)
+from typing import Optional
 
-from deployme.contrib.local import local as local_runner
 from deployme.contrib.supported import ModelType
 from deployme.contrib.validator import (
     validate_ret_container_name,
     validate_ret_port,
 )
 from deployme.utils import get_random_name
-from deployme.utils.types import (
-    Estimator,
-    PathLike,
-)
+from deployme.utils.pipelines.stage import stage
+from deployme.utils.types import Estimator
 
 log = logging.getLogger(__name__)
 
 _DEFAULT_BASE_IMAGE = "python:3.10"
 
 
-def docker(
+@stage("docker-build", depends_on=["project-build"])
+def docker_build(
     model: Estimator,
-    backend: Union[str, Path, None] = None,
     tag: Optional[str] = None,
     base_image: Optional[str] = None,
     container_name: Optional[str] = None,
     need_run: bool = True,
     port: int = 5000,
-    scan_path: Optional[PathLike] = None,
     n_workers: int = 1,
     silent: bool = True,
-    verbose: bool = False,
     remove_project_dir: bool = False,
-    additional_requirements_files: Optional[Sequence[PathLike]] = None,
 ) -> str:
     """Cook docker image."""
     # Lazy docker import
-    from deployme.contrib.docker_.docker_builder import (
+    from deployme.contrib.dockerutils import (
         build_image,
         run_image,
     )
 
-    local_build_result = local_runner(
-        model=model,
-        backend=backend,
-        scan_path=scan_path,
-        verbose=verbose,
-        additional_requirements_files=additional_requirements_files,
-    )
-
-    if not local_build_result:
-        raise RuntimeError("Failed to build local project")
+    port = validate_ret_port(port)
 
     log.info("🔎 Detecting base image")
     python_version = platform.python_version()
@@ -80,8 +61,6 @@ def docker(
 
     container_name = container_name or get_random_name()
     container_name = validate_ret_container_name(container_name)
-
-    port = validate_ret_port(port)
 
     if need_run:
         run_image(

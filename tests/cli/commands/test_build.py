@@ -15,7 +15,7 @@ def test_build():
         pickle.dump(LogisticRegression(), f)
 
     with patch(
-        "deployme.cli.commands.build.local.local", return_value=True
+        "deployme.cli.commands.build.project_build", return_value=True
     ) as mock_local:
         # CliRunner is not used here because ValueError is raised
         # ISSUE: https://github.com/pytest-dev/pytest/issues/3344

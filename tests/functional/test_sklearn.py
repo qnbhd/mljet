@@ -77,7 +77,7 @@ def test_cook_classification_docker(model, backend):
 
     name = f"deployme-test-{random.randint(0, 1000)}"
 
-    container_name = cook(
+    runresult = cook(
         model=model,
         strategy="docker",
         container_name=name,
@@ -86,6 +86,7 @@ def test_cook_classification_docker(model, backend):
         scan_path=Path(__file__).parent,
     )
 
+    container_name = runresult["docker-build"]
     assert container_name == name
 
     client = docker.from_env()
