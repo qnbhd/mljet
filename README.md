@@ -1,5 +1,7 @@
 # DeployMe
 
+[![Join the chat at https://gitter.im/1deployme/deployme](https://badges.gitter.im/1deployme/deployme.svg)](https://gitter.im/1deployme/deployme?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 <p align="center">
     <img width="600" height="250" src="docs/source/deployme-logo-p.svg">
 </p>
