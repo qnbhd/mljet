@@ -6,7 +6,6 @@ USED_FOR = [
     ModelType.XGBOOST,
     ModelType.CATBOOST,
     ModelType.LGBM,
-    ModelType.LAMA,
 ]
 
 
