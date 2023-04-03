@@ -40,7 +40,7 @@ jobs:
 
       - name: Run user examples
         run: |
-          pip install scikit-learn xgboost lightgbm catboost
+          pip install scikit-learn xgboost lightgbm catboost lightautoml
 
           cd examples
 
@@ -48,3 +48,4 @@ jobs:
           python catboost_example.py
           python xgboost_example.py
           python lightgbm_example.py
+          python lama_example.py
