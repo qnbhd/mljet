@@ -24,7 +24,7 @@ def main():
         roles={"target": "4"},
     )
 
-    cook(strategy="docker", model=lama, verbose=True)
+    cook(strategy="local", model=lama, verbose=True)
 
 
 if __name__ == "__main__":
