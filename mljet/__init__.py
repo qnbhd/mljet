@@ -15,4 +15,4 @@ of web framework (like Flask).
 
 from mljet.contrib import cook
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"

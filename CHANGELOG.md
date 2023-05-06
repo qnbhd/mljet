@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.7.0 (2023-05-06)
+### Feature
+* Update push release ([`1febfde`](https://github.com/qnbhd/mljet/commit/1febfdeb326a688c04664b90355294906fa07878))
+
 ## v0.6.0 (2023-05-06)
 ### Feature
 * Migrate to `mljet` project name ([`15e519a`](https://github.com/qnbhd/mljet/commit/15e519afc4d81cd85bbb03420d2b0a900c989ab8))
