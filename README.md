@@ -10,13 +10,12 @@
 ![GitHub branch checks state](https://img.shields.io/github/checks-status/qnbhd/mljet/main?style=for-the-badge)
 ![Codecov](https://img.shields.io/codecov/c/github/qnbhd/mljet?style=for-the-badge)
 
-
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mljet?style=for-the-badge)
 
 [<img height="40" width="120" src="https://user-images.githubusercontent.com/6369915/200408291-f0a22126-00b4-4680-ad29-6f3fc48b4e2e.png">](https://mljet.readthedocs.io/en/latest/)
 </div>
 
-
+> :warning: This project originally had another name: DeployMe. Releases for deployme (on pypi) have been discontinued.
 
 If you have been working on ML models, then you have probably faced the task of deploying these models.
 Perhaps you are participating in a hackathon or want to show your work to management.
