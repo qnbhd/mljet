@@ -2,7 +2,7 @@ from contextlib import nullcontext as does_not_raise
 
 import pytest
 
-from deployme.cookie.templates.ml import dispatcher
+from mljet.cookie.templates.ml import dispatcher
 
 
 @pytest.mark.parametrize(

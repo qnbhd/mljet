@@ -43,7 +43,7 @@ jobs:
       #----------------------------------------------
       - name: Run python tests
         run: |
-          pytest --log-level=INFO --cov=deployme --cov-report=xml tests/
+          pytest --log-level=INFO --cov=mljet --cov-report=xml tests/
 
       - name: Publish coverage report to Codecov
         uses: codecov/codecov-action@v3

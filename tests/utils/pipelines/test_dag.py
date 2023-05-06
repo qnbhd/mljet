@@ -5,7 +5,7 @@ from hypothesis import (
     strategies as st,
 )
 
-from deployme.utils.pipelines.dag import (
+from mljet.utils.pipelines.dag import (
     CycleExistsError,
     DirectedAcyclicGraph,
 )

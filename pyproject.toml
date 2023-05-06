@@ -1,7 +1,7 @@
 [project]
-name = "deployme"
+name = "mljet"
 dynamic = ["version"]
-description = "minimalistic ML-models auto deployment tool"
+description = "minimalistic ML-models auto mljetnt tool"
 authors = [
     {name = "Konstantin Templin", email = "1qnbhd@gmail.com"},
     {name = "Kristina Zheltova", email = "masterkristall@gmail.com"},
@@ -10,7 +10,7 @@ maintainers = [
     {name = "Konstantin Templin", email = "1qnbhd@gmail.com"},
     {name = "Kristina Zheltova", email = "masterkristall@gmail.com"},
 ]
-urls = {Repository = "https://github.com/qnbhd/deployme"}
+urls = {Repository = "https://github.com/qnbhd/mljet"}
 readme = "README.md"
 keywords = ["ML", "deploy", "AutoDeploy"]
 license = {text = "MIT"}
@@ -38,6 +38,7 @@ dependencies = [
     "dill==0.3.6",
     "joblib==1.2.0",
     "tabulate==0.9.0",
+    "requests<2.29.0",
 ]
 classifiers = [
         "Intended Audience :: Science/Research",
@@ -62,7 +63,7 @@ requires = ['flit_core>=3.2,<4']
 build-backend = 'flit_core.buildapi'
 
 [tool.flit.sdist]
-include = ["deployme"]
+include = ["mljet"]
 exclude = [
     '.*',
     'tests',
@@ -74,14 +75,14 @@ exclude = [
 ]
 
 [tool.semantic_release]
-version_variable = "deployme/__init__.py:__version__"
+version_variable = "mljet/__init__.py:__version__"
 branch = "main"
 build_command = "pip install flit && flit build"
 upload_to_pypi = true
 upload_to_release = true
 
 [project.scripts]
-deployme = "deployme.cli.cli:cli"
+mljet = "mljet.cli.cli:cli"
 
 [tool.black]
 line-length = 80
@@ -101,7 +102,7 @@ profile = 'black'
 force_grid_wrap = 2
 combine_as_imports = true
 line_length = 80
-skip = ['docs', 'dist', 'venv', '.venv', 'build', 'deployme.egg-info', 'tutorial']
+skip = ['docs', 'dist', 'venv', '.venv', 'build', 'mljet.egg-info', 'tutorial']
 
 [tool.pytest.ini_options]
 log_cli = true

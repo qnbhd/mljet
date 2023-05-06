@@ -1,6 +1,6 @@
 import pytest
 
-from deployme.cookie.cutter import (
+from mljet.cookie.cutter import (
     MypyValidationError,
     mypy_run,
 )

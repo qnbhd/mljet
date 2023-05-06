@@ -3,10 +3,10 @@ from pathlib import Path
 
 import pytest
 
-from deployme.cookie.cutter import build_backend
+from mljet.cookie.cutter import build_backend
 
 DEFAULTS_BACKENDS_PATH = Path(__file__).parent.parent.parent.parent.joinpath(
-    "deployme", "cookie", "templates", "backends"
+    "mljet", "cookie", "templates", "backends"
 )
 
 FLASK_TEMPLATE_PATH = DEFAULTS_BACKENDS_PATH.joinpath("_flask", "server.py")

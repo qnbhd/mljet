@@ -2,7 +2,7 @@ import logging
 
 import pytest
 
-from deployme.utils.logging_ import RichEmojiFilteredHandler
+from mljet.utils.logging_ import RichEmojiFilteredHandler
 
 
 @pytest.mark.parametrize(

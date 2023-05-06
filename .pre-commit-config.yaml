@@ -22,7 +22,7 @@ repos:
       - id: mixed-line-ending
       - id: sort-simple-yaml
       - id: trailing-whitespace
-        exclude: deployme/cli/commands/info/about.py
+        exclude: mljet/cli/commands/info/about.py
   - repo: https://github.com/psf/black
     rev: 22.10.0
     hooks:

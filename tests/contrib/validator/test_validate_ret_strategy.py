@@ -5,8 +5,8 @@ from hypothesis.strategies import (
     text,
 )
 
-from deployme.contrib.supported import Strategy
-from deployme.contrib.validator import validate_ret_strategy
+from mljet.contrib.supported import Strategy
+from mljet.contrib.validator import validate_ret_strategy
 
 
 @given(strategy=sampled_from(Strategy))

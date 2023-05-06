@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from deployme.utils.requirements import (
+from mljet.utils.requirements import (
     freeze,
     get_pkgs_distributions,
     get_source_from_notebook,

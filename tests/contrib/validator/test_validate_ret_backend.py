@@ -8,11 +8,11 @@ from hypothesis import (
 )
 
 # noinspection PyProtectedMember
-from deployme.contrib.validator import (
+from mljet.contrib.validator import (
     _DEFAULT_BACKEND_NAME,
     validate_ret_backend,
 )
-from deployme.cookie.templates.backends.dispatcher import SUPPORTED_BACKENDS
+from mljet.cookie.templates.backends.dispatcher import SUPPORTED_BACKENDS
 
 
 @given(backend=st.sampled_from(tuple(SUPPORTED_BACKENDS.keys())))

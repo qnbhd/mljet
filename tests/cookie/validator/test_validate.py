@@ -3,7 +3,7 @@ from contextlib import nullcontext as does_not_raise
 # noinspection PyUnresolvedReferences,PyProtectedMember
 import pytest
 
-from deployme.cookie.validator import (
+from mljet.cookie.validator import (
     ValidationError,
     validate,
 )

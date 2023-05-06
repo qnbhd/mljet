@@ -6,7 +6,7 @@ from hypothesis import (
     strategies as st,
 )
 
-from deployme.contrib.validator import validate_ret_port
+from mljet.contrib.validator import validate_ret_port
 
 
 @given(port=st.none())
@@ -26,6 +26,6 @@ def test_validate_ret_port_invalid(port):
 def test_validate_ret_port_in_use(port):
     """Ensures that port in use raises ValueError."""
     with mock.patch(
-        "deployme.contrib.validator.is_port_in_use", return_value=False
+        "mljet.contrib.validator.is_port_in_use", return_value=False
     ):
         assert validate_ret_port(port) == port

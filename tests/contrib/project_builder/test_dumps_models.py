@@ -9,7 +9,7 @@ from hypothesis import (
     strategies as st,
 )
 
-from deployme.contrib.project_builder import dumps_models
+from mljet.contrib.project_builder import dumps_models
 from tests.iomock import DefaultIOMock
 
 

@@ -1,7 +1,7 @@
 from click.testing import CliRunner
 
-from deployme.cli.commands.info.frameworks_list import frameworks_list
-from deployme.contrib.supported import ModelType
+from mljet.cli.commands.info.frameworks_list import frameworks_list
+from mljet.contrib.supported import ModelType
 from tests.cli.commands.testing import assert_support_appearance
 
 

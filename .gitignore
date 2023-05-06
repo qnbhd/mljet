@@ -132,7 +132,7 @@ dmypy.json
 .vscode/
 **/.DS_Store
 **/.pyc
-/deployme/template/models/
+/mljet/template/models/
 
 /examples/sklearn_examples/project/
 /examples/lama_axamples/project/

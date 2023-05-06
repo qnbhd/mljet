@@ -1,7 +1,7 @@
 from click.testing import CliRunner
 
-from deployme.cli.commands.info.backends_list import backends_list
-from deployme.cookie.templates.backends.dispatcher import SUPPORTED_BACKENDS
+from mljet.cli.commands.info.backends_list import backends_list
+from mljet.cookie.templates.backends.dispatcher import SUPPORTED_BACKENDS
 from tests.cli.commands.testing import assert_support_appearance
 
 

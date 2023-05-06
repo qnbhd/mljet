@@ -11,10 +11,10 @@ and XGBoost, see `XGBoost <https://xgboost.readthedocs.io/en/latest/build.html>`
 
 
 ###################################################################################################
-# Firstly, import :mod:`deployme`.
+# Firstly, import :mod:`mljet`.
 
 
-import deployme
+import mljet
 
 ###################################################################################################
 # Import :class:`xgboost.XGBClassifier` as classifier
@@ -34,12 +34,12 @@ clf.fit(X, y)
 
 
 ###################################################################################################
-# Now, we can deploy the model to `docker` with :func:`deployme.contrib.entrypoint.cook`.
+# Now, we can deploy the model to `docker` with :func:`mljet.contrib.entrypoint.cook`.
 
-deployme.contrib.cook(
+mljet.contrib.cook(
     model=clf,
     strategy="docker",
-    tag="deployme-xgboost",
+    tag="mljet-xgboost",
     port=5000,
     need_run=True,
     silent=True,
@@ -53,7 +53,7 @@ deployme.contrib.cook(
 #
 # - `strategy` - strategy to use - `docker`
 #
-# - `tag` - tag for the docker image - `deployme-xgboost`
+# - `tag` - tag for the docker image - `mljet-xgboost`
 #
 # - `port` - port for the docker container - `8000`
 #
@@ -65,9 +65,9 @@ deployme.contrib.cook(
 #
 # - `verbose` - verbose mode - `True`, print DEBUG logs
 #
-# After calling the :func:`deployme.contrib.entrypoint.cook` function
+# After calling the :func:`mljet.contrib.entrypoint.cook` function
 # You can see `build` folder in the current directory.
-# And you can see the docker image and container with name `deployme-xgboost`.
+# And you can see the docker image and container with name `mljet-xgboost`.
 #
 # Now we can send a request to the model.
 # For this example, we use requests, see `Requests <https://requests.readthedocs.io/en/master/>`_.

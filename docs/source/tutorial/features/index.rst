@@ -7,7 +7,7 @@
 Features
 ------------
 
-Showcases DeployMe features.
+Showcases MLJET features.
 
 
 
@@ -18,7 +18,7 @@ Showcases DeployMe features.
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="DeployMe is written entirely in Python with few dependencies. This means that once you get inte...">
+    <div class="sphx-glr-thumbcontainer" tooltip="MLJET is written entirely in Python with few dependencies. This means that once you get inte...">
 
 .. only:: html
 

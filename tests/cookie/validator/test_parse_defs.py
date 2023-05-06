@@ -1,7 +1,7 @@
 import pytest
 
 # noinspection PyUnresolvedReferences,PyProtectedMember
-from deployme.cookie.validator import _parse_defs
+from mljet.cookie.validator import _parse_defs
 
 
 @pytest.mark.parametrize(

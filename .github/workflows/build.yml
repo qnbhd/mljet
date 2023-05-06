@@ -35,8 +35,8 @@ jobs:
 
       - name: Check CLI
         run: |
-          deployme about
-          deployme version
+          mljet about
+          mljet version
 
       - name: Run user examples
         run: |

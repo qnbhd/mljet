@@ -27,7 +27,7 @@ Look through the GitHub issues for features. Anything tagged with “enhancement
 
 ## Write Documentation
 
-DeployMe could always use more documentation, whether as part of the official docs, in docstrings, or even on the web in blog posts, articles, and such.
+mljet could always use more documentation, whether as part of the official docs, in docstrings, or even on the web in blog posts, articles, and such.
 
 
 ## Submit Feedback
@@ -38,12 +38,12 @@ If you are proposing a feature:
 
 - Explain in detail how it would work.
 - Keep the scope as narrow as possible, to make it easier to implement.
-- Ready to contribute? Here’s how to set up deployme for local development.
+- Ready to contribute? Here’s how to set up mljet for local development.
 
 
 # Workflow
 
-1. Fork the deployme repo on GitHub.
+1. Fork the mljet repo on GitHub.
 
 2. Clone your fork locally:
 
@@ -54,7 +54,7 @@ $ git clone
 3. Install your local copy into a virtualenv. Assuming you have venv installed, this is how you set up your fork for local development:
 
 ```
-$ cd deployme/
+$ cd mljet/
 $ python3 -m venv env
 $ source env/bin/activate
 $ pip install -e .
@@ -71,7 +71,7 @@ Now you can make your changes locally.
 
 ```
 $ black .
-$ isort deployme/
+$ isort mljet/
 $ flake8 .
 $ mypy .
 $ pytest
@@ -108,7 +108,7 @@ We use `black`, `isort`, `flake8`, `mypy` and `pylint` to enforce a consistent c
 
 ```
 black .
-isort deployme/
+isort mljet/
 flake8 .
 mypy .
 pylint .

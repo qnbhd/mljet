@@ -1,6 +1,6 @@
 import inspect
 
-from deployme.utils.pipelines.stage import (
+from mljet.utils.pipelines.stage import (
     Stage,
     stage,
 )

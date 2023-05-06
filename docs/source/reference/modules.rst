@@ -1,7 +1,7 @@
-deployme
+mljet
 ========
 
 .. toctree::
    :maxdepth: 4
 
-   deployme
+   mljet

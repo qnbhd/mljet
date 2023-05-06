@@ -10,7 +10,7 @@ from hypothesis import (
 )
 from hypothesis_jsonschema import from_schema
 
-from deployme.utils.nb import (
+from mljet.utils.nb import (
     _Notebook,
     get_code_cells_sources_from_notebook,
     get_code_from_ipynb,

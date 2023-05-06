@@ -7,7 +7,7 @@ from hypothesis import (
     strategies as st,
 )
 
-from deployme.contrib.validator import validate_ret_container_name
+from mljet.contrib.validator import validate_ret_container_name
 
 
 # noinspection PyBroadException

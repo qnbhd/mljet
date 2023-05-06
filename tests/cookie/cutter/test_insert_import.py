@@ -1,6 +1,6 @@
 import pytest
 
-from deployme.cookie.cutter import insert_import
+from mljet.cookie.cutter import insert_import
 
 
 def test_insert_import():

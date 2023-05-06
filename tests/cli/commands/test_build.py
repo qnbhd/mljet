@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from sklearn.linear_model import LogisticRegression
 
-from deployme.cli.commands.build import build
+from mljet.cli.commands.build import build
 
 
 def test_build():
@@ -15,7 +15,7 @@ def test_build():
         pickle.dump(LogisticRegression(), f)
 
     with patch(
-        "deployme.cli.commands.build.project_build", return_value=True
+        "mljet.cli.commands.build.project_build", return_value=True
     ) as mock_local:
         # CliRunner is not used here because ValueError is raised
         # ISSUE: https://github.com/pytest-dev/pytest/issues/3344

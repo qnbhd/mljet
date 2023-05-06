@@ -6,7 +6,7 @@ from hypothesis import (
 )
 
 # noinspection PyProtectedMember
-from deployme.contrib.analyzer import (
+from mljet.contrib.analyzer import (
     _SUPPORTED_METHODS,
     extract_methods_names,
 )

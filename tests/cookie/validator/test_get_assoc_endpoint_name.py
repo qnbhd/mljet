@@ -2,7 +2,7 @@
 from hypothesis import given
 from hypothesis.strategies import text
 
-from deployme.cookie.validator import _get_assoc_endpoint
+from mljet.cookie.validator import _get_assoc_endpoint
 
 
 @given(text())

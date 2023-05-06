@@ -5,7 +5,7 @@ from hypothesis import (
     strategies as st,
 )
 
-from deployme.contrib.project_builder import copy_backend_dockerfile
+from mljet.contrib.project_builder import copy_backend_dockerfile
 from tests.iomock import DefaultIOMock
 
 

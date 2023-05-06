@@ -83,7 +83,7 @@ Let's look at the file for an sklearn model:
 .. code:: python3
 
     """Module that contains Scikit-learn model method's wrappers."""
-    from deployme.contrib.supported import ModelType
+    from mljet.contrib.supported import ModelType
 
     # This constant is needed to determine the type of model
     USED_FOR = [ModelType.SKLEARN_MODEL, ModelType.SKLEARN_PIPE]

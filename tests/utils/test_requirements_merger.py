@@ -8,7 +8,7 @@ from hypothesis import (
 )
 from packaging.version import parse
 
-from deployme.utils.requirements import (
+from mljet.utils.requirements import (
     _ComparableRequirement,
     merge,
     merge_requirements_txt,
