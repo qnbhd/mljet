@@ -10,7 +10,7 @@
     .. note::
         :class: sphx-glr-download-link-note
 
-        Click :ref:`here <sphx_glr_download_tutorial_features_002_docker.py>`
+        :ref:`Go to the end <sphx_glr_download_tutorial_features_002_docker.py>`
         to download the full example code
 
 .. rst-class:: sphx-glr-example-title
@@ -160,6 +160,8 @@ Let's sleep for 5 seconds and check the response.
 .. only:: html
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
+
+
 
 
     .. container:: sphx-glr-download sphx-glr-download-python

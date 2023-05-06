@@ -15,10 +15,9 @@ import sys
 
 import plotly.io as pio
 from sphinx_gallery.sorting import FileNameSortKey
-from mljet import __version__
 
 sys.path.insert(0, os.path.abspath("../.."))
-
+from mljet import __version__
 
 # -- Project information -----------------------------------------------------
 

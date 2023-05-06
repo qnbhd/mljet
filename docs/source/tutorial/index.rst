@@ -31,12 +31,12 @@ Showcases MLJET features.
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="MLJET is written entirely in Python with few dependencies. This means that once you get inte...">
+    <div class="sphx-glr-thumbcontainer" tooltip="MLJET is written entirely in Python with few dependencies. This means that once you get interes...">
 
 .. only:: html
 
   .. image:: /tutorial/features/images/thumb/sphx_glr_001_first_thumb.png
-    :alt: 1. Lightweight and versatile
+    :alt:
 
   :ref:`sphx_glr_tutorial_features_001_first.py`
 
@@ -53,7 +53,7 @@ Showcases MLJET features.
 .. only:: html
 
   .. image:: /tutorial/features/images/thumb/sphx_glr_002_docker_thumb.png
-    :alt: 2. Deploy with Docker
+    :alt:
 
   :ref:`sphx_glr_tutorial_features_002_docker.py`
 
@@ -71,6 +71,7 @@ Showcases MLJET features.
 .. toctree::
    :hidden:
    :includehidden:
+
 
    /tutorial/features/index.rst
 
