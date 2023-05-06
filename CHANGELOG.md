@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.6.0 (2023-05-06)
+### Feature
+* Migrate to `mljet` project name ([`15e519a`](https://github.com/qnbhd/mljet/commit/15e519afc4d81cd85bbb03420d2b0a900c989ab8))
+
 ## v0.5.0 (2022-12-01)
 ### Feature
 * Introduce actions ([`4847b24`](https://github.com/qnbhd/mljet/commit/4847b243d0291999853dfd645b1c7ed39f6887ce))
