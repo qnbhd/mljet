@@ -2,7 +2,7 @@ import socket
 from contextlib import closing
 from unittest.mock import patch
 
-from deployme.utils.conn import (
+from mljet.utils.conn import (
     find_free_port,
     is_port_in_use,
 )

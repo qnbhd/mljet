@@ -6,7 +6,7 @@ from hypothesis import (
     strategies as st,
 )
 
-from deployme.cli.helpers import format_info
+from mljet.cli.helpers import format_info
 
 
 @pytest.mark.parametrize(

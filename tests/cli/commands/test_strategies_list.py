@@ -1,7 +1,7 @@
 from click.testing import CliRunner
 
-from deployme.cli.commands.info.strategies_list import strategies_list
-from deployme.contrib.supported import Strategy
+from mljet.cli.commands.info.strategies_list import strategies_list
+from mljet.contrib.supported import Strategy
 from tests.cli.commands.testing import assert_support_appearance
 
 

@@ -2,7 +2,7 @@ import re
 
 import pytest
 
-from deployme.cookie.cutter import replace_functions_by_names
+from mljet.cookie.cutter import replace_functions_by_names
 
 pyfunc_with_body = re.compile(
     r"(?P<indent>[ \t]*)(async def|def)[ \t]*(?P<name>\w+)\s*\((?P<params>.*?)\)(?:[ "

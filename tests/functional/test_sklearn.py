@@ -22,9 +22,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 
-from deployme import cook
-from deployme.cookie.templates.backends.dispatcher import SUPPORTED_BACKENDS
-from deployme.utils.conn import find_free_port
+from mljet import cook
+from mljet.cookie.templates.backends.dispatcher import SUPPORTED_BACKENDS
+from mljet.utils.conn import find_free_port
 
 log = logging.getLogger(__name__)
 
@@ -75,7 +75,7 @@ def test_cook_classification_docker(model, backend):
     model.fit(X_train, y_train)
     model.predict(X_test)
 
-    name = f"deployme-test-{random.randint(0, 1000)}"
+    name = f"mljet-test-{random.randint(0, 1000)}"
 
     runresult = cook(
         model=model,

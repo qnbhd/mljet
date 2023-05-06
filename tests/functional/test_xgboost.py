@@ -6,8 +6,8 @@ import pytest
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 
-from deployme import cook
-from deployme.utils.utils import is_package_installed
+from mljet import cook
+from mljet.utils.utils import is_package_installed
 
 log = logging.getLogger(__name__)
 

@@ -13,8 +13,8 @@ from hypothesis import (
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 
-from deployme.contrib.project_builder import full_build
-from deployme.cookie.templates.backends.dispatcher import SUPPORTED_BACKENDS
+from mljet.contrib.project_builder import full_build
+from mljet.cookie.templates.backends.dispatcher import SUPPORTED_BACKENDS
 from tests.iomock import DefaultIOMock
 
 
@@ -54,7 +54,7 @@ sanic==20.12.2"""
                 return {"sanic": "20.12.2"}
 
         with patch(
-            "deployme.contrib.project_builder.make_requirements_txt",
+            "mljet.contrib.project_builder.make_requirements_txt",
             mock_make_requirements_txt,
         ):
             full_build(

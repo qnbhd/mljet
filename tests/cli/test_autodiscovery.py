@@ -3,10 +3,10 @@ from pathlib import Path
 import pytest
 from click.testing import CliRunner
 
-from deployme.cli.cli import cli
+from mljet.cli.cli import cli
 
 commands_path = Path(__file__).parent.parent.parent.joinpath(
-    "deployme", "cli", "commands"
+    "mljet", "cli", "commands"
 )
 commands = tuple(
     (

@@ -1,6 +1,6 @@
 import random
 
-from deployme.utils.names_generator import get_random_name
+from mljet.utils.names_generator import get_random_name
 
 
 def test_get_random_name():

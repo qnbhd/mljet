@@ -23,35 +23,29 @@
 1. Lightweight and versatile
 =============================================================
 
-DeployMe is written entirely in Python with few dependencies.
-This means that once you get interested in DeployMe, we can quickly move to a practical example.
+MLJET is written entirely in Python with few dependencies.
+This means that once you get interested in MLJET, we can quickly move to a practical example.
 
 
 Simple Sklearn Local Example
 ----------------------------
 
-DeployMe provides a simple interface to create project and deploy a model.
+MLJET provides a simple interface to create project and deploy a model.
 
-- :func:`deployme.contrib.entrypoint.cook` is a function that takes a model and a strategy and deploys it.
+- :func:`mljet.contrib.entrypoint.cook` is a function that takes a model and a strategy and deploys it.
 
 In this example, we simply create a project with scikit-learn.
 
 .. GENERATED FROM PYTHON SOURCE LINES 23-24
 
-Firstly, import :mod:`deployme`.
+Firstly, import :mod:`mljet`.
 
 .. GENERATED FROM PYTHON SOURCE LINES 24-27
 
 .. code-block:: default
 
 
-    import deployme
-
-
-
-
-
-
+    import mljet
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 28-30
@@ -66,12 +60,6 @@ and :mod:`sklearn.datasets` to load the iris dataset.
 
     from sklearn.datasets import load_iris
     from sklearn.ensemble import RandomForestClassifier
-
-
-
-
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 35-36
@@ -90,30 +78,18 @@ Let's load dataset and create and train a simple model.
 
 
 
-
-
-
-
-.. raw:: html
-
-    <div class="output_subarea output_html rendered_html output_result">
-    <style>#sk-container-id-1 {color: black;background-color: white;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>RandomForestClassifier()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked><label for="sk-estimator-id-1" class="sk-toggleable__label sk-toggleable__label-arrow">RandomForestClassifier</label><div class="sk-toggleable__content"><pre>RandomForestClassifier()</pre></div></div></div></div></div>
-    </div>
-    <br />
-    <br />
-
 .. GENERATED FROM PYTHON SOURCE LINES 44-68
 
-Now, we can deploy the model with :func:`deployme.contrib.entrypoint.cook`.
+Now, we can deploy the model with :func:`mljet.contrib.entrypoint.cook`.
 Main arguments are ``model`` and ``strategy``.
 
 The strategy can be either `local` or `docker`.
 The `local` strategy will deploy the model locally.
 The `docker` strategy will deploy the model in a docker container.
-The :func:`deployme.contrib.entrypoint.cook` function will return a bool or container name.
+The :func:`mljet.contrib.entrypoint.cook` function will return a bool or container name.
 
 Now we make only a project without running it.
-After calling the :func:`deployme.contrib.entrypoint.cook` function
+After calling the :func:`mljet.contrib.entrypoint.cook` function
 You can see `build` folder in the current directory.
 
 It contains:
@@ -134,31 +110,12 @@ It contains:
 .. code-block:: default
 
 
-    deployme.contrib.cook(strategy="local", model=clf)
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    [21:58:10] INFO     Cooking project structure                                                                                                          local.py:36
-    [21:58:11] INFO     Was founded next requirements: {                                                                                        project_builder.py:196
-                            "scikit-learn": "1.1.3",
-                            "xgboost": "1.7.1",
-                            "requests": "2.28.1"
-                        }
-               INFO     Project structure successfully built                                                                                               local.py:73
-
-    True
-
+    mljet.contrib.cook(strategy="local", model=clf)
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 72-96
 
-Let's see on :func:`deployme.contrib.entrypoint.cook` signature.
+Let's see on :func:`mljet.contrib.entrypoint.cook` signature.
 This function accepts a lot of parameters, but we see only the most important ones.
 
 - `model` - model to deploy
@@ -176,7 +133,7 @@ It can be any model that implements the `predict` and other methods.
     The model must be picklable.
 
 .. note::
-    Now is supported `sklearn`, `xgboost`, `catboost`, `lightgbm` models.
+    Now is supported `sklearn`, `xgboost`.
 
 Strategy parameter determines the strategy to use.
 
@@ -186,7 +143,7 @@ Now is implemented :mod:`sanic` and :mod:`flask` backends.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.711 seconds)
+   **Total running time of the script:** ( 0 minutes  0.000 seconds)
 
 
 .. _sphx_glr_download_tutorial_features_001_first.py:

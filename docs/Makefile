@@ -5,7 +5,7 @@
 # from the environment for the first two.
 SPHINXOPTS    = -W --keep-going
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = DeployMe
+SPHINXPROJ    = MLJET
 SOURCEDIR     = source
 BUILDDIR      = build
 

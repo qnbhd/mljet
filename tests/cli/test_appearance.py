@@ -1,7 +1,7 @@
 import click
 from click.testing import CliRunner
 
-from deployme.cli.helpers import appearance
+from mljet.cli.helpers import appearance
 
 
 def test_appearance_no_args():

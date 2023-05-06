@@ -4,7 +4,7 @@ API Reference
 .. toctree::
    :maxdepth: 1
 
-   deployme
-   deployme.contrib
-   deployme.cookie
-   deployme.utils
+   mljet
+   mljet.contrib
+   mljet.cookie
+   mljet.utils

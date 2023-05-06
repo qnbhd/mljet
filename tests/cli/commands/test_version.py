@@ -1,8 +1,8 @@
 from click.testing import CliRunner
 
-from deployme import __version__
-from deployme.cli.commands.info.version import version
-from deployme.contrib.supported import Strategy
+from mljet import __version__
+from mljet.cli.commands.info.version import version
+from mljet.contrib.supported import Strategy
 from tests.cli.commands.testing import assert_support_appearance
 
 

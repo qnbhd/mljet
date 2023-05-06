@@ -3,4 +3,4 @@
 Features
 ------------
 
-Showcases DeployMe features.
+Showcases MLJET features.

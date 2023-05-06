@@ -24,6 +24,6 @@ exclude_lines =
     if __name__ == .__main__.:
 
 omit =
-    deployme/utils/logging_.py
-    deployme/cookie/templates/backends
-    deployme/cookie/templates/ml
+    mljet/utils/logging_.py
+    mljet/cookie/templates/backends
+    mljet/cookie/templates/ml

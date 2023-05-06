@@ -2,7 +2,7 @@ from lightgbm import LGBMClassifier
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 
-from deployme import cook
+from mljet import cook
 
 
 # noinspection PyPep8Naming

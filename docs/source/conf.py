@@ -15,14 +15,14 @@ import sys
 
 import plotly.io as pio
 from sphinx_gallery.sorting import FileNameSortKey
-from deployme import __version__
+from mljet import __version__
 
 sys.path.insert(0, os.path.abspath("../.."))
 
 
 # -- Project information -----------------------------------------------------
 
-project = "deployme"
+project = "mljet"
 copyright = "2022, Konstantin Templin & Kristina Zheltova"
 author = "Konstantin Templin, Kristina Zheltova"
 
@@ -79,7 +79,7 @@ html_theme = "furo"
 html_theme_options = {
     "sidebar_hide_name": True,
     "navigation_with_keys": True,
-    "source_repository": "https://github.com/qnbhd/deployme",
+    "source_repository": "https://github.com/qnbhd/mljet",
     "source_branch": "main",
     "source_directory": "docs/",
     "light_css_variables": {
@@ -92,7 +92,7 @@ html_theme_options = {
     },
 }
 
-html_logo = "deployme-logo-p.svg"
+html_logo = "mljet-logo-p.svg"
 html_show_sourcelink = False
 
 pygments_dark_style = "one-dark"

@@ -1,4 +1,4 @@
-from deployme.utils.logging_ import init
+from mljet.utils.logging_ import init
 
 
 def pytest_sessionstart(session):

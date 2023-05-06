@@ -1,4 +1,4 @@
-from deployme.utils.utils import drop_unnecessary_kwargs
+from mljet.utils.utils import drop_unnecessary_kwargs
 
 
 def test_drop_unnecessary_kwargs():

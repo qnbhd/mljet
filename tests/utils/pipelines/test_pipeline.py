@@ -1,11 +1,11 @@
 import pytest
 
-from deployme.utils.pipelines.pipeline import (
+from mljet.utils.pipelines.pipeline import (
     Context,
     IncorrectDependsError,
     Pipeline,
 )
-from deployme.utils.pipelines.stage import stage
+from mljet.utils.pipelines.stage import stage
 
 
 def test_pipeline_no_allow_concurrency():

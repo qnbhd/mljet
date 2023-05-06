@@ -2,8 +2,8 @@
 Contrib
 =======
 
-**DeployMe** `contrib` directory contains a set of scripts needed for
-final project build and deployment.
+**MLJET** `contrib` directory contains a set of scripts needed for
+final project build and mljetnt.
 
 Now is supported next targets:
 
@@ -17,10 +17,10 @@ Now is supported next targets:
 
     ├── analyzer.py             -- Module for analyze ML model's methods
     ├── docker_                 -- Docker target folder
-    │   ├── docker_builder.py   -- Docker deployment target
+    │   ├── docker_builder.py   -- Docker mljetnt target
     │   └── runner.py           -- Docker runner
     ├── entrypoint.py           -- Main project entrypoint
-    ├── local.py                -- Local deployment target
+    ├── local.py                -- Local mljetnt target
     ├── project_builder.py      -- Project builder
     ├── supported.py            -- List of supported models, targets, etc.
     └── validator.py            -- Project validator

@@ -6,7 +6,7 @@ from hypothesis import (
     strategies as st,
 )
 
-from deployme.contrib.project_builder import init_project_directory
+from mljet.contrib.project_builder import init_project_directory
 from tests.iomock import DefaultIOMock
 
 

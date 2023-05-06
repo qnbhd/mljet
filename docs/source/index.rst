@@ -1,18 +1,18 @@
-.. deployme documentation master file, created by
+.. mljet documentation master file, created by
    sphinx-quickstart on Mon Nov  7 08:45:51 2022.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to deployme's documentation!
+Welcome to mljet's documentation!
 ====================================
 
-.. figure:: deployme-logo-p.svg
+.. figure:: mljet-logo-p.png
     :align: center
 
-DeployMe
+MLJET
 ===============================================
 
-DeployMe - a minimalistic tool for automatic deployment of machine learning models.
+MLJET - a minimalistic tool for automatic mljetnt of machine learning models.
 
 Key Features
 ------------
@@ -48,7 +48,7 @@ Code example
    from sklearn.datasets import load_iris
    from sklearn.ensemble import RandomForestClassifier
 
-   from deployme import cook
+   from mljet import cook
 
    X, y = load_iris(return_X_y=True, as_frame=True)
 
@@ -66,13 +66,13 @@ After running script you can see new Docker container. To interact with service 
 Communication
 -------------
 
--  `GitHub Issues <https://github.com/qnbhd/deployme/issues>`__ for bug
+-  `GitHub Issues <https://github.com/qnbhd/mljet/issues>`__ for bug
    reports, feature requests and questions.
 
 License
 -------
 
-MIT License (see `LICENSE <https://github.com/qnbhd/deployme/blob/master/LICENSE>`__).
+MIT License (see `LICENSE <https://github.com/qnbhd/mljet/blob/master/LICENSE>`__).
 
 Authors
 ---------

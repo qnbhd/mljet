@@ -4,8 +4,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 
-from deployme.contrib.supported import ModelType
-from deployme.contrib.validator import validate_ret_model
+from mljet.contrib.supported import ModelType
+from mljet.contrib.validator import validate_ret_model
 
 
 @given(model=sampled_from([RandomForestClassifier(), LogisticRegression()]))

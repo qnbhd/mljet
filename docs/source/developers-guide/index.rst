@@ -7,14 +7,14 @@ This document is intended to help developers who want to contribute to
 the project. It is not intended to be a tutorial on how to use the
 library, but rather a guide to the codebase.
 
-The deployme project is written in Python and can build and deploy
+The mljet project is written in Python and can build and deploy
 services from different ML models.
 
 The project is structured as follows:
 
 .. code::
 
-    ├── deployme
+    ├── mljet
     │   ├── contrib                -- Create full project from a template, deploy to targets
     │   ├── cookie                 -- Build main project file
     │   └── utils                  -- Utility functions
@@ -53,7 +53,7 @@ For run tests with coverage you need exec:
 
 .. code:: bash
 
-    pytest --log-level=INFO --cov=deployme --cov-report=xml
+    pytest --log-level=INFO --cov=mljet --cov-report=xml
 
 Contributing
 ------------
@@ -68,7 +68,7 @@ You can contribute in many ways:
 Report Bugs
 ~~~~~~~~~~~
 
-Report bugs at `Issues <https://github.com/qnbhd/deployme/issues/>`_.
+Report bugs at `Issues <https://github.com/qnbhd/mljet/issues/>`_.
 
 If you are reporting a bug, please include:
 
@@ -99,7 +99,7 @@ it.
 Write Documentation
 ~~~~~~~~~~~~~~~~~~~
 
-DeployMe could always use more documentation, whether as part of the
+MLJET could always use more documentation, whether as part of the
 official docs, in docstrings, or even on the web in blog posts,
 articles, and such.
 
@@ -108,7 +108,7 @@ articles, and such.
 Submit Feedback
 ~~~~~~~~~~~~~~~
 
-The best way to send feedback is to file an issue at `Issues <https://github.com/qnbhd/deployme/issues/>`_.
+The best way to send feedback is to file an issue at `Issues <https://github.com/qnbhd/mljet/issues/>`_.
 
 If you are proposing a feature:
 
@@ -116,7 +116,7 @@ If you are proposing a feature:
 -  Keep the scope as narrow as possible, to make it easier to implement.
 
 
-Ready to contribute? Here's how to set up `deployme` for local development.
+Ready to contribute? Here's how to set up `mljet` for local development.
 
 |
 
@@ -124,7 +124,7 @@ Workflow
 --------
 
 
-1. Fork the `deployme` repo on GitHub.
+1. Fork the `mljet` repo on GitHub.
 
 2. Clone your
 fork locally::
@@ -134,7 +134,7 @@ fork locally::
 3. Install your local copy into a virtualenv. Assuming you have
 venv installed, this is how you set up your fork for local development::
 
-    $ cd deployme/
+    $ cd mljet/
     $ python3 -m venv env
     $ source env/bin/activate
     $ pip install -e .
@@ -150,7 +150,7 @@ Now you can make your changes locally.
 versions with tox::
 
     $ black .
-    $ isort deployme/
+    $ isort mljet/
     $ flake8 .
     $ mypy .
     $ pytest
@@ -210,7 +210,7 @@ submitting a pull request.
 .. code:: bash
 
     black .
-    isort deployme/
+    isort mljet/
     flake8 .
     mypy .
     pylint .

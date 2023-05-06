@@ -10,7 +10,7 @@ from typing import (
 
 from mock_open import MockOpen
 
-from deployme.utils.types import PathLike
+from mljet.utils.types import PathLike
 
 
 class IOMock(metaclass=abc.ABCMeta):
