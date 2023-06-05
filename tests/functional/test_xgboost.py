@@ -31,6 +31,12 @@ def test_cook_xgboost():
     )
     # fit model
     bst.fit(X_train, y_train)
-    cook(model=bst, strategy="local", backend="sanic", need_run=False)
+    cook(
+        model=bst,
+        strategy="local",
+        backend="sanic",
+        need_run=False,
+        scan_path=__file__,
+    )
     assert Path("build").exists()
     shutil.rmtree("build", ignore_errors=True)

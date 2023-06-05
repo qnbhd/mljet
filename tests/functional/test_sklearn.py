@@ -83,7 +83,7 @@ def test_cook_classification_docker(model, backend):
         container_name=name,
         port=port,
         backend=backend,
-        scan_path=Path(__file__).parent,
+        scan_path=__file__,
     )
 
     container_name = runresult["docker-build"]

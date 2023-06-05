@@ -21,7 +21,7 @@ def main():
     # fit model
     bst.fit(X_train, y_train)
 
-    cook(strategy="local", model=bst, verbose=True)
+    cook(strategy="local", model=bst, verbose=True, scan_path=__file__)
 
 
 if __name__ == "__main__":

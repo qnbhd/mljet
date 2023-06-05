@@ -36,7 +36,7 @@ jobs:
         run: pip install -r requirements-dev.txt
 
       - name: Install supported ML frameworks
-        run: pip install scikit-learn xgboost
+        run: pip install scikit-learn xgboost lightautoml
 
       #----------------------------------------------
       #              run test suite

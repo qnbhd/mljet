@@ -95,6 +95,7 @@ Currently, we support the following models:
 - `xgboost`
 - `catboost`
 - `lightgbm`
+- `LightAutoML`
 
 ## RoadMap
 

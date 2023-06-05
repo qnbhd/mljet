@@ -19,11 +19,11 @@ def drop_unnecessary_kwargs(func: Callable, kwargs: dict) -> dict:
 
 
 def is_package_installed(name: str) -> bool:
-    """Check if package is installed."""
+    """Check if package is installed and valid."""
     try:
         __import__(name)
         return True
-    except ImportError:
+    except Exception:
         return False
 
 

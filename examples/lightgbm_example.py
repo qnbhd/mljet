@@ -20,7 +20,7 @@ def main():
     # fit model
     lgbm.fit(X_train, y_train)
 
-    cook(strategy="local", model=lgbm, verbose=True)
+    cook(strategy="local", model=lgbm, verbose=True, scan_path=__file__)
 
 
 if __name__ == "__main__":
