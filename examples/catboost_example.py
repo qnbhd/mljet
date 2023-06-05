@@ -21,7 +21,7 @@ def main():
     # fit model
     cat.fit(X_train, y_train)
 
-    cook(strategy="local", model=cat, verbose=True)
+    cook(strategy="local", model=cat, verbose=True, scan_path=__file__)
 
 
 if __name__ == "__main__":

@@ -1,10 +1,10 @@
 import pandas as pd
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
 from lightautoml.automl.presets.tabular_presets import TabularAutoML
 from lightautoml.tasks import Task
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
 
-from deployme import cook
+from mljet import cook
 
 
 # noinspection PyPep8Naming
@@ -16,7 +16,7 @@ def main():
     # create model instance
     lama = TabularAutoML(
         task=Task(name="multiclass"),
-        timeout=300,
+        timeout=10,
     )
     # fit model
     lama.fit_predict(
@@ -24,7 +24,7 @@ def main():
         roles={"target": "4"},
     )
 
-    cook(strategy="local", model=lama, verbose=True)
+    cook(strategy="local", model=lama, verbose=True, scan_path=__file__)
 
 
 if __name__ == "__main__":

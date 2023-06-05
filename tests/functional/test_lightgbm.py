@@ -27,6 +27,12 @@ def test_cook_lightgbm():
     # fit model
     cat.fit(X_train, y_train)
 
-    cook(model=cat, strategy="local", backend="sanic", need_run=False)
+    cook(
+        model=cat,
+        strategy="local",
+        backend="sanic",
+        need_run=False,
+        scan_path=__file__,
+    )
     assert Path("build").exists()
     shutil.rmtree("build", ignore_errors=True)

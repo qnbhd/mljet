@@ -17,4 +17,8 @@ def predict(model, data) -> list:
     Returns:
         The predicted class
     """
-    return model.predict(data).data.tolist()
+    import numpy as np
+
+    return model.predict(
+        np.array(data), features_names=list(map(str, range(len(data[0]))))
+    ).data.tolist()

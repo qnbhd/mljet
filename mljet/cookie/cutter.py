@@ -126,7 +126,7 @@ def mypy_run(text: str) -> str:
     """
     log.debug("Running mypy check on template")
 
-    res = _mypy_run(["-c", text])
+    res = _mypy_run(["--ignore-missing-imports", "-c", text])
     if res[2]:
         raise MypyValidationError(res[0])
     return res[0]
