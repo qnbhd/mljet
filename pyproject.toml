@@ -31,7 +31,7 @@ dependencies = [
     "flask==2.2.2",
     "pydantic==1.10.2",
     "flask-pydantic==0.11.0",
-    "sanic==22.9.1",
+    "sanic==23.12.1",
     "sanic-ext==22.9.1",
     "packaging==21.3",
     "nbformat==5.7.0",
