@@ -29,7 +29,7 @@ dependencies = [
     "isort==5.10.1",
     "emoji==2.2.0",
     "flask==2.2.2",
-    "pydantic==1.10.2",
+    "pydantic==1.10.15",
     "flask-pydantic==0.11.0",
     "sanic==22.9.1",
     "sanic-ext==22.9.1",
