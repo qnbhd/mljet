@@ -1,4 +1,4 @@
 sanic==22.9.0
 sanic-ext==22.9.0
-pydantic==1.10.4
+pydantic==1.10.13
 websockets==10.4
