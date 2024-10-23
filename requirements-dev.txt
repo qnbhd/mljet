@@ -4,7 +4,7 @@ pytest-repeat
 black
 isort
 flake8
-mypy==0.950
+mypy==1.13.0
 types-requests
 types-PyYAML
 types-requests
